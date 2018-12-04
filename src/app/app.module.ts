@@ -7,7 +7,7 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { ROUTING } from './app.routing';
 import {NgxMaskModule} from 'ngx-mask';
 import { HttpClientModule } from '@angular/common/http';
-import { CepService } from '../services/cep.service';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -20,11 +20,12 @@ import { CepService } from '../services/cep.service';
     AppRoutingModule,
     ROUTING,
     NgxMaskModule.forRoot(),
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
 
   ],
   
-  providers: [CepService,{provide: APP_BASE_HREF, useValue: '/' }],
+  providers: [{provide: APP_BASE_HREF, useValue: '/' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
