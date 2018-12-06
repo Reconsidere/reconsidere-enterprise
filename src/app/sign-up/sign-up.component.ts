@@ -1,24 +1,20 @@
-import { Observable } from 'rxjs/internal/Observable';
-import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { SearchItem } from 'src/models/SearchItem';
-import { SignUpService } from 'src/services/sign-up.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ConfirmPasswordValidator } from 'src/validations/confirm-password.validator';
-import { ValidCNPJ } from 'src/validations/valid-cnpj';
-
-
+import { Observable } from "rxjs/internal/Observable";
+import { Component, OnInit } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { SearchItem } from "src/models/SearchItem";
+import { SignUpService } from "src/services/sign-up.service";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ConfirmPasswordValidator } from "src/validations/confirm-password.validator";
+import { ValidCNPJ } from "src/validations/valid-cnpj";
 
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss']
+  selector: "app-sign-up",
+  templateUrl: "./sign-up.component.html",
+  styleUrls: ["./sign-up.component.scss"]
 })
 export class SignUpComponent implements OnInit {
-
   //TODO[vinicius]: transformas cep em um pipe.
   result: SearchItem;
-
 
   registerForm: FormGroup;
   submitted = false;
@@ -39,31 +35,52 @@ export class SignUpComponent implements OnInit {
   phone: string;
   cellPhone: string;
 
-  constructor(private http: HttpClient, private signUpService: SignUpService, private formBuilder: FormBuilder) {
+  constructor(
+    private http: HttpClient,
+    private signUpService: SignUpService,
+    private formBuilder: FormBuilder
+  ) {
     this.result = new SearchItem();
-    this.classifications = ["Cooperativa", "Empresa Privada", "Município"];
+    this.classifications = ["", "Cooperativa", "Empresa Privada", "Município"];
   }
 
   ngOnInit() {
-    this.registerForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6),Validators.maxLength(20)]],
-      confirmPassword: ['', [Validators.required, Validators.minLength(6),Validators.maxLength(20)]],
-      cnpj: ['', Validators.required],
-      fantasyName: ['', Validators.required],
-      classification: ['', Validators.required],
-      cep: ['', Validators.required],
-      publicPlace: ['', Validators.required],
-      neighborhood: ['', Validators.required],
-      number: ['', Validators.required],
-      county: ['', Validators.required],
-      state: ['', Validators.required],
-      complement:['', Validators.required],
-      phone: ['', Validators.required],
-      cellPhone: ['', Validators.required]},
+    this.registerForm = this.formBuilder.group(
+      {
+        email: ["", [Validators.required, Validators.email]],
+        password: [
+          "",
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(20)
+          ]
+        ],
+        confirmPassword: [
+          "",
+          [
+            Validators.required,
+            Validators.minLength(6),
+            Validators.maxLength(20)
+          ]
+        ],
+        cnpj: ["", Validators.required],
+        fantasyName: ["", Validators.required],
+        classification: ["", Validators.required],
+        cep: ["", Validators.required],
+        publicPlace: ["", Validators.required],
+        neighborhood: ["", Validators.required],
+        number: ["", Validators.required],
+        county: ["", Validators.required],
+        state: ["", Validators.required],
+        complement: ["", Validators.required],
+        phone: ["", Validators.required],
+        cellPhone: ["", Validators.required]
+      },
       {
         validator: [ConfirmPasswordValidator.MatchPassword, ValidCNPJ.MatchCNPJ]
-      });
+      }
+    );
   }
 
   CEPSearch(value) {
@@ -78,22 +95,27 @@ export class SignUpComponent implements OnInit {
   }
 
   private convertToCEP(cepNaResposta) {
-    this.registerForm.controls['cep'].setValue(cepNaResposta.cep);
-    this.registerForm.controls['publicPlace'].setValue(cepNaResposta.logradouro);
-    this.registerForm.controls['complement'].setValue(cepNaResposta.complemento);
-    this.registerForm.controls['neighborhood'].setValue(cepNaResposta.bairro);
-    this.registerForm.controls['county'].setValue(cepNaResposta.localidade);
-    this.registerForm.controls['state'].setValue(cepNaResposta.uf);
+    this.registerForm.controls["cep"].setValue(cepNaResposta.cep);
+    this.registerForm.controls["publicPlace"].setValue(
+      cepNaResposta.logradouro
+    );
+    this.registerForm.controls["complement"].setValue(
+      cepNaResposta.complemento
+    );
+    this.registerForm.controls["neighborhood"].setValue(cepNaResposta.bairro);
+    this.registerForm.controls["county"].setValue(cepNaResposta.localidade);
+    this.registerForm.controls["state"].setValue(cepNaResposta.uf);
   }
 
-
   // convenience getter for easy access to form fields
-  get f() { return this.registerForm.controls; }
+  get f() {
+    return this.registerForm.controls;
+  }
 
   save() {
     this.submitted = true;
     if (this.registerForm.invalid) {
-          return;
+      return;
     }
 
     const obj = {
@@ -110,10 +132,9 @@ export class SignUpComponent implements OnInit {
       state: this.state,
       complement: this.complement,
       phone: this.phone,
-      cellPhone: this.cellPhone,
-    }
+      cellPhone: this.cellPhone
+    };
 
     this.signUpService.addSignUp(obj);
   }
 }
-

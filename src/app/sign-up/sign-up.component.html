@@ -51,9 +51,15 @@
             id="confirmPassword"
             aria-describedby="confirmPassword"
           />
-          <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.ConfirmPassword">
+          <div
+            class="invalid-feedback"
+            *ngIf="
+              registerForm.get('confirmPassword').errors &&
+              registerForm.get('confirmPassword').errors.ConfirmPassword
+            "
+          >
             Senha não coincide
-           </div>
+          </div>
         </div>
       </div>
     </div>
@@ -70,9 +76,15 @@
         placeholder="00.000.000/0000-00"
         mask="00.000.000/0000-00"
       />
-      <div class="invalid-feedback" *ngIf="registerForm.get('cnpj').errors && registerForm.get('cnpj').errors.ConfirmCNPJ">
+      <div
+        class="invalid-feedback"
+        *ngIf="
+          registerForm.get('cnpj').errors &&
+          registerForm.get('cnpj').errors.ConfirmCNPJ
+        "
+      >
         CNPJ inválido
-       </div>
+      </div>
     </div>
 
     <div class="row">
@@ -80,6 +92,7 @@
         <div class="form-group">
           <label for="fantasyName">Nome fantasia</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.fantasyName.errors }"
             formControlName="fantasyName"
             name="fantasyName"
             type="text"
@@ -87,6 +100,12 @@
             id="fantasyName"
             aria-describedby="fantasyName"
           />
+          <div
+            *ngIf="submitted && f.fantasyName.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.fantasyName.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
 
@@ -94,6 +113,7 @@
         <div class="form-group">
           <label for="classification">Classificação</label>
           <select
+            [ngClass]="{ 'is-invalid': submitted && f.classification.errors }"
             formControlName="classification"
             name="classification"
             class="form-control"
@@ -102,6 +122,14 @@
               item
             }}</option>
           </select>
+          <div
+            *ngIf="submitted && f.classification.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.classification.errors.required">
+              Campo obrigatório
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -111,6 +139,7 @@
         <div class="form-group">
           <label for="cep">CEP</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.cep.errors }"
             formControlName="cep"
             cep="ngModel"
             name="cep"
@@ -123,6 +152,9 @@
             #cep
             (blur)="CEPSearch(cep.value)"
           />
+          <div *ngIf="submitted && f.cep.errors" class="invalid-feedback">
+            <div *ngIf="f.cep.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
 
@@ -130,6 +162,7 @@
         <div class="form-group">
           <label for="publicPlace">Logradouro</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.publicPlace.errors }"
             formControlName="publicPlace"
             name="publicPlace"
             type="text"
@@ -137,12 +170,19 @@
             id="publicPlace"
             aria-describedby="publicPlace"
           />
+          <div
+            *ngIf="submitted && f.publicPlace.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.publicPlace.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="neighborhood">Bairro</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.neighborhood.errors }"
             formControlName="neighborhood"
             name="neighborhood"
             type="text"
@@ -150,12 +190,19 @@
             id="neighborhood"
             aria-describedby="neighborhood"
           />
+          <div
+            *ngIf="submitted && f.neighborhood.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.neighborhood.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
       <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="number">Número</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.number.errors }"
             formControlName="number"
             name="number"
             type="text"
@@ -164,6 +211,9 @@
             numbers-only
             aria-describedby="number"
           />
+          <div *ngIf="submitted && f.number.errors" class="invalid-feedback">
+            <div *ngIf="f.number.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
     </div>
@@ -172,6 +222,7 @@
         <div class="form-group">
           <label for="county">Município</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.county.errors }"
             formControlName="county"
             name="county"
             type="text"
@@ -179,12 +230,16 @@
             id="county"
             aria-describedby="county"
           />
+          <div *ngIf="submitted && f.county.errors" class="invalid-feedback">
+            <div *ngIf="f.county.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
       <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="state">UF</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.state.errors }"
             formControlName="state"
             name="state"
             type="text"
@@ -193,6 +248,9 @@
             numbers-only
             aria-describedby="state"
           />
+          <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+            <div *ngIf="f.state.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
     </div>
@@ -201,6 +259,7 @@
         <div class="form-group">
           <label for="complement">Complemento</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.complement.errors }"
             formControlName="complement"
             name="complement"
             type="text"
@@ -208,12 +267,19 @@
             id="complement"
             aria-describedby="complement"
           />
+          <div
+            *ngIf="submitted && f.complement.errors"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f.complement.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="phone">Telefone</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.phone.errors }"
             formControlName="phone"
             name="phone"
             type="text"
@@ -224,11 +290,15 @@
             mask="(00) 0000-0000"
           />
         </div>
+        <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+          <div *ngIf="f.phone.errors.required">Campo obrigatório</div>
+        </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="cellPhone">Celular</label>
           <input
+            [ngClass]="{ 'is-invalid': submitted && f.cellPhone.errors }"
             formControlName="cellPhone"
             name="cellPhone"
             type="text"
@@ -238,6 +308,9 @@
             placeholder="(00) 00000-0000"
             mask="(00) 00000-0000"
           />
+          <div *ngIf="submitted && f.cellPhone.errors" class="invalid-feedback">
+            <div *ngIf="f.cellPhone.errors.required">Campo obrigatório</div>
+          </div>
         </div>
       </div>
     </div>
