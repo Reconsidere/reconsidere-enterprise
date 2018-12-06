@@ -1,115 +1,255 @@
 <div class="container">
-    <form>
-      <div class="form-group">
-        <label for="lblEmail">Email</label>
-        <input [(ngModel)]="email" #emailText="ngModel" name="email"  type="email" class="form-control" id="email" aria-describedby="email" placeholder="usuario@email.com">
+  <form [formGroup]="registerForm">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        formControlName="email"
+        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+        name="email"
+        type="email"
+        class="form-control"
+        id="email"
+        aria-describedby="email"
+        placeholder="usuario@email.com"
+      />
+      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+        <div *ngIf="f.email.errors.email">Email inválido</div>
+        <div *ngIf="f.email.errors.required">Campo obrigatório</div>
       </div>
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="password">Senha</label>
-          <input [(ngModel)]="password" #passwordText="ngModel" name="password" type="password" class="form-control" id="password" aria-describedby="password">
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <input
+            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+            formControlName="password"
+            name="password"
+            type="password"
+            class="form-control"
+            id="password"
+            aria-describedby="password"
+          />
+          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+            <div *ngIf="f.password.errors.required">Campo obrigatório</div>
+            <div *ngIf="f.password.errors.minlength">
+              Senha deve conter no mínimo 6 caracteres, e no máximo 20
+              caracteres
+            </div>
           </div>
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="confirmPassword">Confirmação de senha</label>
-          <input [(ngModel)]="confirmPassword" #confirmPasswordText="ngModel" name="confirmPassword" type="password" class="form-control" id="confirmPassword" aria-describedby="confirmPassword">
-          </div>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="confirmPassword">Confirmação de senha</label>
+          <input
+            [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
+            formControlName="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            aria-describedby="confirmPassword"
+          />
+          <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.ConfirmPassword">
+            Senha não coincide
+           </div>
         </div>
       </div>
-      <div class="form-group">
-        <label for="cnpj">CNPJ</label>
-        <input [(ngModel)]="cnpj" #cnpjText="ngModel" name="cnpj" type="text" class="form-control" id="cnpj" aria-describedby="cnpj" placeholder="00.000.000/0000-00"
-          mask='00.000.000/0000-00'>
+    </div>
+    <div class="form-group">
+      <label for="cnpj">CNPJ</label>
+      <input
+        [ngClass]="{ 'is-invalid': submitted && f.cnpj.errors }"
+        formControlName="cnpj"
+        name="cnpj"
+        type="text"
+        class="form-control"
+        id="cnpj"
+        aria-describedby="cnpj"
+        placeholder="00.000.000/0000-00"
+        mask="00.000.000/0000-00"
+      />
+      <div class="invalid-feedback" *ngIf="registerForm.get('cnpj').errors && registerForm.get('cnpj').errors.ConfirmCNPJ">
+        CNPJ inválido
+       </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="fantasyName">Nome fantasia</label>
+          <input
+            formControlName="fantasyName"
+            name="fantasyName"
+            type="text"
+            class="form-control"
+            id="fantasyName"
+            aria-describedby="fantasyName"
+          />
+        </div>
       </div>
 
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="fantasyName">Nome fantasia</label>
-            <input [(ngModel)]="fantasyName" #fantasyNameText="ngModel" name="fantasyName" type="text" class="form-control" id="fantasyName" aria-describedby="fantasyName">
-          </div>
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="classification">Classificação</label>
+          <select
+            formControlName="classification"
+            name="classification"
+            class="form-control"
+          >
+            <option id="classification" *ngFor="let item of classifications">{{
+              item
+            }}</option>
+          </select>
         </div>
+      </div>
+    </div>
 
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="classification">Classificação</label>
-            <select [(ngModel)]="classification"   name="classification" class="form-control">
-            <option   id="classification" *ngFor="let item of classifications">{{item}}</option>
-            </select>
-          </div>
+    <div class="row">
+      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="cep">CEP</label>
+          <input
+            formControlName="cep"
+            cep="ngModel"
+            name="cep"
+            type="text"
+            class="form-control"
+            id="cep"
+            aria-describedby="cep"
+            placeholder="00.000-000"
+            mask="00.000-000"
+            #cep
+            (blur)="CEPSearch(cep.value)"
+          />
         </div>
       </div>
 
-
-      <div class="row">
-        <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="cep">CEP</label>
-            <input [(ngModel)]="cep" #cepText="ngModel" name="cep" type="text" class="form-control" id="cep" aria-describedby="cep" placeholder="00.000-000" mask='00.000-000'
-              #cepValue (blur)="CEPSearch(cepValue.value)">
-          </div>
-        </div>
-
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="publicPlace">Logradouro</label>
-            <input [(ngModel)]="publicPlace" #publicPlaceText="ngModel" name="publicPlace" type="text" class="form-control" id="publicPlace"  aria-describedby="publicPlace">
-          </div>
-        </div>
-        <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="neighborhood">Bairro</label>
-            <input [(ngModel)]="neighborhood" #neighborhoodText="ngModel" name="neighborhood" type="text" class="form-control" id="neighborhood"  aria-describedby="neighborhood">
-          </div>
-        </div>
-        <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="number">Número</label>
-            <input [(ngModel)]="number" #numberText="ngModel" name="number" type="text" class="form-control" id="number"  numbers-only
-              aria-describedby="number">
-          </div>
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="publicPlace">Logradouro</label>
+          <input
+            formControlName="publicPlace"
+            name="publicPlace"
+            type="text"
+            class="form-control"
+            id="publicPlace"
+            aria-describedby="publicPlace"
+          />
         </div>
       </div>
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="county">Município</label>
-            <input [(ngModel)]="county"  #countyText="ngModel" name="county" type="text" class="form-control" id="county"  aria-describedby="county">
-          </div>
-        </div>
-        <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="state">UF</label>
-            <input [(ngModel)]="state" #stateText="ngModel" name="state" type="text" class="form-control" id="state"  numbers-only aria-describedby="state">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="complement">Complemento</label>
-            <input [(ngModel)]="complement" #complementText="ngModel" name="complement" type="text" class="form-control" id="complement"  aria-describedby="complement">
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="phone">Telefone</label>
-            <input [(ngModel)]="phone" #phoneText="ngModel" name="phone" type="text" class="form-control" id="phone" aria-describedby="phone" placeholder="(00) 0000-0000"
-              mask='(00) 0000-0000'>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="cellPhone">Celular</label>
-            <input [(ngModel)]="cellPhone" #cellPhoneText="ngModel" name="cellPhone" type="text" class="form-control" id="cellPhone" aria-describedby="cellPhone" placeholder="(00) 00000-0000"
-              mask='(00) 00000-0000'>
-          </div>
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="neighborhood">Bairro</label>
+          <input
+            formControlName="neighborhood"
+            name="neighborhood"
+            type="text"
+            class="form-control"
+            id="neighborhood"
+            aria-describedby="neighborhood"
+          />
         </div>
       </div>
-      <div>
-          <button type="submit" id="save" (click)="save()"    class="btn btn-primary col-md-12">Salvar</button>
+      <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="number">Número</label>
+          <input
+            formControlName="number"
+            name="number"
+            type="text"
+            class="form-control"
+            id="number"
+            numbers-only
+            aria-describedby="number"
+          />
+        </div>
       </div>
-    </form>
-  </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="county">Município</label>
+          <input
+            formControlName="county"
+            name="county"
+            type="text"
+            class="form-control"
+            id="county"
+            aria-describedby="county"
+          />
+        </div>
+      </div>
+      <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="state">UF</label>
+          <input
+            formControlName="state"
+            name="state"
+            type="text"
+            class="form-control"
+            id="state"
+            numbers-only
+            aria-describedby="state"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="complement">Complemento</label>
+          <input
+            formControlName="complement"
+            name="complement"
+            type="text"
+            class="form-control"
+            id="complement"
+            aria-describedby="complement"
+          />
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="phone">Telefone</label>
+          <input
+            formControlName="phone"
+            name="phone"
+            type="text"
+            class="form-control"
+            id="phone"
+            aria-describedby="phone"
+            placeholder="(00) 0000-0000"
+            mask="(00) 0000-0000"
+          />
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="cellPhone">Celular</label>
+          <input
+            formControlName="cellPhone"
+            name="cellPhone"
+            type="text"
+            class="form-control"
+            id="cellPhone"
+            aria-describedby="cellPhone"
+            placeholder="(00) 00000-0000"
+            mask="(00) 00000-0000"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        type="submit"
+        id="save"
+        (click)="save()"
+        class="btn btn-primary col-md-12"
+      >
+        Salvar
+      </button>
+    </div>
+  </form>
+</div>
