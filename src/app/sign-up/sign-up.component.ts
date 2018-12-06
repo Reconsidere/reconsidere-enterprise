@@ -2,6 +2,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http'
 import { SearchItem } from 'src/models/SearchItem';
+import { SignUpService } from 'src/services/sign-up.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -13,24 +14,24 @@ export class SignUpComponent implements OnInit {
   result: SearchItem;
   classifications: string[];
   email: string;
-  password : string;
-  confirmPassword :string;
-  cnpj : string;
+  password: string;
+  confirmPassword: string;
+  cnpj: string;
   fantasyName: string;
-  classification : string;
+  classification: string;
   cep: string;
   publicPlace: string;
-  neighborhood:String;
+  neighborhood: String;
   number: string;
-  county:string;
-  state:string;
-  complement:string;
-  phone:string;
-  cellPhone:string;
+  county: string;
+  state: string;
+  complement: string;
+  phone: string;
+  cellPhone: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private signUpService: SignUpService) {
     this.result = new SearchItem();
-    this.classifications = ["Cooperativa","Empresa Privada","Município"];
+    this.classifications = ["Cooperativa", "Empresa Privada", "Município"];
   }
 
   ngOnInit() {
@@ -41,27 +42,43 @@ export class SignUpComponent implements OnInit {
     this.search(removedSpecialCaracter);
   }
 
-  search(cep: string) {
+  search(cepValue: string) {
     return this.http
-      .get(`https://viacep.com.br/ws/${cep}/json/`)
-      .subscribe(data => this.result = this.convertToCEP(data));
+      .get(`https://viacep.com.br/ws/${cepValue}/json/`)
+      .subscribe(data => this.convertToCEP(data));
   }
 
-  private convertToCEP(cepNaResposta): SearchItem {
-    let cep = new SearchItem();
+  private convertToCEP(cepNaResposta) {
+    
 
-    cep.cep = cepNaResposta.cep;
-    cep.publicPlace = cepNaResposta.logradouro;
-    cep.complement = cepNaResposta.complemento;
-    cep.neighborhood = cepNaResposta.bairro;
-    cep.county = cepNaResposta.localidade;
-    cep.state = cepNaResposta.uf;
-    return cep;
+    this.cep = cepNaResposta.cep;
+    this.publicPlace = cepNaResposta.logradouro;
+    this.complement = cepNaResposta.complemento;
+    this.neighborhood = cepNaResposta.bairro;
+    this.county = cepNaResposta.localidade;
+    this.state = cepNaResposta.uf;
   }
 
 
-  save(){
+  save() {
+    const obj = {
+      email: this.email,
+      password: this.password,
+      cnpj: this.cnpj,
+      fantasyName: this.fantasyName,
+      classification: this.classification,
+      cep: this.cep,
+      publicPlace: this.publicPlace,
+      neighborhood: this.neighborhood,
+      number: Number(this.number),
+      county: this.county,
+      state: this.state,
+      complement: this.complement,
+      phone: this.phone,
+      cellPhone: this.cellPhone,
+    }
 
+    this.signUpService.addSignUp(obj);
   }
 }
 

@@ -2,41 +2,41 @@
     <form>
       <div class="form-group">
         <label for="lblEmail">Email</label>
-        <input [(ngModel)]="emailText" #email="ngModel" name="emailName"  type="email" class="form-control" id="lblEmail" aria-describedby="email" placeholder="usuario@email.com">
+        <input [(ngModel)]="email" #emailText="ngModel" name="email"  type="email" class="form-control" id="email" aria-describedby="email" placeholder="usuario@email.com">
       </div>
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblPassword">Senha</label>
-          <input [(ngModel)]="passwordText" #password="ngModel" name="passwordName" type="password" class="form-control" id="lblPassword" aria-describedby="senha">
+            <label for="password">Senha</label>
+          <input [(ngModel)]="password" #passwordText="ngModel" name="password" type="password" class="form-control" id="password" aria-describedby="password">
           </div>
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblConfirmPassword">Confirmação de senha</label>
-          <input [(ngModel)]="confirmPasswordText" #confirmPassword="ngModel" name="confirmName" type="password" class="form-control" id="lblConfirmPassword" aria-describedby=" confirmar senha">
+            <label for="confirmPassword">Confirmação de senha</label>
+          <input [(ngModel)]="confirmPassword" #confirmPasswordText="ngModel" name="confirmPassword" type="password" class="form-control" id="confirmPassword" aria-describedby="confirmPassword">
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="lblCNPJ">CNPJ</label>
-        <input [(ngModel)]="cnpjText" #cnpj="ngModel" name="cnpjName" type="text" class="form-control" id="lblCNPJ" aria-describedby="CNPJ" placeholder="00.000.000/0000-00"
+        <label for="cnpj">CNPJ</label>
+        <input [(ngModel)]="cnpj" #cnpjText="ngModel" name="cnpj" type="text" class="form-control" id="cnpj" aria-describedby="cnpj" placeholder="00.000.000/0000-00"
           mask='00.000.000/0000-00'>
       </div>
 
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblFantasyName">Nome fantasia</label>
-            <input [(ngModel)]="fantasyNameText" #fantasyName="ngModel" name="fantasyName" type="text" class="form-control" id="lblFantasyName" aria-describedby="Nome fantasia">
+            <label for="fantasyName">Nome fantasia</label>
+            <input [(ngModel)]="fantasyName" #fantasyNameText="ngModel" name="fantasyName" type="text" class="form-control" id="fantasyName" aria-describedby="fantasyName">
           </div>
         </div>
 
         <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblClassification">Classificação</label>
-            <select [(ngModel)]="classification"  name="classification" class="form-control">
-            <option   id="lblClassification" *ngFor="let item of classifications">{{item}}</option>
+            <label for="classification">Classificação</label>
+            <select [(ngModel)]="classification"   name="classification" class="form-control">
+            <option   id="classification" *ngFor="let item of classifications">{{item}}</option>
             </select>
           </div>
         </div>
@@ -46,70 +46,70 @@
       <div class="row">
         <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblCEP">CEP</label>
-            <input [(ngModel)]="cepText" #cep="ngModel" name="cepName" type="text" class="form-control" id="lblCEP" aria-describedby="CEP" placeholder="00.000-000" mask='00.000-000'
-              #cep (blur)="CEPSearch(cep.value)">
+            <label for="cep">CEP</label>
+            <input [(ngModel)]="cep" #cepText="ngModel" name="cep" type="text" class="form-control" id="cep" aria-describedby="cep" placeholder="00.000-000" mask='00.000-000'
+              #cepValue (blur)="CEPSearch(cepValue.value)">
           </div>
         </div>
 
         <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblPublicPlace">Logradouro</label>
-            <input [(ngModel)]="publicPlaceText" #publicPlace="ngModel" name="publicName" type="text" class="form-control" id="lblPublicPlace" value={{result.publicPlace}} aria-describedby="Logradouro">
+            <label for="publicPlace">Logradouro</label>
+            <input [(ngModel)]="publicPlace" #publicPlaceText="ngModel" name="publicPlace" type="text" class="form-control" id="publicPlace"  aria-describedby="publicPlace">
           </div>
         </div>
         <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblNeighborhood">Bairro</label>
-            <input [(ngModel)]="neighborhoodText" #neighborhood="ngModel" name="neighborName" type="text" class="form-control" id="lblNeighborhood" value={{result.neighborhood}} aria-describedby="Bairro">
+            <label for="neighborhood">Bairro</label>
+            <input [(ngModel)]="neighborhood" #neighborhoodText="ngModel" name="neighborhood" type="text" class="form-control" id="neighborhood"  aria-describedby="neighborhood">
           </div>
         </div>
         <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblNumber">Número</label>
-            <input [(ngModel)]="numberText" #number="ngModel" name="numberName" type="text" class="form-control" id="lblNumber" value={{result.number}} numbers-only
-              aria-describedby="Número">
+            <label for="number">Número</label>
+            <input [(ngModel)]="number" #numberText="ngModel" name="number" type="text" class="form-control" id="number"  numbers-only
+              aria-describedby="number">
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblCounty">Município</label>
-            <input [(ngModel)]="countyText"  #county="ngModel" name="countyName" type="text" class="form-control" id="lblCounty" value={{result.county}} aria-describedby="Município">
+            <label for="county">Município</label>
+            <input [(ngModel)]="county"  #countyText="ngModel" name="county" type="text" class="form-control" id="county"  aria-describedby="county">
           </div>
         </div>
         <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblUF">UF</label>
-            <input [(ngModel)]="stateText" #state="ngModel" name="ufName" type="text" class="form-control" id="lblUF" value={{result.state}} numbers-only aria-describedby="UF">
+            <label for="state">UF</label>
+            <input [(ngModel)]="state" #stateText="ngModel" name="state" type="text" class="form-control" id="state"  numbers-only aria-describedby="state">
           </div>
         </div>
       </div>
       <div class="row">
         <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblComplement">Complemento</label>
-            <input [(ngModel)]="complementText" #complement="ngModel" name="complementName" type="text" class="form-control" id="lblComplement" value={{result.complement}} aria-describedby="Complemento">
+            <label for="complement">Complemento</label>
+            <input [(ngModel)]="complement" #complementText="ngModel" name="complement" type="text" class="form-control" id="complement"  aria-describedby="complement">
           </div>
         </div>
         <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblPhone">Telefone</label>
-            <input [(ngModel)]="phoneText" #phone="ngModel" name="phoneName" type="text" class="form-control" id="lblPhone" aria-describedby="Telefone" placeholder="(00) 0000-0000"
+            <label for="phone">Telefone</label>
+            <input [(ngModel)]="phone" #phoneText="ngModel" name="phone" type="text" class="form-control" id="phone" aria-describedby="phone" placeholder="(00) 0000-0000"
               mask='(00) 0000-0000'>
           </div>
         </div>
         <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="form-group">
-            <label for="lblCellPhone">Celular</label>
-            <input [(ngModel)]="cellPhoneText" #cellPhone="ngModel" name="cellName" type="text" class="form-control" id="lblCellPhone" aria-describedby="Celular" placeholder="(00) 00000-0000"
+            <label for="cellPhone">Celular</label>
+            <input [(ngModel)]="cellPhone" #cellPhoneText="ngModel" name="cellPhone" type="text" class="form-control" id="cellPhone" aria-describedby="cellPhone" placeholder="(00) 00000-0000"
               mask='(00) 00000-0000'>
           </div>
         </div>
       </div>
       <div>
-          <button type="submit" id="btnSave" (click)="save()"    class="btn btn-primary col-md-12">Salvar</button>
+          <button type="submit" id="save" (click)="save()"    class="btn btn-primary col-md-12">Salvar</button>
       </div>
     </form>
   </div>
