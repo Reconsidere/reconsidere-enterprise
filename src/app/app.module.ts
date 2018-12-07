@@ -8,7 +8,7 @@ import { ROUTING, routes } from './app.routing';
 import {NgxMaskModule} from 'ngx-mask';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignUpService } from 'src/services/sign-up.service';
+import { SignUpService } from 'src/services/auth.service';
 import { RouterModule } from '@angular/router';
 
 

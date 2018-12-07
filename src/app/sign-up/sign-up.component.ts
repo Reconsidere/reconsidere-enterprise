@@ -2,10 +2,11 @@ import { Observable } from "rxjs/internal/Observable";
 import { Component, OnInit } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { SearchItem } from "src/models/SearchItem";
-import { SignUpService } from "src/services/sign-up.service";
+import { SignUpService } from "src/services/auth.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ConfirmPasswordValidator } from "src/validations/confirm-password.validator";
-import { ValidCNPJ } from "src/validations/valid-cnpj";
+import { CNPJValidator } from "src/validations/valid-cnpj.validator";
+
 
 @Component({
   selector: "app-sign-up",
@@ -78,7 +79,7 @@ export class SignUpComponent implements OnInit {
         cellPhone: ["", Validators.required]
       },
       {
-        validator: [ConfirmPasswordValidator.MatchPassword, ValidCNPJ.MatchCNPJ]
+        validator: [ConfirmPasswordValidator.MatchPassword, CNPJValidator.MatchCNPJ]
       }
     );
   }

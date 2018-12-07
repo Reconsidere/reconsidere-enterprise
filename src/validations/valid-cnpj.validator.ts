@@ -1,5 +1,5 @@
 import {AbstractControl} from '@angular/forms';
-export class ValidCNPJ {
+export class CNPJValidator {
   static MatchCNPJ(control: AbstractControl) {
     let cnpj = control.get('cnpj').value.replace(/[^\d]+/g,'');
 
