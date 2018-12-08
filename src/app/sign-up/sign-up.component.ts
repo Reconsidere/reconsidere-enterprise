@@ -1,11 +1,12 @@
 import { Observable } from "rxjs/internal/Observable";
 import { Component, OnInit } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
 import { SearchItem } from "src/models/SearchItem";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ConfirmPasswordValidator } from "src/validations/confirm-password.validator";
 import { CNPJValidator } from "src/validations/valid-cnpj.validator";
 import { AuthService } from "src/services/auth.service";
+import { promise } from "protractor";
+import { CepService } from "src/services/cep.service";
 
 
 @Component({
@@ -16,6 +17,7 @@ import { AuthService } from "src/services/auth.service";
 export class SignUpComponent implements OnInit {
   //TODO[vinicius]: transformas cep em um pipe.
   result: SearchItem;
+  adrress: string[];
 
   registerForm: FormGroup;
   submitted = false;
@@ -37,9 +39,9 @@ export class SignUpComponent implements OnInit {
   cellPhone: string;
 
   constructor(
-    private http: HttpClient,
     private authService: AuthService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private cepService: CepService
   ) {
     this.result = new SearchItem();
     this.classifications = ["", "Cooperativa", "Empresa Privada", "Município"];
@@ -86,28 +88,8 @@ export class SignUpComponent implements OnInit {
 
   CEPSearch(value) {
     let removedSpecialCaracter = value.replace(/[^a-zA-Z0-9 ]/g, "");
-    this.search(removedSpecialCaracter);
+    this.cepService.search(removedSpecialCaracter, this.registerForm);
   }
-
-  search(cep: string) {
-    return this.http
-      .get(`https://viacep.com.br/ws/${cep}/json/`)
-      .subscribe(data => this.convertToCEP(data));
-  }
-
-  private convertToCEP(cepNaResposta) {
-    this.registerForm.controls["cep"].setValue(cepNaResposta.cep);
-    this.registerForm.controls["publicPlace"].setValue(
-      cepNaResposta.logradouro
-    );
-    this.registerForm.controls["complement"].setValue(
-      cepNaResposta.complemento
-    );
-    this.registerForm.controls["neighborhood"].setValue(cepNaResposta.bairro);
-    this.registerForm.controls["county"].setValue(cepNaResposta.localidade);
-    this.registerForm.controls["state"].setValue(cepNaResposta.uf);
-  }
-
   get f() {
     return this.registerForm.controls;
   }
@@ -118,7 +100,7 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    const obj = {
+    const saveObject = {
       email: this.registerForm.controls["email"].value,
       password: this.registerForm.controls["password"].value,
       cnpj: this.registerForm.controls["cnpj"].value,
@@ -135,6 +117,6 @@ export class SignUpComponent implements OnInit {
       cellPhone: this.registerForm.controls["cellPhone"].value
     };
 
-    this.authService.addSignUp(obj);
+    this.authService.addSignUp(saveObject);
   }
 }
