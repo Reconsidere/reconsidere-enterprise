@@ -13,6 +13,7 @@ mongoose.connect(config.DB).then(
 );
 
 const app = express();
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cors());
 const port = process.env.PORT || 3000;

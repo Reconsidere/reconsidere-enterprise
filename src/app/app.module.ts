@@ -8,7 +8,7 @@ import { ROUTING, routes } from './app.routing';
 import {NgxMaskModule} from 'ngx-mask';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { SignUpService } from 'src/services/auth.service';
+import { AuthService } from 'src/services/auth.service';
 import { RouterModule } from '@angular/router';
 
 
@@ -30,8 +30,8 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule
 
   ],
-  
-  providers: [{provide: APP_BASE_HREF, useValue: '/' }, SignUpService,ReactiveFormsModule,BrowserModule, RouterModule],
+
+  providers: [{provide: APP_BASE_HREF, useValue: '/' }, AuthService,ReactiveFormsModule,BrowserModule, RouterModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

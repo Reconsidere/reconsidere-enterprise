@@ -2,10 +2,10 @@ import { Observable } from "rxjs/internal/Observable";
 import { Component, OnInit } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { SearchItem } from "src/models/SearchItem";
-import { SignUpService } from "src/services/auth.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ConfirmPasswordValidator } from "src/validations/confirm-password.validator";
 import { CNPJValidator } from "src/validations/valid-cnpj.validator";
+import { AuthService } from "src/services/auth.service";
 
 
 @Component({
@@ -38,7 +38,7 @@ export class SignUpComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private signUpService: SignUpService,
+    private authService: AuthService,
     private formBuilder: FormBuilder
   ) {
     this.result = new SearchItem();
@@ -108,7 +108,6 @@ export class SignUpComponent implements OnInit {
     this.registerForm.controls["state"].setValue(cepNaResposta.uf);
   }
 
-  // convenience getter for easy access to form fields
   get f() {
     return this.registerForm.controls;
   }
@@ -120,22 +119,22 @@ export class SignUpComponent implements OnInit {
     }
 
     const obj = {
-      email: this.email,
-      password: this.password,
-      cnpj: this.cnpj,
-      fantasyName: this.fantasyName,
-      classification: this.classification,
-      cep: this.cep,
-      publicPlace: this.publicPlace,
-      neighborhood: this.neighborhood,
-      number: Number(this.number),
-      county: this.county,
-      state: this.state,
-      complement: this.complement,
-      phone: this.phone,
-      cellPhone: this.cellPhone
+      email: this.registerForm.controls["email"].value,
+      password: this.registerForm.controls["password"].value,
+      cnpj: this.registerForm.controls["cnpj"].value,
+      fantasyName: this.registerForm.controls["fantasyName"].value,
+      classification: this.registerForm.controls["classification"].value,
+      cep: this.registerForm.controls["cep"].value,
+      publicPlace: this.registerForm.controls["publicPlace"].value,
+      neighborhood: this.registerForm.controls["neighborhood"].value,
+      number: Number(this.registerForm.controls["number"].value),
+      county: this.registerForm.controls["county"].value,
+      state: this.registerForm.controls["state"].value,
+      complement: this.registerForm.controls["complement"].value,
+      phone: this.registerForm.controls["phone"].value,
+      cellPhone: this.registerForm.controls["cellPhone"].value
     };
 
-    this.signUpService.addSignUp(obj);
+    this.authService.addSignUp(obj);
   }
 }
