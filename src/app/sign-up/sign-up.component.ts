@@ -8,17 +8,12 @@ import { AuthService } from "src/services/auth.service";
 import { promise } from "protractor";
 import { CepService } from "src/services/cep.service";
 
-
 @Component({
   selector: "app-sign-up",
   templateUrl: "./sign-up.component.html",
   styleUrls: ["./sign-up.component.scss"]
 })
 export class SignUpComponent implements OnInit {
-  //TODO[vinicius]: transformas cep em um pipe.
-  result: SearchItem;
-  adrress: string[];
-
   registerForm: FormGroup;
   submitted = false;
   classifications: string[];
@@ -43,7 +38,6 @@ export class SignUpComponent implements OnInit {
     private formBuilder: FormBuilder,
     private cepService: CepService
   ) {
-    this.result = new SearchItem();
     this.classifications = ["", "Cooperativa", "Empresa Privada", "Município"];
   }
 
@@ -81,14 +75,16 @@ export class SignUpComponent implements OnInit {
         cellPhone: ["", Validators.required]
       },
       {
-        validator: [ConfirmPasswordValidator.MatchPassword, CNPJValidator.MatchCNPJ]
+        validator: [
+          ConfirmPasswordValidator.MatchPassword,
+          CNPJValidator.MatchCNPJ
+        ]
       }
     );
   }
 
   CEPSearch(value) {
-    let removedSpecialCaracter = value.replace(/[^a-zA-Z0-9 ]/g, "");
-    this.cepService.search(removedSpecialCaracter, this.registerForm);
+    this.cepService.search(value, this.registerForm);
   }
   get f() {
     return this.registerForm.controls;
