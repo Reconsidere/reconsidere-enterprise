@@ -1,6 +1,5 @@
 import { Observable } from "rxjs/internal/Observable";
 import { Component, OnInit } from "@angular/core";
-import { SearchItem } from "src/models/SearchItem";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ConfirmPasswordValidator } from "src/validations/confirm-password.validator";
 import { CNPJValidator } from "src/validations/valid-cnpj.validator";
