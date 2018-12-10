@@ -3,13 +3,22 @@ import { NgModule } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SignUpComponent } from './sign-up/sign-up.component';
 import { ROUTING, routes } from './app.routing';
 import {NgxMaskModule} from 'ngx-mask';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from 'src/services/auth.service';
 import { RouterModule } from '@angular/router';
+import { SignUpComponent } from './auth/sign-up/sign-up.component';
+import { ForgotComponent } from './auth/forgot/forgot.component';
+import { SignInComponent } from './auth/sign-in/sign-in.component';
+import { LogoutComponent } from './auth/logout/logout.component';
+import { CalendarComponent } from './calendar/calendar.component';
+import { AdminComponent } from './admin/admin.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { StartcenterComponent } from './startcenter/startcenter.component';
+import { SchedulerComponent } from './scheduler/scheduler.component';
+import { CepPipe } from '../pipes/cep.pipe';
 
 
 
@@ -17,6 +26,15 @@ import { RouterModule } from '@angular/router';
   declarations: [
     AppComponent,
     SignUpComponent,
+    ForgotComponent,
+    SignInComponent,
+    LogoutComponent,
+    CalendarComponent,
+    AdminComponent,
+    ToolbarComponent,
+    StartcenterComponent,
+    SchedulerComponent,
+    CepPipe,
   ],
   imports: [
     BrowserModule,
