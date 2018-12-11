@@ -1,13 +1,4 @@
-<div class="sidenav" #sidenav>
-    <mat-list>
-      <div class="align-self-end">
-        <mat-list-item class="option align-self-end" routerLink="/sign-up" routerLinkActive="active">
-          <span class="d-none d-lg-block">Conta</span>
-          <span class="spacer" *ngIf="show_title"></span>
-          <i class="fa fa-user-circle fa-2x"></i>
-        </mat-list-item>
-
-
-      </div>
-    </mat-list>
-  </div>
+<ol id="menu" class="breadcrumb">
+    <li><a class="option nav-link text-light" routerLink="/sign-up" routerLinkActive="active">Conta</a></li>
+    <li><a class="option nav-link text-light" routerLink="/vehicle-management" routerLinkActive="active">Veículo</a></li>
+</ol>

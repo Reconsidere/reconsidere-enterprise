@@ -22,6 +22,7 @@ import { SchedulerComponent } from './scheduler/scheduler.component';
 import { CepPipe } from '../pipes/cep.pipe';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { VehicleManagementComponent } from './vehicle-management/vehicle-management/vehicle-management.component';
 
 
 
@@ -39,6 +40,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     StartcenterComponent,
     SchedulerComponent,
     CepPipe,
+    VehicleManagementComponent,
   ],
   imports: [
     BrowserModule,
