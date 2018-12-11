@@ -5,8 +5,7 @@ import { ModuleWithProviders } from '@angular/core/src/metadata/ng_module';
 
 export const routes: Routes = [
     {
-        path: 'sign-up',
-        component: SignUpComponent
+        path: 'sign-up', component: SignUpComponent
     },
 ]
 export const ROUTING: ModuleWithProviders = RouterModule.forRoot(routes);

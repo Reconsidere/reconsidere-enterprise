@@ -1,3 +1,4 @@
+import { Location } from "./../../../models/location";
 import { Observable } from "rxjs/internal/Observable";
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
@@ -6,6 +7,7 @@ import { CNPJValidator } from "src/validations/valid-cnpj.validator";
 import { AuthService } from "src/services/auth.service";
 import { promise } from "protractor";
 import { CepService } from "src/services/cep.service";
+import { Organization } from "src/models/organization";
 
 @Component({
   selector: "app-sign-up",
@@ -13,105 +15,130 @@ import { CepService } from "src/services/cep.service";
   styleUrls: ["./sign-up.component.scss"]
 })
 export class SignUpComponent implements OnInit {
-  registerForm: FormGroup;
-  submitted = false;
+  isValidPassword: boolean;
+  isValidCNPJ: boolean;
   classifications: string[];
+  organization: Organization;
   email: string;
   password: string;
   confirmPassword: string;
   cnpj: string;
-  fantasyName: string;
+  company: string;
+  tradingName: string;
   classification: string;
   cep: string;
   publicPlace: string;
-  neighborhood: String;
-  number: string;
+  neighborhood: string;
+  number: number;
   county: string;
   state: string;
   complement: string;
   phone: string;
   cellPhone: string;
+  msgStatus: string;
+  showMessage: boolean;
 
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder,
     private cepService: CepService
   ) {
     this.classifications = ["", "Cooperativa", "Empresa Privada", "Município"];
+    this.organization = new Organization();
   }
 
-  ngOnInit() {
-    this.registerForm = this.formBuilder.group(
-      {
-        email: ["", [Validators.required, Validators.email]],
-        password: [
-          "",
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(20)
-          ]
-        ],
-        confirmPassword: [
-          "",
-          [
-            Validators.required,
-            Validators.minLength(6),
-            Validators.maxLength(20)
-          ]
-        ],
-        cnpj: ["", Validators.required],
-        fantasyName: ["", Validators.required],
-        classification: ["", Validators.required],
-        cep: ["", Validators.required],
-        publicPlace: ["", Validators.required],
-        neighborhood: ["", Validators.required],
-        number: ["", Validators.required],
-        county: ["", Validators.required],
-        state: ["", Validators.required],
-        complement: ["", Validators.required],
-        phone: ["", Validators.required],
-        cellPhone: ["", Validators.required]
-      },
-      {
-        validator: [
-          ConfirmPasswordValidator.MatchPassword,
-          CNPJValidator.MatchCNPJ
-        ]
-      }
-    );
-  }
+  ngOnInit() {}
 
   CEPSearch(value) {
-    this.cepService.search(value, this.registerForm);
+    this.cepService.search(value, this);
   }
-  get f() {
-    return this.registerForm.controls;
+
+  verifyPassword() {
+    this.isValidPassword = ConfirmPasswordValidator.MatchPassword(
+      this.password,
+      this.confirmPassword
+    );
+    setTimeout(function() {}.bind(this), 1000);
+  }
+
+  verifyCNPJ() {
+    this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.cnpj);
+    setTimeout(function() {}.bind(this), 1000);
+  }
+
+  closeAlertMessage() {
+    this.showMessage = false;
+  }
+  veryfyBeforeSave() {
+    if (
+      this.email == undefined ||
+      this.company == undefined ||
+      this.tradingName == undefined ||
+      this.password == undefined ||
+      this.cnpj == undefined ||
+      this.phone == undefined ||
+      this.cellPhone == undefined ||
+      this.classification == undefined ||
+      this.state == undefined ||
+      this.cep == undefined ||
+      this.publicPlace == undefined ||
+      this.neighborhood == undefined ||
+      this.number == undefined ||
+      this.county == undefined ||
+      this.company == undefined
+    ) {
+      this.msgStatus =
+        "Por favor, preencha os campos antes de salvar os dados!";
+      return false;
+    }
+    this.showMessage = this.isValidPassword = ConfirmPasswordValidator.MatchPassword(
+      this.password,
+      this.confirmPassword
+    );
+
+    if (!this.showMessage) {
+      this.msgStatus = "Verifique se as senhas são iguais.";
+      return false;
+    }
+
+    this.showMessage = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.cnpj);
+    if (!this.showMessage) {
+      this.msgStatus = "CNPJ incorreto.";
+      return false;
+    }
   }
 
   save() {
-    this.submitted = true;
-    if (this.registerForm.invalid) {
+    this.showMessage = true;
+    if (!this.veryfyBeforeSave()) {
       return;
     }
 
-    const saveObject = {
-      email: this.registerForm.controls["email"].value,
-      password: this.registerForm.controls["password"].value,
-      cnpj: this.registerForm.controls["cnpj"].value,
-      fantasyName: this.registerForm.controls["fantasyName"].value,
-      classification: this.registerForm.controls["classification"].value,
-      cep: this.registerForm.controls["cep"].value,
-      publicPlace: this.registerForm.controls["publicPlace"].value,
-      neighborhood: this.registerForm.controls["neighborhood"].value,
-      number: Number(this.registerForm.controls["number"].value),
-      county: this.registerForm.controls["county"].value,
-      state: this.registerForm.controls["state"].value,
-      complement: this.registerForm.controls["complement"].value,
-      phone: this.registerForm.controls["phone"].value,
-      cellPhone: this.registerForm.controls["cellPhone"].value
-    };
-
-    this.authService.addSignUp(saveObject);
+    try {
+      this.organization.email = this.email;
+      this.organization.company = this.company;
+      this.organization.tradingName = this.tradingName;
+      this.organization.password = this.password;
+      this.organization.cnpj = this.cnpj;
+      this.organization.phone = Number(this.phone);
+      this.organization.cellPhone = Number(this.cellPhone);
+      this.organization.classification = this.classification;
+      this.organization.location = new Location(
+        "",
+        this.state,
+        0,
+        0,
+        this.cep,
+        this.publicPlace,
+        this.neighborhood,
+        this.number,
+        this.county,
+        this.company
+      );
+      this.authService.add(this.organization);
+      this.msgStatus = "Dados salvos com sucesso";
+    } catch (error) {
+      this.msgStatus = "Erro ao salvar!";
+      console.log(error);
+    }
   }
 }

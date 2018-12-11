@@ -1,13 +1,13 @@
 import {AbstractControl} from '@angular/forms';
 export class CNPJValidator {
-  static MatchCNPJ(control: AbstractControl) {
-    let cnpj = control.get('cnpj').value.replace(/[^\d]+/g,'');
+  static MatchCNPJ(value: string) {
+    let cnpj = value.replace(/[^\d]+/g,'');
 
     if(cnpj ==''){
-      control.get('cnpj').setErrors( {ConfirmCNPJ: true} );
+      return false;
     }
     if(cnpj.length != 14){
-      control.get('cnpj').setErrors( {ConfirmCNPJ: true} );
+      return false;
     }
     if (cnpj == "00000000000000" ||
     cnpj == "11111111111111" ||
@@ -19,7 +19,8 @@ export class CNPJValidator {
     cnpj == "77777777777777" ||
     cnpj == "88888888888888" ||
     cnpj == "99999999999999")
-    control.get('cnpj').setErrors( {CNPJ: true} );
+    return false;
+
 
     // Valida DVs
   let range = cnpj.length - 2
@@ -29,14 +30,14 @@ export class CNPJValidator {
   let pos = range - 7;
   let i;
   for (i = range; i >= 1; i--) {
-    sum += numbers.charAt(range - i) * pos--;
+    sum += Number(numbers.charAt(range - i)) * pos--;
     if (pos < 2){
       pos = 9;
     }
   }
   let result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-  if (result != digits.charAt(0)){
-      control.get('cnpj').setErrors( {ConfirmCNPJ: true} );
+  if (result != Number(digits.charAt(0))){
+    return false;
   }
 
   range = range + 1;
@@ -44,16 +45,17 @@ export class CNPJValidator {
   sum = 0;
   pos = range - 7;
   for (i = range; i >= 1; i--) {
-    sum += numbers.charAt(range - i) * pos--;
+    sum += Number(numbers.charAt(range - i)) * pos--;
     if (pos < 2){
       pos = 9;
     }
   }
   result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-  if (result != digits.charAt(1)){
-    control.get('cnpj').setErrors( {ConfirmCNPJ: true} );
+  if (result != Number(digits.charAt(1))){
+    return false;
   }
 
-  return null
-  }
+
+  return true;
+}
 }

@@ -8,12 +8,11 @@ import 'rxjs/add/operator/map';
   providedIn: 'root'
 })
 export class AuthService {
-
   result: any;
   constructor(private http: HttpClient) { }
 
-  addSignUp(obj) {
-    const uri = 'http://localhost:3000/signUp/add';
+  add(obj) {
+    const uri = 'http://localhost:3000/organization/add';
     this
       .http
       .post(uri, obj)
@@ -22,7 +21,7 @@ export class AuthService {
   }
 
   getSignUp() {
-    const uri = 'http://localhost:3000/signUp';
+    const uri = 'http://localhost:3000/organization';
     return this
       .http
       .get(uri)
@@ -32,7 +31,7 @@ export class AuthService {
   }
 
   editSignUp(id) {
-    const uri = 'http://localhost:3000/signUp/edit/' + id;
+    const uri = 'http://localhost:3000/organization/edit/' + id;
     return this
       .http
       .get(uri)

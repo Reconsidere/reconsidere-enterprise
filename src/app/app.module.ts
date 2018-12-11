@@ -1,3 +1,4 @@
+import { MatListModule } from '@angular/material/list';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
@@ -19,6 +20,9 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { StartcenterComponent } from './startcenter/startcenter.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { CepPipe } from '../pipes/cep.pipe';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+
 
 
 
@@ -45,7 +49,12 @@ import { CepPipe } from '../pipes/cep.pipe';
     FormsModule,
     BrowserModule,
     RouterModule.forRoot(routes),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatListModule,
+    MatSidenavModule,
+    BrowserAnimationsModule,
+
+
 
   ],
 

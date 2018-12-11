@@ -10,6 +10,7 @@ export class Organization {
   tradingName: string;
   active: boolean;
   phone: number;
+  cellPhone: number;
   class: string;
   creationDate: Date;
   activationDate: Date;
@@ -17,5 +18,7 @@ export class Organization {
   suports: [Material];
   location: Location;
   users: [User];
-
+  email: string;
+  password: string;
+  classification: string;
 }

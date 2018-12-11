@@ -1,0 +1,24 @@
+/* The sidenav */
+.sidenav {
+  height: 100%;
+  width: 5%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: springgreen;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  padding-top: 20px;
+}
+
+.option:hover {
+  background-color: yellow;
+}
+
+.common
+{
+    float: none;
+    display: table-cell;
+    vertical-align: bottom;
+}

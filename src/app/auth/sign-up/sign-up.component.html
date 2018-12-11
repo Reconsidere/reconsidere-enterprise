@@ -1,63 +1,35 @@
+<app-toolbar></app-toolbar>
 <div class="container">
-  <form [formGroup]="registerForm">
+
+      <div *ngIf="showMessage ==true" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>Atenção: </strong> {{msgStatus}}
+          <button type="button" (click)="closeAlertMessage()"  class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+
+
+  <form ngNativeValidate >
     <div class="form-group">
-      <label for="email">Email</label>
-      <input
-        formControlName="email"
-        [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
-        name="email"
-        type="email"
-        class="form-control"
-        id="email"
-        aria-describedby="email"
-        placeholder="usuario@email.com"
-      />
-      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-        <div *ngIf="f.email.errors.email">Email inválido</div>
-        <div *ngIf="f.email.errors.required">Campo obrigatório</div>
-      </div>
+      <label  for="email">Email</label>
+      <input required [(ngModel)]="email" name="email" type="email" class="form-control" id="email"
+        aria-describedby="email" placeholder="usuario@email.com" />
     </div>
     <div class="row">
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="password">Senha</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-            formControlName="password"
-            name="password"
-            type="password"
-            class="form-control"
-            id="password"
-            aria-describedby="password"
-          />
-          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Campo obrigatório</div>
-            <div *ngIf="f.password.errors.minlength">
-              Senha deve conter no mínimo 6 caracteres, e no máximo 20
-              caracteres
-            </div>
-          </div>
+          <input minlength="6" maxlength="20" required [(ngModel)]="password" name="password" type="password" class="form-control" id="password"
+            aria-describedby="password" />
         </div>
       </div>
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="confirmPassword">Confirmação de senha</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.confirmPassword.errors }"
-            formControlName="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            class="form-control"
-            id="confirmPassword"
-            aria-describedby="confirmPassword"
-          />
-          <div
-            class="invalid-feedback"
-            *ngIf="
-              registerForm.get('confirmPassword').errors &&
-              registerForm.get('confirmPassword').errors.ConfirmPassword
-            "
-          >
+          <input  minlength="6" maxlength="20" required [(ngModel)]="confirmPassword" name="confirmPassword" type="password" class="form-control" id="confirmPassword"
+            aria-describedby="confirmPassword" (blur)="verifyPassword()" />
+          <div *ngIf="isValidPassword ==false" class="input-group is-invalid">
             Senha não coincide
           </div>
         </div>
@@ -65,71 +37,38 @@
     </div>
     <div class="form-group">
       <label for="cnpj">CNPJ</label>
-      <input
-        [ngClass]="{ 'is-invalid': submitted && f.cnpj.errors }"
-        formControlName="cnpj"
-        name="cnpj"
-        type="text"
-        class="form-control"
-        id="cnpj"
-        aria-describedby="cnpj"
-        placeholder="00.000.000/0000-00"
-        mask="00.000.000/0000-00"
-      />
-      <div
-        class="invalid-feedback"
-        *ngIf="
-          registerForm.get('cnpj').errors &&
-          registerForm.get('cnpj').errors.ConfirmCNPJ
-        "
-      >
-        CNPJ inválido
-      </div>
+      <input required [(ngModel)]="cnpj" name="cnpj" type="text" class="form-control" id="cnpj" aria-describedby="cnpj"
+        placeholder="00.000.000/0000-00" mask="00.000.000/0000-00" (blur)="verifyCNPJ()" />
+        <div *ngIf="isValidCNPJ ==false" class="input-group is-invalid">
+          CNPJ inválido
+        </div>
     </div>
 
     <div class="row">
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
-          <label for="fantasyName">Nome fantasia</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.fantasyName.errors }"
-            formControlName="fantasyName"
-            name="fantasyName"
-            type="text"
-            class="form-control"
-            id="fantasyName"
-            aria-describedby="fantasyName"
-          />
-          <div
-            *ngIf="submitted && f.fantasyName.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.fantasyName.errors.required">Campo obrigatório</div>
-          </div>
+          <label for="company">Nome</label>
+          <input required [(ngModel)]="company" name="company" type="text" class="form-control" id="company"
+            aria-describedby="company" />
+        </div>
+      </div>
+
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="tradingName">Nome fantasia</label>
+          <input required [(ngModel)]="tradingName" name="tradingName" type="text" class="form-control" id="tradingName"
+            aria-describedby="tradingName" />
         </div>
       </div>
 
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="classification">Classificação</label>
-          <select
-            [ngClass]="{ 'is-invalid': submitted && f.classification.errors }"
-            formControlName="classification"
-            name="classification"
-            class="form-control"
-          >
+          <select required [(ngModel)]="classification" name="classification" class="form-control">
             <option id="classification" *ngFor="let item of classifications">{{
               item
-            }}</option>
+              }}</option>
           </select>
-          <div
-            *ngIf="submitted && f.classification.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.classification.errors.required">
-              Campo obrigatório
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -138,24 +77,9 @@
       <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="cep">CEP</label>
-          <input
-            [value]="registerForm.get('cep').value"
-            [ngClass]="{ 'is-invalid': submitted && f.cep.errors }"
-            formControlName="cep"
-            cep="ngModel"
-            name="cep"
-            type="text"
-            class="form-control"
-            id="cep"
-            aria-describedby="cep"
-            placeholder="00.000-000"
-            mask="00.000-000"
-            #cep
-            (blur)="CEPSearch(cep.value)"
-          />
-          <div *ngIf="submitted && f.cep.errors" class="invalid-feedback">
-            <div *ngIf="f.cep.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="cep" cep="ngModel" name="cep"
+            type="text" class="form-control" id="cep" aria-describedby="cep" placeholder="00.000-000" mask="00.000-000"
+            #cepVal (blur)="CEPSearch(cepVal.value)" />
         </div>
       </div>
     </div>
@@ -163,59 +87,22 @@
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="publicPlace">Logradouro</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.publicPlace.errors }"
-            formControlName="publicPlace"
-            name="publicPlace"
-            type="text"
-            class="form-control"
-            id="publicPlace"
-            aria-describedby="publicPlace"
-          />
-          <div
-            *ngIf="submitted && f.publicPlace.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.publicPlace.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="publicPlace" name="publicPlace" type="text" class="form-control" id="publicPlace"
+            aria-describedby="publicPlace" />
         </div>
       </div>
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="neighborhood">Bairro</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.neighborhood.errors }"
-            formControlName="neighborhood"
-            name="neighborhood"
-            type="text"
-            class="form-control"
-            id="neighborhood"
-            aria-describedby="neighborhood"
-          />
-          <div
-            *ngIf="submitted && f.neighborhood.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.neighborhood.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="neighborhood" name="neighborhood" type="text" class="form-control"
+            id="neighborhood" aria-describedby="neighborhood" />
         </div>
       </div>
       <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="number">Número</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.number.errors }"
-            formControlName="number"
-            name="number"
-            type="text"
-            class="form-control"
-            id="number"
-            numbers-only
-            aria-describedby="number"
-          />
-          <div *ngIf="submitted && f.number.errors" class="invalid-feedback">
-            <div *ngIf="f.number.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="number" name="number" type="number" class="form-control" id="number"
+            numbers-only aria-describedby="number" />
         </div>
       </div>
     </div>
@@ -223,36 +110,15 @@
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="county">Município</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.county.errors }"
-            formControlName="county"
-            name="county"
-            type="text"
-            class="form-control"
-            id="county"
-            aria-describedby="county"
-          />
-          <div *ngIf="submitted && f.county.errors" class="invalid-feedback">
-            <div *ngIf="f.county.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="county" name="county" type="text" class="form-control" id="county"
+            aria-describedby="county" />
         </div>
       </div>
       <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="state">UF</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.state.errors }"
-            formControlName="state"
-            name="state"
-            type="text"
-            class="form-control"
-            id="state"
-            numbers-only
-            aria-describedby="state"
-          />
-          <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
-            <div *ngIf="f.state.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="state" name="state" type="text" class="form-control" id="state"
+            numbers-only aria-describedby="state" />
         </div>
       </div>
     </div>
@@ -260,69 +126,27 @@
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="complement">Complemento</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.complement.errors }"
-            formControlName="complement"
-            name="complement"
-            type="text"
-            class="form-control"
-            id="complement"
-            aria-describedby="complement"
-          />
-          <div
-            *ngIf="submitted && f.complement.errors"
-            class="invalid-feedback"
-          >
-            <div *ngIf="f.complement.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="complement" name="complement" type="text" class="form-control" id="complement"
+            aria-describedby="complement" />
         </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="phone">Telefone</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.phone.errors }"
-            formControlName="phone"
-            name="phone"
-            type="text"
-            class="form-control"
-            id="phone"
-            aria-describedby="phone"
-            placeholder="(00) 0000-0000"
-            mask="(00) 0000-0000"
-          />
-        </div>
-        <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
-          <div *ngIf="f.phone.errors.required">Campo obrigatório</div>
+          <input required [(ngModel)]="phone" name="phone" type="text" class="form-control" id="phone"
+            aria-describedby="phone" placeholder="(00) 0000-0000" mask="(00) 0000-0000" />
         </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="cellPhone">Celular</label>
-          <input
-            [ngClass]="{ 'is-invalid': submitted && f.cellPhone.errors }"
-            formControlName="cellPhone"
-            name="cellPhone"
-            type="text"
-            class="form-control"
-            id="cellPhone"
-            aria-describedby="cellPhone"
-            placeholder="(00) 00000-0000"
-            mask="(00) 00000-0000"
-          />
-          <div *ngIf="submitted && f.cellPhone.errors" class="invalid-feedback">
-            <div *ngIf="f.cellPhone.errors.required">Campo obrigatório</div>
-          </div>
+          <input required [(ngModel)]="cellPhone" name="cellPhone" type="text" class="form-control" id="cellPhone"
+            aria-describedby="cellPhone" placeholder="(00) 00000-0000" mask="(00) 00000-0000" />
         </div>
       </div>
     </div>
     <div>
-      <button
-        type="submit"
-        id="save"
-        (click)="save()"
-        class="btn btn-primary col-md-12"
-      >
+      <button type="submit" id="save" (click)="save()" class="btn btn-primary col-md-12">
         Salvar
       </button>
     </div>

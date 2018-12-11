@@ -1,6 +1,7 @@
+import { Location } from './../models/location';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { SignUpComponent } from 'src/app/auth/sign-up/sign-up.component';
 
 @Injectable({
   providedIn: "root"
@@ -9,18 +10,18 @@ export class CepService {
   private adrress: string[];
   constructor(private http: HttpClient) { }
 
-  search(cep: string, registerForm: FormGroup) {
-    let value = cep.replace(/[^a-zA-Z0-9 ]/g, "");
+  search(value: string, component: SignUpComponent) {
+    value = value.replace(/[^a-zA-Z0-9 ]/g, "");
     return this.http
       .get(`https://viacep.com.br/ws/${value}/json/`)
-      .subscribe(data => this.convertToCEP(data, registerForm), error => console.log(error));
+      .subscribe(data => this.convertToCEP(data, component), error => console.log(error));
   }
-  private convertToCEP(cepNaResposta, registerForm) {
-    registerForm.controls["cep"].setValue(cepNaResposta.cep);
-    registerForm.controls["publicPlace"].setValue(cepNaResposta.logradouro);
-    registerForm.controls["complement"].setValue(cepNaResposta.complemento);
-    registerForm.controls["neighborhood"].setValue(cepNaResposta.bairro);
-    registerForm.controls["county"].setValue(cepNaResposta.localidade);
-    registerForm.controls["state"].setValue(cepNaResposta.uf);
+  private convertToCEP(cepNaResposta, component) {
+    component.cep = cepNaResposta.cep;
+    component.publicPlace = cepNaResposta.logradouro;
+    component.complement = cepNaResposta.complemento;
+    component.neighborhood = cepNaResposta.bairro;
+    component.county = cepNaResposta.localidade;
+    component.state = cepNaResposta.uf;
   }
 }
