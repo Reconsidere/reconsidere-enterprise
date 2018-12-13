@@ -42,7 +42,7 @@ export class SignUpComponent implements OnInit {
     private authService: AuthService,
     private cepService: CepService
   ) {
-    this.classifications = ["", "Cooperativa", "Empresa Privada", "Município"];
+    this.classifications = ['', 'Cooperativa', 'Empresa Privada', 'Município'];
     this.organization = new Organization();
   }
 
@@ -70,24 +70,24 @@ export class SignUpComponent implements OnInit {
   }
   veryfyBeforeSave() {
     if (
-      this.email == undefined ||
-      this.company == undefined ||
-      this.tradingName == undefined ||
-      this.password == undefined ||
-      this.cnpj == undefined ||
-      this.phone == undefined ||
-      this.cellPhone == undefined ||
-      this.classification == undefined ||
-      this.state == undefined ||
-      this.cep == undefined ||
-      this.publicPlace == undefined ||
-      this.neighborhood == undefined ||
-      this.number == undefined ||
-      this.county == undefined ||
-      this.company == undefined
+      this.email === undefined ||
+      this.company === undefined ||
+      this.tradingName === undefined ||
+      this.password === undefined ||
+      this.cnpj === undefined ||
+      this.phone === undefined ||
+      this.cellPhone === undefined ||
+      this.classification === undefined ||
+      this.state === undefined ||
+      this.cep === undefined ||
+      this.publicPlace === undefined ||
+      this.neighborhood === undefined ||
+      this.number === undefined ||
+      this.county === undefined ||
+      this.company === undefined
     ) {
       this.msgStatus =
-        "Por favor, preencha os campos antes de salvar os dados!";
+        'Por favor, preencha os campos antes de salvar os dados!';
       return false;
     }
     this.showMessage = this.isValidPassword = ConfirmPasswordValidator.MatchPassword(
@@ -96,14 +96,16 @@ export class SignUpComponent implements OnInit {
     );
 
     if (!this.showMessage) {
-      this.msgStatus = "Verifique se as senhas são iguais.";
+      this.msgStatus = 'Verifique se as senhas são iguais.';
       return false;
     }
 
     this.showMessage = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.cnpj);
     if (!this.showMessage) {
-      this.msgStatus = "CNPJ incorreto.";
+      this.msgStatus = 'CNPJ incorreto.';
       return false;
+    } else {
+      return true;
     }
   }
 
@@ -123,7 +125,7 @@ export class SignUpComponent implements OnInit {
       this.organization.cellPhone = Number(this.cellPhone);
       this.organization.classification = this.classification;
       this.organization.location = new Location(
-        "",
+        '',
         this.state,
         0,
         0,
@@ -135,9 +137,9 @@ export class SignUpComponent implements OnInit {
         this.company
       );
       this.authService.add(this.organization);
-      this.msgStatus = "Dados salvos com sucesso";
+      this.msgStatus = 'Dados salvos com sucesso';
     } catch (error) {
-      this.msgStatus = "Erro ao salvar!";
+      this.msgStatus = 'Erro ao salvar!';
       console.log(error);
     }
   }

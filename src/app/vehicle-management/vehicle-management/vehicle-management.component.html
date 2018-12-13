@@ -1,3 +1,162 @@
-<p>
-  vehicle-management works!
-</p>
+<app-toolbar></app-toolbar>
+<div class="container">
+    <div
+    *ngIf="showMessage == true"
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
+  >
+    <strong>Atenção: </strong> {{ msgStatus }}
+    <button
+      type="button"
+      (click)="closeAlertMessage()"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <table class="table table-hover table-striped">
+      <thead class="thead-light">
+        <tr>
+          <th>Placa</th>
+          <th>Capacidade de Carga</th>
+          <th>Combustível</th>
+          <th>Tipo Combustível</th>
+          <th>Peso do Veículo Vazio</th>
+          <th>Ativo</th>
+          <th>Detalhes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let vehicle of loadVehicles(); let i= index">
+          <td>{{vehicle.carPlate}}</td>
+          <td>{{vehicle.weightCapacity}}</td>
+          <td>{{vehicle.emptyVehicleWeight}}</td>
+          <td>{{vehicle.fuel}}</td>
+          <td>{{vehicle.typeFuel}}</td>
+          <td>{{vehicle.active}}</td>
+          <td>
+              <i (click)="loadValuesForEdit()"  class="fas fa-edit"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  <form ngNativeValidate>
+    <div class="row">
+      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="carPlate">Placa</label>
+          <input
+            required
+            [(ngModel)]="carPlate"
+            name="carPlate"
+            type="text"
+            class="form-control"
+            pattern="[a-zA-Z]{3}-[0-9]{4}"
+            id="carPlate"
+            aria-describedby="carPlate"
+            placeholder="AAA-0000"
+            mask="SSS-0000"
+          />
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="weightCapacity">Capacidade de Carga</label>
+          <input
+            required
+            [(ngModel)]="weightCapacity"
+            [value]="weightCapacity | weight"
+            name="weightCapacity"
+            type="text"
+            class="form-control"
+            id="weightCapacity"
+            aria-describedby="weightCapacity"
+            placeholder="0.0"
+            pattern="[0-9]+([\.,][0-9]+)?"
+          />
+        </div>
+      </div>
+      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label for="fuel">Combustível</label>
+            <input
+              required
+              [(ngModel)]="fuel"
+              name="fuel"
+              type="number"
+              class="form-control"
+              pattern="[a-zA-Z]{3}-[0-9]{4}"
+              id="fuel"
+              aria-describedby="fuel"
+              placeholder="0.0"
+            />
+          </div>
+        </div>
+    </div>
+    <div class="row">
+
+      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="fuel">Tipo Combustível</label>
+          <select
+            required
+            [(ngModel)]="typeFuel"
+            name="typeFuel"
+            class="form-control"
+          >
+            <option id="typeFuel" *ngFor="let item of typesFuel">{{
+              item
+            }}</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label for="weightCapacity">Peso do Veículo Vazio</label>
+            <input
+              required
+              [(ngModel)]="emptyVehicleWeight"
+              [value]="emptyVehicleWeight | weight"
+              name="emptyVehicleWeight"
+              type="text"
+              class="form-control"
+              id="emptyVehicleWeight"
+              aria-describedby="emptyVehicleWeight"
+              placeholder="0.0"
+              pattern="[0-9]+([\.,][0-9]+)?"
+            />
+          </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-check form-group">
+          <input
+            [(ngModel)]="active"
+            name="active"
+            class="form-control"
+            type="checkbox"
+            class="form-check-input"
+            id="active"
+          />
+          <label class="form-check-label" for="active">Ativo</label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <button
+        type="submit"
+        id="save"
+        (click)="save()"
+        class="btn btn-primary col-md-12"
+      >
+        Salvar
+      </button>
+    </div>
+  </form>
+</div>

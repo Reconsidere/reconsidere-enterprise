@@ -1,6 +1,7 @@
 import { Material } from "./material";
 import {Location} from "./location";
 import { User } from "./user";
+import { Vehicle } from "./vehicle";
 
 export class Organization {
 
@@ -21,4 +22,5 @@ export class Organization {
   email: string;
   password: string;
   classification: string;
+  vehicles: [Vehicle];
 }

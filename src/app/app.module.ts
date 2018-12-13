@@ -23,6 +23,7 @@ import { CepPipe } from '../pipes/cep.pipe';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { VehicleManagementComponent } from './vehicle-management/vehicle-management/vehicle-management.component';
+import { WeightPipe } from '../pipes/weight.pipe';
 
 
 
@@ -41,6 +42,7 @@ import { VehicleManagementComponent } from './vehicle-management/vehicle-managem
     SchedulerComponent,
     CepPipe,
     VehicleManagementComponent,
+    WeightPipe,
   ],
   imports: [
     BrowserModule,

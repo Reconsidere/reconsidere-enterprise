@@ -53,8 +53,12 @@ var OrganizationSchema = new mongoose.Schema({
   ],
   vehicles: [
     {
-      plate: String,
-      capacity: { type: Number, min: 0, max: 30000 }
+      carPlate: String,
+      emptyVehicleWeight: Number,
+      weightCapacity: Number,
+      active: Boolean,
+      fuel: Number,
+      typeFuel: String,
     }
   ],
   calendars: [
@@ -70,21 +74,20 @@ var OrganizationSchema = new mongoose.Schema({
   ]
 });
 
-
-var organizationModel = mongoose.model("Organization", OrganizationSchema);
+var organizationModel = mongoose.model('Organization', OrganizationSchema);
 
 const express = require('express');
-path = require('path'),
-bodyParser = require('body-parser'),
-cors = require('cors');
+(path = require('path')),
+  (bodyParser = require('body-parser')),
+  (cors = require('cors'));
 var organizations = express.Router();
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const URL = "mongodb://eowyn-reconsidere-enterprise:27017/organization";
-const TestURL = "mongodb://localhost:27017/eowyn-reconsidere-enterprise";
+const URL = 'mongodb://eowyn-reconsidere-enterprise:27017/organization';
+const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
 const options = {
   autoIndex: false, // Don't build indexes
   reconnectTries: 30, // Retry up to 30 times
@@ -92,20 +95,26 @@ const options = {
   poolSize: 10, // Maintain up to 10 socket connections
   // If not connected, return errors immediately rather than waiting for reconnect
   bufferMaxEntries: 0
-}
+};
 
-mongoose.connect(TestURL,options).catch(err => {
-  console.error('Erro ao conectar no banco: ' + err.stack);
-});
+mongoose
+  .connect(
+    TestURL,
+    options
+  )
+  .catch(err => {
+    console.error('Erro ao conectar no banco: ' + err.stack);
+  });
 
-organizations.route('/add').post(function (req, res) {
+organizations.route('/add').post(function(req, res) {
   var organization = new organizationModel(req.body);
-   organization.save()
+  organization
+    .save()
     .then(item => {
-    res.status(200).json({'Organizations': 'added successfully'});
+      res.status(200).json({ Organizations: 'added successfully' });
     })
     .catch(err => {
-    res.status(400).send("unable to save to database" + err.stack);
+      res.status(400).send('unable to save to database' + err.stack);
     });
 });
 
@@ -167,7 +176,5 @@ organizations.route('/add').post(function (req, res) {
 //    });
 // });
 
-
 app.use('/organization', organizations);
 module.exports = app;
-

@@ -1,3 +1,4 @@
+import { Organization } from 'src/models/organization';
 import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -20,7 +21,7 @@ export class AuthService {
         console.log('Done'));
   }
 
-  getSignUp() {
+  get() {
     const uri = 'http://localhost:3000/organization';
     return this
       .http
