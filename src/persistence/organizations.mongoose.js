@@ -118,17 +118,17 @@ organizations.route('/add').post(function(req, res) {
     });
 });
 
-// Defined get data(index or listing) route
-// signUpRoutes.route('/').get(function (req, res) {
-//   SignUp.find(function (err, signUps){
-//    if(err){
-//      console.log(err);
-//    }
-//    else {
-//      res.json(signUps);
-//    }
-//  });
-// });
+//Defined get data(index or listing) route
+organizations.route('/').get(function (req, res) {
+  organizationModel.find(function (err, org){
+   if(err){
+     console.log(err);
+   }
+   else {
+     res.json(org);
+   }
+ });
+});
 
 // // Defined edit route
 // signUpRoutes.route('/edit/:id').get(function (req, res) {

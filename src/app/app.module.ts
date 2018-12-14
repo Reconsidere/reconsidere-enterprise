@@ -23,7 +23,7 @@ import { CepPipe } from '../pipes/cep.pipe';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { VehicleManagementComponent } from './vehicle-management/vehicle-management/vehicle-management.component';
-import { WeightPipe } from '../pipes/weight.pipe';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 
@@ -42,7 +42,6 @@ import { WeightPipe } from '../pipes/weight.pipe';
     SchedulerComponent,
     CepPipe,
     VehicleManagementComponent,
-    WeightPipe,
   ],
   imports: [
     BrowserModule,
@@ -57,6 +56,7 @@ import { WeightPipe } from '../pipes/weight.pipe';
     MatListModule,
     MatSidenavModule,
     BrowserAnimationsModule,
+    NgxPaginationModule
 
 
 

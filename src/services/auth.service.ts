@@ -1,3 +1,4 @@
+import { Vehicle } from './../models/vehicle';
 import { Organization } from 'src/models/organization';
 import { Injectable } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -25,10 +26,8 @@ export class AuthService {
     const uri = 'http://localhost:3000/organization';
     return this
       .http
-      .get(uri)
-      .map(res => {
-        return res;
-      });
+      .get<Organization[]>(uri)
+      .pipe();
   }
 
   editSignUp(id) {

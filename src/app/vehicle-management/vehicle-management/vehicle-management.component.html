@@ -1,6 +1,6 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-    <div
+  <div
     *ngIf="showMessage == true"
     class="alert alert-warning alert-dismissible fade show"
     role="alert"
@@ -17,36 +17,50 @@
     </button>
   </div>
 
-  <table class="table table-hover table-striped">
+  <div class="tableVehicles">
+    <table class="table table-hover table-striped">
       <thead class="thead-light">
         <tr>
           <th>Placa</th>
           <th>Capacidade de Carga</th>
+          <th>Peso do Veículo Vazio</th>
           <th>Combustível</th>
           <th>Tipo Combustível</th>
-          <th>Peso do Veículo Vazio</th>
           <th>Ativo</th>
-          <th>Detalhes</th>
+          <th>Editar</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vehicle of loadVehicles(); let i= index">
-          <td>{{vehicle.carPlate}}</td>
-          <td>{{vehicle.weightCapacity}}</td>
-          <td>{{vehicle.emptyVehicleWeight}}</td>
-          <td>{{vehicle.fuel}}</td>
-          <td>{{vehicle.typeFuel}}</td>
-          <td>{{vehicle.active}}</td>
-          <td>
-              <i (click)="loadValuesForEdit()"  class="fas fa-edit"></i>
-          </td>
+        <tr
+          *ngFor="
+            let item of (vehicles
+              | paginate: { itemsPerPage: 2, currentPage: p });
+            let i = index
+          "
+        >
+          <td>{{ item.carPlate }}</td>
+          <td>{{ item.weightCapacity }}</td>
+          <td>{{ item.emptyVehicleWeight }}</td>
+          <td>{{ item.fuel }}</td>
+          <td>{{ item.typeFuel }}</td>
+          <td>{{ item.active }}</td>
+          <td><i (click)="loadValuesForEdit()" class="fa fa-edit"></i></td>
         </tr>
       </tbody>
+      <pagination-controls
+        (pageChange)="p = $event"
+        previousLabel="Anterior"
+        nextLabel="Próxima"
+        autoHide="true"
+        responsive="true"
+        screenReaderPaginationLabel="Pagination"
+      ></pagination-controls>
     </table>
+  </div>
 
   <form ngNativeValidate>
     <div class="row">
-      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="carPlate">Placa</label>
           <input
@@ -63,43 +77,40 @@
           />
         </div>
       </div>
-      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="weightCapacity">Capacidade de Carga</label>
           <input
             required
             [(ngModel)]="weightCapacity"
-            [value]="weightCapacity | weight"
+            [value]="weightCapacity"
             name="weightCapacity"
-            type="text"
+            type="number"
             class="form-control"
             id="weightCapacity"
             aria-describedby="weightCapacity"
             placeholder="0.0"
-            pattern="[0-9]+([\.,][0-9]+)?"
           />
         </div>
       </div>
-      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="fuel">Combustível</label>
-            <input
-              required
-              [(ngModel)]="fuel"
-              name="fuel"
-              type="number"
-              class="form-control"
-              pattern="[a-zA-Z]{3}-[0-9]{4}"
-              id="fuel"
-              aria-describedby="fuel"
-              placeholder="0.0"
-            />
-          </div>
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="fuel">Combustível</label>
+          <input
+            required
+            [(ngModel)]="fuel"
+            name="fuel"
+            type="number"
+            class="form-control"
+            id="fuel"
+            aria-describedby="fuel"
+            placeholder="0.0"
+          />
         </div>
+      </div>
     </div>
     <div class="row">
-
-      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="fuel">Tipo Combustível</label>
           <select
@@ -114,23 +125,22 @@
           </select>
         </div>
       </div>
-      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="form-group">
-            <label for="weightCapacity">Peso do Veículo Vazio</label>
-            <input
-              required
-              [(ngModel)]="emptyVehicleWeight"
-              [value]="emptyVehicleWeight | weight"
-              name="emptyVehicleWeight"
-              type="text"
-              class="form-control"
-              id="emptyVehicleWeight"
-              aria-describedby="emptyVehicleWeight"
-              placeholder="0.0"
-              pattern="[0-9]+([\.,][0-9]+)?"
-            />
-          </div>
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="weightCapacity">Peso do Veículo Vazio</label>
+          <input
+            required
+            [(ngModel)]="emptyVehicleWeight"
+            [value]="emptyVehicleWeight"
+            name="emptyVehicleWeight"
+            type="number"
+            class="form-control"
+            id="emptyVehicleWeight"
+            aria-describedby="emptyVehicleWeight"
+            placeholder="0.0"
+          />
         </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">

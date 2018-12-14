@@ -2,6 +2,7 @@ import { Organization } from './../../../models/organization';
 import { Vehicle } from './../../../models/vehicle';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/services/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-vehicle-management',
@@ -20,7 +21,9 @@ export class VehicleManagementComponent implements OnInit {
   msgStatus: string;
   showMessage: boolean;
   vehicle: Vehicle;
-  vehicles: Vehicle[];
+  vehicles: Vehicle[] = [];
+  p = 1;
+  //result$: Observable<Organization[]>;
 
   constructor(private authService: AuthService) {
     this.typesFuel = [
@@ -35,13 +38,20 @@ export class VehicleManagementComponent implements OnInit {
     this.vehicle = new Vehicle();
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.authService.get().subscribe(x => this.loadVehicles(x));
+  }
+  loadVehicles(value) {
+    for (let items of value) {
+      for (let item of items.vehicles) {
+        this.vehicles.push(item);
+      }
+    }
+  }
 
   closeAlertMessage() {
     this.showMessage = false;
   }
-
-  loadVehicles() {}
 
   veryfyBeforeSave() {
     if (
@@ -58,10 +68,7 @@ export class VehicleManagementComponent implements OnInit {
     }
   }
 
-  loadValuesForEdit() {
-
-  }
-
+  loadValuesForEdit() {}
 
   save() {
     this.showMessage = true;
@@ -69,8 +76,8 @@ export class VehicleManagementComponent implements OnInit {
       return;
     }
     try {
-    //modificar esta forma de cadastrar a empresa,trazer uma existente
-    //para manter vinculo e não cruzar dados
+      //modificar esta forma de cadastrar a empresa,trazer uma existente
+      //para manter vinculo e não cruzar dados
       const organization = new Organization();
       this.vehicle.active = this.active;
       this.vehicle.carPlate = this.carPlate;
