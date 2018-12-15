@@ -18,9 +18,35 @@
   </div>
 
   <div class="tableVehicles">
-    <table class="table table-hover table-striped">
-      <thead class="thead-light">
-        <tr>
+    <table class="table table-hover table-sm">
+      <thead>
+        <tr id="buttonAdd">
+          <th colspan="7">
+            <button
+              *ngIf="this.showForm == false"
+              type="button"
+              (click)="openForm()"
+              class="btn btn-primary"
+              data-toggle="button"
+              aria-pressed="false"
+              autocomplete="off"
+            >
+              <i class="fa fa-plus"></i>
+            </button>
+            <button
+              *ngIf="this.showForm == true"
+              type="button"
+              (click)="openForm()"
+              class="btn btn-primary"
+              data-toggle="button"
+              aria-pressed="false"
+              autocomplete="off"
+            >
+              <i class="fa fa-minus"></i>
+            </button>
+          </th>
+        </tr>
+        <tr id="Titles">
           <th>Placa</th>
           <th>Capacidade de Carga</th>
           <th>Peso do Veículo Vazio</th>
@@ -34,17 +60,29 @@
         <tr
           *ngFor="
             let item of (vehicles
-              | paginate: { itemsPerPage: 2, currentPage: p });
+              | paginate: { itemsPerPage: 5, currentPage: p });
             let i = index
           "
         >
+          <td hidden >{{ item._id }}</td>
           <td>{{ item.carPlate }}</td>
           <td>{{ item.weightCapacity }}</td>
           <td>{{ item.emptyVehicleWeight }}</td>
           <td>{{ item.fuel }}</td>
           <td>{{ item.typeFuel }}</td>
           <td>{{ item.active }}</td>
-          <td><i (click)="loadValuesForEdit()" class="fa fa-edit"></i></td>
+          <td>
+            <button
+              (click)="loadValuesForEdit(item)"
+              type="button"
+              class="btn btn-sm btn-primary"
+              data-toggle="button"
+              aria-pressed="false"
+              autocomplete="off"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+          </td>
         </tr>
       </tbody>
       <pagination-controls
@@ -57,15 +95,14 @@
       ></pagination-controls>
     </table>
   </div>
-
-  <form ngNativeValidate>
+  <form ngNativeValidate *ngIf="showForm === true">
     <div class="row">
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="carPlate">Placa</label>
           <input
             required
-            [(ngModel)]="carPlate"
+            [(ngModel)]="vehicle.carPlate"
             name="carPlate"
             type="text"
             class="form-control"
@@ -82,8 +119,7 @@
           <label for="weightCapacity">Capacidade de Carga</label>
           <input
             required
-            [(ngModel)]="weightCapacity"
-            [value]="weightCapacity"
+            [(ngModel)]="vehicle.weightCapacity"
             name="weightCapacity"
             type="number"
             class="form-control"
@@ -98,7 +134,7 @@
           <label for="fuel">Combustível</label>
           <input
             required
-            [(ngModel)]="fuel"
+            [(ngModel)]="vehicle.fuel"
             name="fuel"
             type="number"
             class="form-control"
@@ -115,7 +151,7 @@
           <label for="fuel">Tipo Combustível</label>
           <select
             required
-            [(ngModel)]="typeFuel"
+            [(ngModel)]="vehicle.typeFuel"
             name="typeFuel"
             class="form-control"
           >
@@ -130,8 +166,7 @@
           <label for="weightCapacity">Peso do Veículo Vazio</label>
           <input
             required
-            [(ngModel)]="emptyVehicleWeight"
-            [value]="emptyVehicleWeight"
+            [(ngModel)]="vehicle.emptyVehicleWeight"
             name="emptyVehicleWeight"
             type="number"
             class="form-control"
@@ -146,7 +181,7 @@
       <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-check form-group">
           <input
-            [(ngModel)]="active"
+            [(ngModel)]="vehicle.active"
             name="active"
             class="form-control"
             type="checkbox"
@@ -161,9 +196,17 @@
     <div>
       <button
         type="submit"
+        id="clean"
+        (click)="clean()"
+        class="btn btn-primary col-md-12"
+      >
+        Limpar Campos
+      </button>
+      <button
+        type="submit"
         id="save"
         (click)="save()"
-        class="btn btn-primary col-md-12"
+        class="btn btn-success col-md-12"
       >
         Salvar
       </button>

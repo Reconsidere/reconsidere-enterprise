@@ -1,6 +1,5 @@
 mongoose = require('mongoose');
 var OrganizationSchema = new mongoose.Schema({
-  id: String,
   company: String,
   cnpj: String,
   tradingName: String,
@@ -58,7 +57,7 @@ var OrganizationSchema = new mongoose.Schema({
       weightCapacity: Number,
       active: Boolean,
       fuel: Number,
-      typeFuel: String,
+      typeFuel: String
     }
   ],
   calendars: [
@@ -119,54 +118,51 @@ organizations.route('/add').post(function(req, res) {
 });
 
 //Defined get data(index or listing) route
-organizations.route('/').get(function (req, res) {
-  organizationModel.find(function (err, org){
-   if(err){
-     console.log(err);
-   }
-   else {
-     res.json(org);
-   }
- });
+organizations.route('/').get(function(req, res) {
+  organizationModel.find(function(err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org);
+    }
+  });
 });
 
 // // Defined edit route
-// signUpRoutes.route('/edit/:id').get(function (req, res) {
-//  var id = req.params.id;
-//  SignUp.findById(id, function (err, signUp){
-//      res.json(signUp);
-//  });
-// });
+organizations.route('/edit/:id').get(function(req, res) {
+  var id = req.params.id;
+  organizationModel.findById(id, function(err, organization) {
+    res.json(organization);
+  });
+});
 
 // //  Defined update route
-// signUpRoutes.route('/update/:id').post(function (req, res) {
-//   SignUp.findById(req.params.id, function(err, signUp) {
-//    if (!signUp)
-//      return next(new Error('Could not load Document'));
-//    else {
-//      signUp.email = req.body.email;
-//      signUp.password = req.body.password;
-//      signUp.cnpj = req.body.cnpj;
-//      signUp.fantasyName = req.body.fantasyName;
-//      signUp.classification = req.body.classification;
-//      signUp.cep = req.body.cep;
-//      signUp.publicPlace = req.body.publicPlace;
-//      signUp.neighborhood = req.body.neighborhood;
-//      signUp.number = req.body.number;
-//      signUp.county = req.body.county;
-//      signUp.complement = req.body.complement;
-//      signUp.phone = req.body.phone;
-//      signUp.cellPhone = req.body.cellPhone;
+organizations.route('/update/:id').post(function(req, res, next) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      org.email = req.body.email;
+      org.company = req.body.company;
+      org.tradingName = req.body.tradingName;
+      org.password = req.body.password;
+      org.cnpj = req.body.cnpj;
+      org.phone = req.body.phone;
+      org.cellPhone = req.body.cellPhone;
+      org.classification = req.body.classification;
+      org.location = req.body.location;
+      org.vehicles = req.body.vehicles;
 
-//      signUp.save().then(coin => {
-//          res.json('Update complete');
-//      })
-//      .catch(err => {
-//            res.status(400).send("unable to update the database");
-//      });
-//    }
-//  });
-// });
+      org
+        .save()
+        .then(org => {
+          res.json('Update complete');
+        })
+        .catch(err => {
+          res.status(400).send('unable to update the database');
+        });
+    }
+  });
+});
 
 // // Defined delete | remove | destroy route
 // signUpRoutes.route('/delete/:id').get(function (req, res) {

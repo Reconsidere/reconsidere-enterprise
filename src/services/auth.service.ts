@@ -30,7 +30,7 @@ export class AuthService {
       .pipe();
   }
 
-  editSignUp(id) {
+  edit(id) {
     const uri = 'http://localhost:3000/organization/edit/' + id;
     return this
       .http
@@ -38,5 +38,12 @@ export class AuthService {
       .map(res => {
         return res;
       });
+  }
+
+  update(id, obj) {
+    this
+      .http
+      .post(`http://localhost:3000/organization/update/${id}`, obj)
+      .subscribe(res => console.log('Done'));
   }
 }

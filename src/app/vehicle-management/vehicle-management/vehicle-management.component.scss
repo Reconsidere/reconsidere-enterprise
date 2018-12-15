@@ -1,3 +1,18 @@
-.tableVehicles{
-  overflow-x:auto;
+.tableVehicles {
+  overflow-x: auto;
+  border-radius: 10px 10px 10px 10px;
+}
+
+#Titles {
+  font-family: Montserrat-Medium;
+  font-size: 12px;
+  color: white;
+  line-height: 1.4;
+  text-transform: uppercase;
+  background-color: #444444;
+  font-weight: unset;
+}
+
+#buttonAdd{
+  background-color: rgb(211, 211, 211)
 }

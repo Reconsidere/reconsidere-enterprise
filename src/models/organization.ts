@@ -5,7 +5,7 @@ import { Vehicle } from "./vehicle";
 
 export class Organization {
 
-  id: number;
+  _id: string;
   company: string;
   cnpj: string;
   tradingName: string;
