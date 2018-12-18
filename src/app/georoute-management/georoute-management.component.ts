@@ -1,5 +1,3 @@
-import { Routes } from '@angular/router';
-
 import {
   Component,
   OnInit,
@@ -26,7 +24,9 @@ import {
   CalendarView
 } from 'angular-calendar';
 import { GeoRoute } from 'src/models/georoute';
-import { Turn } from 'src/models/turn';
+import { Schedule } from 'src/models/schedule';
+import { forEach } from '@angular/router/src/utils/collection';
+import { AuthService } from 'src/services/auth.service';
 
 const colors: any = {
   red: {
@@ -44,12 +44,12 @@ const colors: any = {
 };
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-georoute-management',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss']
+  templateUrl: './georoute-management.component.html',
+  styleUrls: ['./georoute-management.component.scss']
 })
-export class CalendarComponent implements OnInit {
+export class GeorouteManagementComponent implements OnInit {
   @ViewChild('modalContent')
   modalContent: TemplateRef<any>;
   view: CalendarView = CalendarView.Month;
@@ -80,14 +80,12 @@ export class CalendarComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
   activeDayIsOpen = true;
-  routes: GeoRoute[] = [];
-  showRouterInsert: boolean;
-  turns: Turn[] = [];
-  hideRoute: boolean;
-  constructor(private modal: NgbModal) { }
+  geoRoutes: GeoRoute[];
+
+  constructor(private modal: NgbModal, private authService: AuthService) {}
 
   ngOnInit() {
-    this.hideRoute = false;
+    this.geoRoutes = [];
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -120,9 +118,14 @@ export class CalendarComponent implements OnInit {
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  addEvent(): void {
+  addEvent(
+    startDate: Date,
+    endDate: Date,
+    startTime: Date,
+    endTime: Date
+  ): void {
     this.events.push({
-      title: 'Novo item',
+      title: 'Nova rota',
       start: startOfDay(new Date()),
       actions: this.actions,
       end: endOfDay(new Date()),
@@ -134,16 +137,42 @@ export class CalendarComponent implements OnInit {
       }
     });
     this.refresh.next();
-    this.hideRoute = false;
   }
 
-  openRouteInsert() {
-    this.hideRoute = true;
-    this.showRouterInsert = true;
-    let route =  new GeoRoute();
-    this.routes.push(route);
+  addGeoRoute() {
+    let geoRoute = new GeoRoute();
+    geoRoute.name = 'Nova rota';
 
-    let turn = new Turn(new Date, new Date);
-    this.turns.push(turn);
+    if (geoRoute.schedules === undefined) {
+      geoRoute.schedules = [
+        new Schedule(new Date(), new Date(), new Date(), new Date())
+      ];
+    } else {
+      geoRoute.schedules.push(
+        new Schedule(new Date(), new Date(), new Date(), new Date())
+      );
+    }
+
+    this.geoRoutes.push(geoRoute);
+    this.refresh.next();
   }
+
+  save() {
+
+    //this.authService.add
+    this.loadRoutes();
+  }
+
+  loadRoutes() {
+    //após salvar recarregar lista de rotas ou após entrar na tela
+    //this.addEvent(name, startDate, endDate,startTime, endTime);
+    //for (let items of this.geoRoutes) {}
+  }
+
+  newSchedule(schedules) {
+    schedules.push([
+      new Schedule(new Date(), new Date(), new Date(), new Date())
+    ]);
+  }
+
 }

@@ -1,7 +1,6 @@
-import { Turn } from "./turn";
+import { Schedule } from './schedule';
 
 export class GeoRoute {
-
   name: string;
-  turns: [Turn];
+  schedules: [Schedule];
 }

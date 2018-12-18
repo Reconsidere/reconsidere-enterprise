@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<div class="container-fluid small">
+<div class="container">
   <ng-template #modalContent let-close="close">
     <div class="modal-header">
       <h5 class="modal-title">Event action occurred</h5>
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <h3>{{ viewDate | calendarDate: view + "ViewTitle":"pt" }}</h3>
+      <h3>{{ viewDate | calendarDate: view + 'ViewTitle':'pt' }}</h3>
     </div>
     <div class="col-md-4">
       <div class="btn-group">
@@ -122,152 +122,138 @@
   <br /><br /><br />
 
   <h3>
-    Editar calendário
-    <button class="btn btn-primary pull-right" (click)="addEvent()">
-      Adicionar
+    Rota
+    <button (click)="save()" class="btn btn-success pull-right">
+        <i class="fa fa-save" aria-hidden="true"></i>
+      </button>
+
+    <button class="btn btn-primary pull-right" (click)="addGeoRoute()">
+      <i class="fa fa-plus" aria-hidden="true"></i>
     </button>
+
     <div class="clearfix"></div>
   </h3>
 
   <table class="table table-bordered">
     <thead>
       <tr>
-        <th *ngIf="hideRoute == false">Nome</th>
-        <th *ngIf="hideRoute == false">Início</th>
-        <th *ngIf="hideRoute == false">Fim</th>
-        <th *ngIf="hideRoute == false">Rota</th>
-        <th *ngIf="hideRoute == false">Ação</th>
-        <th *ngIf="hideRoute == false">Ação</th>
+        <th>Nome</th>
+        <th>Agendamento</th>
+        <th>Ação</th>
+        <th>Ação</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let event of events; let index = index">
-        <td *ngIf="hideRoute == false">
+      <tr *ngFor="let route of geoRoutes; let index = index">
+        <td>
           <input
             type="text"
             class="form-control"
-            [(ngModel)]="event.title"
+            [(ngModel)]="route.name"
             (keyup)="refresh.next()"
           />
         </td>
 
-        <td *ngIf="hideRoute == false">
-          <input
-            class="form-control"
-            type="text"
-            mwlFlatpickr
-            [(ngModel)]="event.start"
-            (ngModelChange)="refresh.next()"
-            [altInput]="true"
-            [convertModelValue]="true"
-            [enableTime]="true"
-            dateFormat="Y-m-dTH:i"
-            altFormat="F j, Y H:i"
-          />
-        </td>
-        <td *ngIf="hideRoute == false">
-          <input
-            class="form-control"
-            type="text"
-            mwlFlatpickr
-            [(ngModel)]="event.end"
-            (ngModelChange)="refresh.next()"
-            [altInput]="true"
-            [convertModelValue]="true"
-            [enableTime]="true"
-            dateFormat="Y-m-dTH:i"
-            altFormat="F j, Y H:i"
-          />
-        </td>
         <td>
-          <button *ngIf="hideRoute == false" (click)="openRouteInsert()" class="btn btn-primary">
-            Inserir rota
-          </button>
-
-          <table *ngIf="showRouterInsert === true" class="table table-bordered">
+          <table class="table table-bordered">
             <thead>
               <tr>
-                <th >Nome</th>
-                <th>Turno</th>
-                <th>Ação</th>
-                <th>Ação</th>
+                <th>Data inicial</th>
+                <th>Data final</th>
+                <th>Hora inicial</th>
+                <th>Hora Final</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr *ngFor="let rout of routes; let index = index">
+              <tr *ngFor="let schedule of route.schedules; let index = index">
                 <td>
                   <input
                     class="form-control"
-                    [(ngModel)]="rout.name"
                     type="text"
+                    mwlFlatpickr
+                    [(ngModel)]="schedule.startDate"
+                    (ngModelChange)="refresh.next()"
+                    [altInput]="true"
+                    [convertModelValue]="true"
+                    [enableTime]="true"
+                    dateFormat="Y-m-dTH:i"
+                    altFormat="F j, Y H:i"
                   />
                 </td>
                 <td>
-                  <table class="table table-bordered">
-                    <thead>
-                      <tr>
-                        <th>Início</th>
-                        <th>Fim</th>
-                      </tr>
-                    </thead>
-                  </table>
-
-                  <tbody>
-                    <tr *ngFor="let turn of turns; let index = index">
-                      <td>
-                        <input
-                          class="form-control"
-                          type="text"
-                          mwlFlatpickr
-                          [(ngModel)]="turn.startTime"
-                          (ngModelChange)="refresh.next()"
-                          [altInput]="true"
-                          [convertModelValue]="true"
-                          [enableTime]="true"
-                          dateFormat="Y-m-dTH:i"
-                          altFormat="F j, Y H:i"
-                        />
-                      </td>
-                      <td>
-                        <input
-                          class="form-control"
-                          type="text"
-                          mwlFlatpickr
-                          [(ngModel)]="turn.endTime"
-                          (ngModelChange)="refresh.next()"
-                          [altInput]="true"
-                          [convertModelValue]="true"
-                          [enableTime]="true"
-                          dateFormat="Y-m-dTH:i"
-                          altFormat="F j, Y H:i"
-                        />
-                      </td>
-                    </tr>
-                  </tbody>
+                  <input
+                    class="form-control"
+                    type="text"
+                    mwlFlatpickr
+                    [(ngModel)]="schedule.endDate"
+                    (ngModelChange)="refresh.next()"
+                    [altInput]="true"
+                    [convertModelValue]="true"
+                    [enableTime]="true"
+                    dateFormat="Y-m-dTH:i"
+                    altFormat="F j, Y H:i"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="form-control"
+                    type="text"
+                    mwlFlatpickr
+                    [(ngModel)]="schedule.startTime"
+                    (ngModelChange)="refresh.next()"
+                    [altInput]="true"
+                    [convertModelValue]="true"
+                    [enableTime]="true"
+                    [noCalendar]="true"
+                    dateFormat="H:i"
+                    altFormat="H:i"
+                  />
+                </td>
+                <td>
+                  <input
+                    class="form-control"
+                    type="text"
+                    mwlFlatpickr
+                    [(ngModel)]="schedule.endTime"
+                    (ngModelChange)="refresh.next()"
+                    [altInput]="true"
+                    [convertModelValue]="true"
+                    [enableTime]="true"
+                    [noCalendar]="true"
+                    dateFormat="H:i"
+                    altFormat="H:i"
+                  />
                 </td>
                 <td>
                   <button
+                    (click)="route.schedules.splice(index, 1)"
                     class="btn btn-danger"
                   >
-                    Remover
+                    <i class="fa fa-times" aria-hidden="true"></i>
                   </button>
                 </td>
-                <td ><button class="btn btn-success">Salvar</button></td>
               </tr>
             </tbody>
           </table>
         </td>
-        <td *ngIf="hideRoute == false">
+        <td>
           <button
             class="btn btn-danger"
-            (click)="events.splice(index, 1); refresh.next()"
+            (click)="geoRoutes.splice(index, 1); refresh.next()"
           >
-            Remover
+            <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </td>
-        <td *ngIf="hideRoute == false"><button class="btn btn-success">Salvar</button></td>
+        <td>
+          <button
+            (click)="newSchedule(route.schedules)"
+            class="btn btn-primary"
+          >
+            <i class="fa fa-plus" aria-hidden="true"></i>
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>

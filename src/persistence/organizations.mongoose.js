@@ -60,15 +60,10 @@ var OrganizationSchema = new mongoose.Schema({
       typeFuel: String
     }
   ],
-  calendars: [
+  geoRoute: [
     {
       name: String,
-      startDate: Date,
-      endDate: Date,
-      geoRoute: {
-        name: String,
-        turns: [{ startTime: Date, endTime: Date }]
-      }
+      schedules: [{startTime: Date, endTime: Date ,startDate: Date, endDate: Date}],
     }
   ]
 });
