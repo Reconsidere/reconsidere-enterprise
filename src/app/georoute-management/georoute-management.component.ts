@@ -27,6 +27,7 @@ import { GeoRoute } from 'src/models/georoute';
 import { Schedule } from 'src/models/schedule';
 import { forEach } from '@angular/router/src/utils/collection';
 import { AuthService } from 'src/services/auth.service';
+import { Organization } from 'src/models/organization';
 
 const colors: any = {
   red: {
@@ -80,12 +81,34 @@ export class GeorouteManagementComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
   activeDayIsOpen = true;
-  geoRoutes: GeoRoute[];
+  georoutes: GeoRoute[];
+  msgStatus: string;
+  showMessage: boolean;
+  georoute: GeoRoute;
 
-  constructor(private modal: NgbModal, private authService: AuthService) {}
+  constructor(private modal: NgbModal, private authService: AuthService) {
+    this.georoute = new GeoRoute();
+  }
 
   ngOnInit() {
-    this.geoRoutes = [];
+    this.georoutes = [];
+    this.authService.get().subscribe(x => this.loadGeoroutes(x));
+  }
+
+  loadGeoroutes(value) {
+    for (const items of value) {
+      for (const georoute of items.georoutes) {
+        for (const item of georoute.schedules) {
+          this.addEvent(
+            georoute.name,
+            item.startDate,
+            item.endDate,
+            item.startTime,
+            item.endTime
+          );
+        }
+      }
+    }
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
@@ -115,20 +138,22 @@ export class GeorouteManagementComponent implements OnInit {
 
   handleEvent(action: string, event: CalendarEvent): void {
     this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
+    this.modal.open(this.modalContent, { size: 'lg'});
   }
 
   addEvent(
+    title: string,
     startDate: Date,
     endDate: Date,
     startTime: Date,
     endTime: Date
   ): void {
+    this.events = [];
     this.events.push({
-      title: 'Nova rota',
-      start: startOfDay(new Date()),
+      title: title,
+      start: startOfDay(startDate),
       actions: this.actions,
-      end: endOfDay(new Date()),
+      end: endOfDay(endDate),
       color: colors.red,
       draggable: true,
       resizable: {
@@ -139,8 +164,12 @@ export class GeorouteManagementComponent implements OnInit {
     this.refresh.next();
   }
 
+  closeAlertMessage() {
+    this.showMessage = false;
+  }
+
   addGeoRoute() {
-    let geoRoute = new GeoRoute();
+    const geoRoute = new GeoRoute();
     geoRoute.name = 'Nova rota';
 
     if (geoRoute.schedules === undefined) {
@@ -153,26 +182,77 @@ export class GeorouteManagementComponent implements OnInit {
       );
     }
 
-    this.geoRoutes.push(geoRoute);
+    this.georoutes.push(geoRoute);
     this.refresh.next();
   }
 
+  veryfyBeforeSave() {
+    for (const items of this.georoutes) {
+      if (items.name === undefined) {
+        this.msgStatus =
+          'Por favor, preencha os campos antes de salvar os dados!';
+        return false;
+      } else {
+        return true;
+      }
+      for (const schedule of items.schedules) {
+        if (
+          schedule.startDate === undefined ||
+          schedule.endDate === undefined ||
+          schedule.startTime === undefined ||
+          schedule.endTime === undefined
+        ) {
+          this.msgStatus =
+            'Por favor, preencha os campos antes de salvar os dados!';
+          return false;
+        } else {
+          return true;
+        }
+      }
+    }
+  }
+
   save() {
+    this.showMessage = true;
+    if (!this.veryfyBeforeSave()) {
+      return;
+    }
 
-    //this.authService.add
-    this.loadRoutes();
+    //TODO[vinicius]: a organização ja deve vir após o login
+    //assim não haverá risco de cruzar dados de usuários
+    //Pela regra teremos um modelo de organização e vamos apenas inserindo ou atualizando dados dentro dela
+    // e fazendo o update da mesma para guardar estas informações.
+    //usando esta organização ja cadastrada para teste de update
+    //caso  já exista id do veiculo é um update.
+
+    try {
+      //ATENCAO simulando organização ja cadastrada alterar isso aqui
+      const organization = new Organization();
+      organization._id = '5c20cd39875f7935582ad314';
+      organization.email = 'vinicius@teste.com';
+      organization.company = 'empresa a';
+      organization.tradingName = 'empresa a fantasia ltda';
+      organization.password = '1234567';
+      organization.cnpj = '27835753000173';
+      organization.phone = 4932222222.0;
+      organization.cellPhone = 49999766955.0;
+      organization.classification = 'Empresa Privada';
+      if (organization.georoutes === undefined) {
+        organization.georoutes = [this.georoutes.pop()];
+      } else {
+        organization.georoutes.push(this.georoutes.pop());
+      }
+
+      if (organization._id === undefined || organization._id === '') {
+        this.authService.add(organization);
+      } else {
+        this.authService.update(organization._id, organization);
+      }
+      this.msgStatus = 'Dados salvos com sucesso';
+      this.authService.get().subscribe(x => this.loadGeoroutes(x));
+    } catch (error) {
+      this.msgStatus = 'Erro ao salvar!';
+      console.log(error);
+    }
   }
-
-  loadRoutes() {
-    //após salvar recarregar lista de rotas ou após entrar na tela
-    //this.addEvent(name, startDate, endDate,startTime, endTime);
-    //for (let items of this.geoRoutes) {}
-  }
-
-  newSchedule(schedules) {
-    schedules.push([
-      new Schedule(new Date(), new Date(), new Date(), new Date())
-    ]);
-  }
-
 }

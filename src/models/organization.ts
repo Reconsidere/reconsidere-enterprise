@@ -2,6 +2,7 @@ import { Material } from "./material";
 import {Location} from "./location";
 import { User } from "./user";
 import { Vehicle } from "./vehicle";
+import { GeoRoute } from "./georoute";
 
 export class Organization {
 
@@ -23,4 +24,5 @@ export class Organization {
   password: string;
   classification: string;
   vehicles: [Vehicle];
+  georoutes: [GeoRoute];
 }

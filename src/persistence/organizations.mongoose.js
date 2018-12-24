@@ -60,10 +60,12 @@ var OrganizationSchema = new mongoose.Schema({
       typeFuel: String
     }
   ],
-  geoRoute: [
+  georoutes: [
     {
       name: String,
-      schedules: [{startTime: Date, endTime: Date ,startDate: Date, endDate: Date}],
+      schedules: [
+        { startDate: Date, endDate: Date, startTime: Date, endTime: Date }
+      ]
     }
   ]
 });
@@ -146,6 +148,7 @@ organizations.route('/update/:id').post(function(req, res, next) {
       org.classification = req.body.classification;
       org.location = req.body.location;
       org.vehicles = req.body.vehicles;
+      org.georoutes = req.body.georoutes;
 
       org
         .save()

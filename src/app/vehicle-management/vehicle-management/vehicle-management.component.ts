@@ -104,7 +104,7 @@ export class VehicleManagementComponent implements OnInit {
 
       //ATENCAO simulando organização ja cadastrada alterar isso aqui
       const organization = new Organization();
-      organization._id = '5c1508b8149b411e5c7654fd';
+      organization._id = '5c1bbd628b51272e40a0e82a';
       organization.email = 'vinicius@teste.com';
       organization.company = 'empresa a';
       organization.tradingName = 'empresa a fantasia ltda';
@@ -116,7 +116,7 @@ export class VehicleManagementComponent implements OnInit {
       organization.vehicles = [this.vehicle];
 
       //organization.vehicles = [this.vehicle];
-      if (this.vehicle._id === undefined || this.vehicle._id === '') {
+      if (organization._id === undefined || organization._id === '') {
         this.authService.add(organization);
       } else {
         this.authService.update(organization._id, organization);

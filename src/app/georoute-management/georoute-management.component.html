@@ -1,5 +1,22 @@
 <app-toolbar></app-toolbar>
 <div class="container">
+    <div
+    *ngIf="showMessage == true"
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
+  >
+    <strong>Atenção: </strong> {{ msgStatus }}
+    <button
+      type="button"
+      (click)="closeAlertMessage()"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
   <ng-template #modalContent let-close="close">
     <div class="modal-header">
       <h5 class="modal-title">Event action occurred</h5>
@@ -15,6 +32,9 @@
       <div>
         Event:
         <pre>{{ modalData?.event | json }}</pre>
+      </div>
+      <div>
+
       </div>
     </div>
     <div class="modal-footer">
@@ -140,12 +160,11 @@
         <th>Nome</th>
         <th>Agendamento</th>
         <th>Ação</th>
-        <th>Ação</th>
       </tr>
     </thead>
 
     <tbody>
-      <tr *ngFor="let route of geoRoutes; let index = index">
+      <tr *ngFor="let route of georoutes; let index = index">
         <td>
           <input
             type="text"
@@ -177,9 +196,9 @@
                     (ngModelChange)="refresh.next()"
                     [altInput]="true"
                     [convertModelValue]="true"
-                    [enableTime]="true"
-                    dateFormat="Y-m-dTH:i"
-                    altFormat="F j, Y H:i"
+                    [enableTime]="false"
+                    dateFormat="Y-m-d"
+                    altFormat="F j, Y"
                   />
                 </td>
                 <td>
@@ -191,13 +210,13 @@
                     (ngModelChange)="refresh.next()"
                     [altInput]="true"
                     [convertModelValue]="true"
-                    [enableTime]="true"
-                    dateFormat="Y-m-dTH:i"
-                    altFormat="F j, Y H:i"
+                    [enableTime]="false"
+                    dateFormat="Y-m-d"
+                    altFormat="F j, Y"
                   />
                 </td>
                 <td>
-                  <input
+                    <input
                     class="form-control"
                     type="text"
                     mwlFlatpickr
@@ -209,10 +228,12 @@
                     [noCalendar]="true"
                     dateFormat="H:i"
                     altFormat="H:i"
+                    defaultHour="24"
+                    defaultMinute ="00"
                   />
                 </td>
                 <td>
-                  <input
+                    <input
                     class="form-control"
                     type="text"
                     mwlFlatpickr
@@ -224,6 +245,8 @@
                     [noCalendar]="true"
                     dateFormat="H:i"
                     altFormat="H:i"
+                    defaultHour="24"
+                    defaultMinute ="00"
                   />
                 </td>
                 <td>
@@ -241,17 +264,9 @@
         <td>
           <button
             class="btn btn-danger"
-            (click)="geoRoutes.splice(index, 1); refresh.next()"
+            (click)="georoutes.splice(index, 1); refresh.next()"
           >
             <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
-        </td>
-        <td>
-          <button
-            (click)="newSchedule(route.schedules)"
-            class="btn btn-primary"
-          >
-            <i class="fa fa-plus" aria-hidden="true"></i>
           </button>
         </td>
       </tr>
