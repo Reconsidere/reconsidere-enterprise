@@ -1,3 +1,4 @@
+import { AppService } from 'src/services/app.service';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { FlatpickrModule } from 'angularx-flatpickr';
@@ -28,7 +29,13 @@ import { VehicleManagementComponent } from './vehicle-management/vehicle-managem
 import { NgxPaginationModule } from 'ngx-pagination';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
-import { GeorouteManagementComponent } from './georoute-management/georoute-management.component';
+import {
+  DxSchedulerModule,
+  DxCheckBoxModule,
+  DxSelectBoxModule,
+  DxDataGridModule
+} from 'devextreme-angular';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 registerLocaleData(localePt);
 
@@ -44,8 +51,7 @@ registerLocaleData(localePt);
     StartcenterComponent,
     SchedulerComponent,
     CepPipe,
-    VehicleManagementComponent,
-    GeorouteManagementComponent
+    VehicleManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -66,12 +72,17 @@ registerLocaleData(localePt);
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-    CommonModule
+    CommonModule,
+    DxSchedulerModule,
+    DxCheckBoxModule,
+    DxSelectBoxModule,
+    DxDataGridModule
   ],
 
   providers: [
     { provide: APP_BASE_HREF, useValue: '/' },
     AuthService,
+    AppService,
     ReactiveFormsModule,
     BrowserModule,
     RouterModule
@@ -79,3 +90,5 @@ registerLocaleData(localePt);
   bootstrap: [AppComponent]
 })
 export class AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
