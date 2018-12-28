@@ -1,6 +1,10 @@
-<div class="dx-viewport">
+<div  class="dx-viewport">
   <div class="demo-container">
     <dx-scheduler
+      (onAppointmentUpdating)="onAppointmentUpdating($event)"
+      (onAppointmentUpdated)="onAppointmentUpdated($event)"
+      (onAppointmentAdding)="onAppointmentAdding($event)"
+     (onAppointmentAdded)="onAppointmentAdded($event)"
       [dataSource]="appointmentsData"
       [views]="[
         'timelineDay',
@@ -16,6 +20,7 @@
       [groups]="['priority']"
       [currentDate]="currentDate"
       [height]="580"
+
     >
       <dxi-resource
         fieldExpr="ownerId"
