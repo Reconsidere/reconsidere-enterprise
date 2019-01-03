@@ -64,7 +64,11 @@ var OrganizationSchema = new mongoose.Schema({
     {
       name: String,
       schedules: [
-        { startDate: Date, endDate: Date, startTime: Date, endTime: Date }
+        {
+          startDate: Date,
+          endDate: Date,
+          turns: [{ startTime: Date, endTime: Date }]
+        }
       ]
     }
   ]
@@ -161,6 +165,40 @@ organizations.route('/update/:id').post(function(req, res, next) {
     }
   });
 });
+
+/**
+ * CRUD  - Scheduler
+ */
+organizations.route('/update/scheduler/:id').post(function(req, res, next) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      var route = org.georoutes.id(req.body._id);
+      if (!route) {
+        org.georoutes.push(req.body);
+        org
+          .update(org)
+          .then(org => {
+            res.json('Update complete');
+          })
+          .catch(err => {
+            res.status(400).send('unable to update the database');
+          });
+      } else {
+        route.set(req.body);
+        org
+          .update(org)
+          .then(org => {
+            res.json('Update complete');
+          })
+          .catch(err => {
+            res.status(400).send('unable to update the database');
+          });
+      }
+    }
+  });
+});
+/**End Scheduler */
 
 // // Defined delete | remove | destroy route
 // signUpRoutes.route('/delete/:id').get(function (req, res) {

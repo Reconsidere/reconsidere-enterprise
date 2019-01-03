@@ -1,18 +1,18 @@
-import { Location } from "./../../../models/location";
-import { Observable } from "rxjs/internal/Observable";
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ConfirmPasswordValidator } from "src/validations/confirm-password.validator";
-import { CNPJValidator } from "src/validations/valid-cnpj.validator";
-import { AuthService } from "src/services/auth.service";
-import { promise } from "protractor";
-import { CepService } from "src/services/cep.service";
-import { Organization } from "src/models/organization";
+import { Location } from './../../../models/location';
+import { Observable } from 'rxjs/internal/Observable';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ConfirmPasswordValidator } from 'src/validations/confirm-password.validator';
+import { CNPJValidator } from 'src/validations/valid-cnpj.validator';
+import { AuthService } from 'src/services/auth.service';
+import { promise } from 'protractor';
+import { CepService } from 'src/services/cep.service';
+import { Organization } from 'src/models/organization';
 
 @Component({
-  selector: "app-sign-up",
-  templateUrl: "./sign-up.component.html",
-  styleUrls: ["./sign-up.component.scss"]
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
   isValidPassword: boolean;
@@ -50,6 +50,13 @@ export class SignUpComponent implements OnInit {
 
   CEPSearch(value) {
     this.cepService.search(value, this);
+  }
+
+  TypeOrganization(value) {
+    if (value === 'Cooperativa') {
+    } else if (value === 'Empresa Privada') {
+    } else if (value === 'Município') {
+    }
   }
 
   verifyPassword() {
@@ -136,7 +143,7 @@ export class SignUpComponent implements OnInit {
         this.county,
         this.company
       );
-      this.authService.add(this.organization);
+      //this.add(this.organization);
       this.msgStatus = 'Dados salvos com sucesso';
     } catch (error) {
       this.msgStatus = 'Erro ao salvar!';

@@ -17,8 +17,26 @@
     </button>
   </div>
 
-
   <form ngNativeValidate>
+    <div class="row">
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="classification">Classificação</label>
+          <select
+            required
+            [(ngModel)]="classification"
+            name="classification"
+            class="form-control"
+            onchange="TypeOrganization(classification)"
+          >
+            <option id="classification" *ngFor="let item of classifications">{{
+              item
+            }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <label for="email">Email</label>
       <input
@@ -117,22 +135,6 @@
             id="tradingName"
             aria-describedby="tradingName"
           />
-        </div>
-      </div>
-
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="classification">Classificação</label>
-          <select
-            required
-            [(ngModel)]="classification"
-            name="classification"
-            class="form-control"
-          >
-            <option id="classification" *ngFor="let item of classifications">{{
-              item
-            }}</option>
-          </select>
         </div>
       </div>
     </div>

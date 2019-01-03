@@ -32,7 +32,7 @@ export class VehicleManagementComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.get().subscribe(x => this.loadVehicles(x));
+    //this.authService.get().subscribe(x => this.loadVehicles(x));
   }
   loadVehicles(value) {
     for (let items of value) {
@@ -117,9 +117,9 @@ export class VehicleManagementComponent implements OnInit {
 
       //organization.vehicles = [this.vehicle];
       if (organization._id === undefined || organization._id === '') {
-        this.authService.add(organization);
+        //this.authService.add(organization);
       } else {
-        this.authService.update(organization._id, organization);
+        //this.authService.update(organization._id, organization);
       }
       this.showForm = false;
       this.msgStatus = 'Dados salvos com sucesso';

@@ -33,7 +33,10 @@ import {
   DxSchedulerModule,
   DxCheckBoxModule,
   DxSelectBoxModule,
-  DxDataGridModule
+  DxDataGridModule,
+  DxTextAreaModule,
+  DxFormModule,
+  DxTemplateModule
 } from 'devextreme-angular';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -76,7 +79,11 @@ registerLocaleData(localePt);
     DxSchedulerModule,
     DxCheckBoxModule,
     DxSelectBoxModule,
-    DxDataGridModule
+    DxDataGridModule,
+    DxSelectBoxModule,
+    DxTextAreaModule,
+    DxFormModule,
+    DxTemplateModule
   ],
 
   providers: [

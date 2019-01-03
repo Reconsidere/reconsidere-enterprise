@@ -1,24 +1,18 @@
 export class Appointment {
-  text: string;
-  ownerId: number;
-  priority: number;
+  title: string;
   startDate: Date;
   endDate: Date;
   startTime: Date;
   endTime: Date;
 
   constructor(
-    ownerId: number,
-    text: string,
-    priority: number,
+    title: string,
     startDate: Date,
     endDate: Date,
     startTime: Date,
     endTime: Date
   ) {
-    this.ownerId = ownerId;
-    this.text = text;
-    this.priority = priority;
+    this.title = title;
     this.startDate = startDate;
     this.endDate = endDate;
     this.startTime = startTime;
