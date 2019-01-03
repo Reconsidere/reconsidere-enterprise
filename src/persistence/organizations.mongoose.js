@@ -166,9 +166,99 @@ organizations.route('/update/:id').post(function(req, res, next) {
   });
 });
 
-/**
- * CRUD  - Scheduler
- */
+
+//#region CRUD  - Vehicle
+organizations.route('/vehicle/:id').get(function(req, res) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org.vehicles);
+    }
+  });
+});
+
+organizations.route('/add/vehicle/:id').post(function(req, res, next) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      org.vehicles.push(req.body);
+      org
+        .update(org)
+        .then(org => {
+          res.json('Update complete');
+        })
+        .catch(err => {
+          res.status(400).send('unable to update the database');
+        });
+    }
+  });
+});
+
+organizations.route('/update/vehicle/:id').post(function(req, res, next) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      var vehicle = org.vehicles.id(req.body._id);
+      if (!vehicle) {
+        org.vehicles.push(req.body);
+        org
+          .update(org)
+          .then(org => {
+            res.json('Update complete');
+          })
+          .catch(err => {
+            res.status(400).send('unable to update the database');
+          });
+      } else {
+        vehicle.set(req.body);
+        org
+          .update(org)
+          .then(org => {
+            res.json('Update complete');
+          })
+          .catch(err => {
+            res.status(400).send('unable to update the database');
+          });
+      }
+    }
+  });
+});
+
+//#endregion
+
+
+
+
+//#region CRUD  - Scheduler
+
+organizations.route('/scheduler/:id').get(function(req, res) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org.georoutes);
+    }
+  });
+});
+
+organizations.route('/add/scheduler/:id').post(function(req, res, next) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      org.georoutes.push(req.body);
+      org
+        .update(org)
+        .then(org => {
+          res.json('Update complete');
+        })
+        .catch(err => {
+          res.status(400).send('unable to update the database');
+        });
+    }
+  });
+});
+
 organizations.route('/update/scheduler/:id').post(function(req, res, next) {
   organizationModel.findById(req.params.id, function(err, org) {
     if (!org) return next(new Error('Could not load Document'));
@@ -198,7 +288,7 @@ organizations.route('/update/scheduler/:id').post(function(req, res, next) {
     }
   });
 });
-/**End Scheduler */
+//#endregion
 
 // // Defined delete | remove | destroy route
 // signUpRoutes.route('/delete/:id').get(function (req, res) {

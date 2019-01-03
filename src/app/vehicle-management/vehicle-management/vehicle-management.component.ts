@@ -3,6 +3,7 @@ import { Vehicle } from './../../../models/vehicle';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/services/auth.service';
 import { Observable } from 'rxjs';
+import { VehicleManagementService } from 'src/services/vehicle-management.service';
 
 @Component({
   selector: 'app-vehicle-management',
@@ -17,8 +18,9 @@ export class VehicleManagementComponent implements OnInit {
   vehicles: Vehicle[] = [];
   p = 1;
   showForm = false;
+  organizationMock: Organization;
 
-  constructor(private authService: AuthService) {
+  constructor(private service: VehicleManagementService) {
     this.typesFuel = [
       '',
       'Gasolina Comum',
@@ -29,14 +31,21 @@ export class VehicleManagementComponent implements OnInit {
       'Gás'
     ];
     this.vehicle = new Vehicle();
+
+    /*ATENCAO simulando organização ja cadastrada alterar isso aqui*/
+    this.organizationMock = new Organization();
+    this.organizationMock._id = '5c2e3736014dc837908f24c4';
+    /*---------------------------------------------------*/
   }
 
   ngOnInit() {
-    //this.authService.get().subscribe(x => this.loadVehicles(x));
+    this.service
+      .get(this.organizationMock._id)
+      .subscribe(x => this.loadVehicles(x));
   }
   loadVehicles(value) {
-    for (let items of value) {
-      for (let item of items.vehicles) {
+    for (const items of value) {
+      for (const item of items.vehicles) {
         this.vehicles.push(item);
       }
     }
@@ -95,31 +104,10 @@ export class VehicleManagementComponent implements OnInit {
       return;
     }
     try {
-      //TODO[vinicius]: a organização ja deve vir após o login
-      //assim não haverá risco de cruzar dados de usuários
-      //Pela regra teremos um modelo de organização e vamos apenas inserindo ou atualizando dados dentro dela
-      // e fazendo o update da mesma para guardar estas informações.
-      //usando esta organização ja cadastrada para teste de update
-      //caso  já exista id do veiculo é um update.
-
-      //ATENCAO simulando organização ja cadastrada alterar isso aqui
-      const organization = new Organization();
-      organization._id = '5c1bbd628b51272e40a0e82a';
-      organization.email = 'vinicius@teste.com';
-      organization.company = 'empresa a';
-      organization.tradingName = 'empresa a fantasia ltda';
-      organization.password = '1234567';
-      organization.cnpj = '27835753000173';
-      organization.phone = 4932222222.0;
-      organization.cellPhone = 49999766955.0;
-      organization.classification = 'Empresa Privada';
-      organization.vehicles = [this.vehicle];
-
-      //organization.vehicles = [this.vehicle];
-      if (organization._id === undefined || organization._id === '') {
-        //this.authService.add(organization);
+      if (this.vehicle._id === undefined) {
+        this.service.add(this.organizationMock._id, this.vehicle);
       } else {
-        //this.authService.update(organization._id, organization);
+        this.service.update(this.organizationMock._id, this.vehicle);
       }
       this.showForm = false;
       this.msgStatus = 'Dados salvos com sucesso';
