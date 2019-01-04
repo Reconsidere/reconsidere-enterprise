@@ -1,5 +1,5 @@
-import { Organization } from './../../../models/organization';
-import { Vehicle } from './../../../models/vehicle';
+import { Organization } from '../../models/organization';
+import { Vehicle } from '../../models/vehicle';
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/services/auth.service';
 import { Observable } from 'rxjs';

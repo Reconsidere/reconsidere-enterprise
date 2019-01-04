@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ROUTING, routes } from './app.routing';
 import { NgxMaskModule } from 'ngx-mask';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from 'src/services/auth.service';
 import { RouterModule } from '@angular/router';
@@ -25,7 +25,7 @@ import { SchedulerComponent } from './scheduler/scheduler.component';
 import { CepPipe } from '../pipes/cep.pipe';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { VehicleManagementComponent } from './vehicle-management/vehicle-management/vehicle-management.component';
+import { VehicleManagementComponent } from './vehicle-management/vehicle-management.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
@@ -39,6 +39,8 @@ import {
   DxTemplateModule
 } from 'devextreme-angular';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { JwtInterceptor } from './_helpers/jwt.interceptor';
+import { ErrorInterceptor } from './_helpers/error.interceptor';
 
 registerLocaleData(localePt);
 
@@ -87,6 +89,8 @@ registerLocaleData(localePt);
   ],
 
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LOCALE_ID, useValue: 'pt' },
     AuthService,

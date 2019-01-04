@@ -17,6 +17,9 @@ import { SchedulerService } from 'src/services/scheduler.service';
 import { Schedule } from 'src/models/schedule';
 import { Turn } from 'src/models/turn';
 import { DxSchedulerComponent } from 'devextreme-angular';
+import { UserService } from 'src/services';
+import { User } from 'src/models';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-scheduler',
@@ -32,13 +35,24 @@ export class SchedulerComponent implements OnInit {
   msgStatus: string;
   showMessage: boolean;
   organizationMock: Organization;
+  users: User[] = [];
 
-  constructor(private servive: SchedulerService) {
+  constructor(
+    private servive: SchedulerService,
+    private userService: UserService
+  ) {
     this.appointmentsData = [];
     this.resourcesData = [];
     this.prioritiesData = [];
   }
   ngOnInit() {
+    this.userService
+      .getAll()
+      .pipe(first())
+      .subscribe(users => {
+        this.users = users;
+      });
+
     /*ATENCAO simulando organização ja cadastrada alterar isso aqui*/
     this.organizationMock = new Organization();
     this.organizationMock._id = '5c2f79136ba73239dc432b95';

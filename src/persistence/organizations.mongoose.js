@@ -47,7 +47,8 @@ var OrganizationSchema = new mongoose.Schema({
         }
       ],
       password: String,
-      active: Boolean
+      active: Boolean,
+      token: String
     }
   ],
   vehicles: [
