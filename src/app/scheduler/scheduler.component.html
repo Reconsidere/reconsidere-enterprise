@@ -20,10 +20,12 @@
   <div class="dx-viewport">
     <div class="demo-container">
       <dx-scheduler #targetScheduler
-        (onAppointmentUpdating)="onAppointmentUpdating($event)"
-        (onAppointmentAdded)="onAppointmentAdded($event)"
-        (onAppointmentFormCreated)="onAppointmentFormCreated($event)"
-        (onAppointmentUpdated) = "onAppointmentUpdated($event)"
+      (onAppointmentUpdating)="onAppointmentUpdating($event)"
+      (onAppointmentUpdated)="onAppointmentUpdated($event)"
+      (onAppointmentAdding)="onAppointmentAdding($event)"
+      (onAppointmentAdded)="onAppointmentAdded($event)"
+      (onAppointmentFormCreated)="onAppointmentFormCreated($event)"
+      (onAppointmentUpdated) = "onAppointmentUpdated($event)"
         [dataSource]="appointmentsData"
         [views]="[
           'timelineDay',

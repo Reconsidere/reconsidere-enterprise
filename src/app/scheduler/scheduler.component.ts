@@ -41,7 +41,7 @@ export class SchedulerComponent implements OnInit {
   ngOnInit() {
     /*ATENCAO simulando organização ja cadastrada alterar isso aqui*/
     this.organizationMock = new Organization();
-    this.organizationMock._id = '5c2e3736014dc837908f24c4';
+    this.organizationMock._id = '5c2f79136ba73239dc432b95';
     /*---------------------------------------------------*/
     this.servive
       .get(this.organizationMock._id)
@@ -54,18 +54,18 @@ export class SchedulerComponent implements OnInit {
       endDate = data.appointmentData.endDate,
       startTime = data.appointmentData.startTime,
       endTime = data.appointmentData.endTime,
-      title = data.appointmentData.title;
+      text = data.appointmentData.text;
 
     form.option('items', [
       {},
       {
-        dataField: 'title',
+        dataField: 'text',
         editorType: 'dxTextBox',
         editorOptions: {
           width: '100%',
           type: 'text',
           onValueChanged: function(args) {
-            title = args.value;
+            text = args.value;
           }
         }
       },
@@ -124,15 +124,15 @@ export class SchedulerComponent implements OnInit {
     this.prioritiesData = [];
     let id = 0;
     for (const georoute of value) {
-      const priority = new Priority(id, georoute.name, '#1e90ff');
-      id++;
+      const priority = new Priority(id, georoute.name, '#6CB2EB');
       this.prioritiesData.push(priority);
+      id++;
       for (const item of georoute.schedules) {
         const appointment = new Appointment();
         let idOwner = 0;
         let priorty = 0;
         appointment._id = georoute._id;
-        appointment.title = georoute.name;
+        appointment.text = georoute.name;
         appointment.startDate = item.startDate;
         appointment.endDate = item.endDate;
 
@@ -141,7 +141,7 @@ export class SchedulerComponent implements OnInit {
           appointment.endTime = turn.endTime;
         }
         this.appointmentsData.push(appointment);
-        const resource = new Resource(idOwner, georoute.name, '#1e90ff');
+        const resource = new Resource(idOwner, georoute.name, '#6CB2EB');
         this.resourcesData.push(resource);
         idOwner++;
         priorty++;
@@ -151,7 +151,7 @@ export class SchedulerComponent implements OnInit {
 
   veryfyBeforeSave(object) {
     if (object.newData === undefined) {
-      if (object.appointmentData.title === undefined) {
+      if (object.appointmentData.text === undefined) {
         this.msgStatus =
           'Por favor, preencha os campos antes de salvar os dados!';
         return false;
@@ -173,7 +173,7 @@ export class SchedulerComponent implements OnInit {
         return false;
       }
     } else {
-      if (object.newData.title === undefined) {
+      if (object.newData.text === undefined) {
         this.msgStatus =
           'Por favor, preencha os campos antes de salvar os dados!';
         return false;
@@ -210,16 +210,28 @@ export class SchedulerComponent implements OnInit {
     const georoutes = new GeoRoute();
     if (e.newData === undefined) {
       try {
-        georoutes.name = e.appointmentData.title;
+        georoutes.name = e.appointmentData.text;
         georoutes._id = e.appointmentData._id;
         const turn = new Turn(
           e.appointmentData.startTime,
           e.appointmentData.endTime
         );
-        const schedule = new Schedule(
-          e.appointmentData.startDate,
-          e.appointmentData.endDate
-        );
+        let newDate = new Date(e.appointmentData.startDate).toDateString();
+        const timeStringInit =
+          new Date(e.appointmentData.startTime).getHours() +
+          ':' +
+          new Date(e.appointmentData.startTime).getMinutes() +
+          ':00';
+        const dateInit = new Date(newDate + ' ' + timeStringInit);
+        newDate = new Date(e.appointmentData.endDate).toDateString();
+        const timeStringEnd =
+          new Date(e.appointmentData.endTime).getHours() +
+          ':' +
+          new Date(e.appointmentData.endTime).getMinutes() +
+          ':00';
+        const dateEnd = new Date(newDate + ' ' + timeStringEnd);
+
+        const schedule = new Schedule(dateInit, dateEnd);
         schedule.turns = [turn];
         georoutes.schedules = [schedule];
         this.servive.update(this.organizationMock._id, georoutes);
@@ -229,24 +241,30 @@ export class SchedulerComponent implements OnInit {
         console.log(error);
       }
     } else {
-      georoutes.name = e.newData.title;
+      georoutes.name = e.newData.text;
       georoutes._id = e.newData._id;
       const turn = new Turn(e.newData.startTime, e.newData.endTime);
-      const schedule = new Schedule(e.newData.startDate, e.newData.endDate);
+      let newDate = new Date(e.newData.startDate).toDateString();
+      const timeStringInit =
+        new Date(e.newData.startTime).getHours() +
+        ':' +
+        new Date(e.newData.startTime).getMinutes() +
+        ':00';
+      const dateInit = new Date(newDate + ' ' + timeStringInit);
+      newDate = new Date(e.newData.endDate).toDateString();
+      const timeStringEnd =
+        new Date(e.newData.endTime).getHours() +
+        ':' +
+        new Date(e.newData.endTime).getMinutes() +
+        ':00';
+      const dateEnd = new Date(newDate + ' ' + timeStringEnd);
+
+      const schedule = new Schedule(dateInit, dateEnd);
       schedule.turns = [turn];
       georoutes.schedules = [schedule];
       this.servive.update(this.organizationMock._id, georoutes);
       this.msgStatus = 'Dados salvos com sucesso';
     }
-    this.servive
-      .get(this.organizationMock._id)
-      .subscribe(x => this.loadGeoroutes(x));
-  }
-
-  schedulerRefresh(scheduler) {
-    setTimeout(function() {
-      scheduler.instance.repaint();
-    }, 1000);
   }
 
   /**
@@ -261,15 +279,27 @@ export class SchedulerComponent implements OnInit {
 
     try {
       const georoutes = new GeoRoute();
-      georoutes.name = e.appointmentData.title;
+      georoutes.name = e.appointmentData.text;
       const turn = new Turn(
         e.appointmentData.startTime,
         e.appointmentData.endTime
       );
-      const schedule = new Schedule(
-        e.appointmentData.startDate,
-        e.appointmentData.endDate
-      );
+      let newDate = new Date(e.appointmentData.startDate).toDateString();
+      const timeStringInit =
+        e.appointmentData.startTime.getHours() +
+        ':' +
+        e.appointmentData.startTime.getMinutes() +
+        ':00';
+      const dateInit = new Date(newDate + ' ' + timeStringInit);
+      newDate = new Date(e.appointmentData.endDate).toDateString();
+      const timeStringEnd =
+        e.appointmentData.endTime.getHours() +
+        ':' +
+        e.appointmentData.endTime.getMinutes() +
+        ':00';
+      const dateEnd = new Date(newDate + ' ' + timeStringEnd);
+
+      const schedule = new Schedule(dateInit, dateEnd);
       schedule.turns = [turn];
       georoutes.schedules = [schedule];
       this.servive.add(this.organizationMock._id, georoutes);
@@ -278,20 +308,28 @@ export class SchedulerComponent implements OnInit {
       this.msgStatus = 'Erro ao salvar!';
       console.log(error);
     }
-    /*---------------------------------------------------*/
-    this.servive
-      .get(this.organizationMock._id)
-      .subscribe(x => this.loadGeoroutes(x));
-
-    this.schedulerRefresh(this.scheduler);
   }
 
+  closeAlertMessage() {
+    this.showMessage = false;
+  }
   onAppointmentUpdated(e) {
-    // this.scheduler.instance.instance().updateAppointment(
-    //   this.scheduler.instance,
-    //   this.appointmentsData
-    //   );
-    //this.scheduler.instance.getDataSource().reload();
-    //this.scheduler.instance.repaint();
+    setTimeout(
+      () =>
+        this.servive
+          .get(this.organizationMock._id)
+          .subscribe(x => this.loadGeoroutes(x)),
+      500
+    );
+  }
+
+  onAppointmentAdding(e) {
+    setTimeout(
+      () =>
+        this.servive
+          .get(this.organizationMock._id)
+          .subscribe(x => this.loadGeoroutes(x)),
+      500
+    );
   }
 }
