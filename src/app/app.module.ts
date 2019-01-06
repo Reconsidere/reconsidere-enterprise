@@ -38,6 +38,7 @@ import {
   DxFormModule,
   DxTemplateModule
 } from 'devextreme-angular';
+import './polyfills';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
