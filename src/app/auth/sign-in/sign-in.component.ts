@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/services';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -50,17 +51,19 @@ export class SignInComponent implements OnInit {
     }
 
     this.loading = true;
-    this.authenticationService
+    if(!environment.auth) {
+      this.router.navigate([this.returnUrl]);
+    } else {
+      this.authenticationService
       .login(this.f.username.value, this.f.password.value)
       .pipe(first())
-      .subscribe(
-        data => {
+      .subscribe(data => {
           this.router.navigate([this.returnUrl]);
-        },
-        error => {
-          this.error = error;
-          this.loading = false;
-        }
-      );
+      },
+      error => {
+        this.error = error;
+        this.loading = false;
+      });
+    }
   }
 }
