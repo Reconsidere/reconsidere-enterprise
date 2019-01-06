@@ -34,6 +34,7 @@ export class VehicleManagementComponent implements OnInit {
       .get(this.organizationMock._id)
       .subscribe(x => this.loadVehicles(x));
   }
+  
   loadVehicles(value) {
     for (const items of value) {
       for (const item of items.vehicles) {
@@ -50,14 +51,9 @@ export class VehicleManagementComponent implements OnInit {
       this.showForm = true;
     }
   }
+
   clean() {
-    this.vehicle.carPlate = undefined;
-    this.vehicle.active = undefined;
-    this.vehicle.emptyVehicleWeight = undefined;
-    this.vehicle.fuel = undefined;
-    this.vehicle.typeFuel = undefined;
-    this.vehicle.weightCapacity = undefined;
-    this.vehicle._id = undefined;
+    this.vehicle = new Vehicle();
   }
 
   closeAlertMessage() {
