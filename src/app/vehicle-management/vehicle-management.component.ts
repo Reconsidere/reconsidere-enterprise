@@ -11,7 +11,7 @@ import { VehicleManagementService } from 'src/services/vehicle-management.servic
   styleUrls: ['./vehicle-management.component.scss']
 })
 export class VehicleManagementComponent implements OnInit {
-  typesFuel: string[];
+  typesFuel= Object.values(Vehicle.Fuel);
   msgStatus: string;
   showMessage: boolean;
   vehicle: Vehicle;
@@ -21,15 +21,6 @@ export class VehicleManagementComponent implements OnInit {
   organizationMock: Organization;
 
   constructor(private service: VehicleManagementService) {
-    this.typesFuel = [
-      '',
-      'Gasolina Comum',
-      'Gasolina Aditivada',
-      'Gasolina Premium',
-      'Etanol',
-      'Diesel',
-      'Gás'
-    ];
     this.vehicle = new Vehicle();
 
     /*ATENCAO simulando organização ja cadastrada alterar isso aqui*/
