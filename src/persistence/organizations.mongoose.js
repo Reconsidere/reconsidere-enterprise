@@ -47,8 +47,7 @@ var OrganizationSchema = new mongoose.Schema({
         }
       ],
       password: String,
-      active: Boolean,
-      token: String
+      active: Boolean
     }
   ],
   vehicles: [
@@ -86,6 +85,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+const bcrypt = require('bcryptjs');
 
 const URL = 'mongodb://eowyn-reconsidere-enterprise:27017/organization';
 const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
@@ -154,6 +154,7 @@ organizations.route('/update/:id').post(function(req, res, next) {
       org.location = req.body.location;
       org.vehicles = req.body.vehicles;
       org.georoutes = req.body.georoutes;
+      org.users = req.body.users;
 
       org
         .save()
@@ -167,6 +168,82 @@ organizations.route('/update/:id').post(function(req, res, next) {
   });
 });
 
+//#region CRUD - User
+organizations.route('/user/authenticate').post(function(req, res, next) {
+  organizationModel.findOne(
+    { 'users.email': req.body.email },
+    { 'users.$': 1 },
+    function(err, org) {
+      if (!org) return next(new Error('Login error.'));
+      else {
+        if (bcrypt.compareSync(req.body.password, org.users[0].password)) {
+          res.json(org.users[0]);
+        } else {
+          return res.status(400).send('User not found.');
+        }
+      }
+    }
+  );
+});
+
+organizations.route('/add/user/:id').post(function(req, res, next) {
+  organizationModel.findOne(
+    { _id: req.params.id, 'users.email': req.body.email },
+    function(err, obj) {
+      if (obj) {
+        return res.status(400).send('Email already in use.');
+      } else {
+        organizationModel.findById(req.params.id, function(err, org) {
+          if (!org) return next(new Error('Could not load Document'));
+          else {
+            req.body.password = bcrypt.hashSync(req.body.password, 10);
+            org.users.push(req.body);
+            org
+              .updateOne(org)
+              .then(org => {
+                res.json('save user complete');
+              })
+              .catch(err => {
+                res.status(400).send('unable to save user');
+              });
+          }
+        });
+      }
+    }
+  );
+});
+
+organizations.route('/update/user/:id').post(function(req, res, next) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      var user = org.users.id(req.body._id);
+      if (!user) {
+        org.users.push(req.body);
+        org
+          .update(org)
+          .then(org => {
+            res.json('Update complete');
+          })
+          .catch(err => {
+            res.status(400).send('unable to update the database');
+          });
+      } else {
+        user.set(req.body);
+        org
+          .update(org)
+          .then(org => {
+            res.json('Update complete');
+          })
+          .catch(err => {
+            res.status(400).send('unable to update the database');
+          });
+      }
+    }
+  });
+});
+
+//#endregion
 
 //#region CRUD  - Vehicle
 organizations.route('/vehicle/:id').get(function(req, res) {
@@ -227,9 +304,6 @@ organizations.route('/update/vehicle/:id').post(function(req, res, next) {
 });
 
 //#endregion
-
-
-
 
 //#region CRUD  - Scheduler
 

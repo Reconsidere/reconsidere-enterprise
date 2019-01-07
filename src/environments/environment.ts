@@ -4,11 +4,12 @@
 
 export const environment = {
   production: false,
-  auth: false,
+  auth: true,
   database: {
     name: 'Mongo',
     uri: `http://localhost:3000/`
-  }
+  },
+  secret: 'ABXjghhttl5600096874ttpld#'
 };
 
 /*
