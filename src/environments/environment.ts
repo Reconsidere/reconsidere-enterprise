@@ -9,7 +9,6 @@ export const environment = {
     name: 'Mongo',
     uri: `http://localhost:3000/`
   }
-    
 };
 
 /*
