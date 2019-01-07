@@ -11,96 +11,62 @@ import { VehicleManagementService } from 'src/services/vehicle-management.servic
   styleUrls: ['./vehicle-management.component.scss']
 })
 export class VehicleManagementComponent implements OnInit {
-  typesFuel= Object.values(Vehicle.Fuel);
-  msgStatus: string;
-  showMessage: boolean;
-  vehicle: Vehicle;
-  vehicles: Vehicle[] = [];
-  p = 1;
-  showForm = false;
+  
+  page: number;
+  message: string;
+  show = false;
+  
+  vehicle: any;
+  vehicles: Observable<Vehicle[]>;
+  typesFuel = Object.values(Vehicle.Fuel);
+  
   organizationMock: Organization;
+
+  userProfile: {
+    organizationId: '5c2e3736014dc837908f24c4';
+  }
 
   constructor(private service: VehicleManagementService) {
     this.vehicle = new Vehicle();
-
-    /*ATENCAO simulando organização ja cadastrada alterar isso aqui*/
-    this.organizationMock = new Organization();
-    this.organizationMock._id = '5c2e3736014dc837908f24c4';
-    /*---------------------------------------------------*/
-  }
-
-  ngOnInit() {
-    this.service
-      .get(this.organizationMock._id)
-      .subscribe(x => this.loadVehicles(x));
+    this.show = true;
   }
   
-  loadVehicles(value) {
-    for (const items of value) {
-      for (const item of items.vehicles) {
-        this.vehicles.push(item);
-      }
-    }
-  }
-
-  openForm() {
-    if (this.showForm) {
-      this.showForm = false;
-      this.clean();
-    } else {
-      this.showForm = true;
-    }
+  ngOnInit() {
+    this.page = 1;
+    this.vehicles = this.service.loadAll(this.userProfile.organizationId);
   }
 
   clean() {
     this.vehicle = new Vehicle();
   }
 
-  closeAlertMessage() {
-    this.showMessage = false;
+  closeMessage() {
+    this.message = undefined;
   }
 
-  veryfyBeforeSave() {
-    if (
-      this.vehicle.carPlate === undefined ||
-      this.vehicle.weightCapacity === undefined ||
-      this.vehicle.emptyVehicleWeight === undefined ||
-      this.vehicle.typeFuel === undefined
-    ) {
-      this.msgStatus =
-        'Por favor, preencha os campos antes de salvar os dados!';
-      return false;
-    } else {
-      return true;
-    }
+  edit(vehicle: any) {
+    this.vehicle = vehicle;
+    this.show = true;
   }
 
-  loadValuesForEdit(item) {
-    this.vehicle.carPlate = item.carPlate;
-    this.vehicle.active = item.active;
-    this.vehicle.emptyVehicleWeight = item.emptyVehicleWeight;
-    this.vehicle.fuel = item.fuel;
-    this.vehicle.typeFuel = item.typeFuel;
-    this.vehicle.weightCapacity = item.weightCapacity;
-    this.vehicle._id = item._id;
-    this.showForm = true;
-  }
   save() {
-    this.showMessage = true;
-    if (!this.veryfyBeforeSave()) {
-      return;
-    }
     try {
-      if (this.vehicle._id === undefined) {
-        this.service.add(this.organizationMock._id, this.vehicle);
-      } else {
-        this.service.update(this.organizationMock._id, this.vehicle);
-      }
-      this.showForm = false;
-      this.msgStatus = 'Dados salvos com sucesso';
+      this.veryfyBeforeSave()
+      this.service.createOrUpdate(this.organizationMock._id, this.vehicle);
+      this.show = false;
+      this.message = 'Dados salvos com sucesso';
     } catch (error) {
-      this.msgStatus = 'Erro ao salvar!';
+      this.message = error;
       console.log(error);
     }
   }
+
+  veryfyBeforeSave() {
+    if (!this.vehicle.carPlate || !this.vehicle.weightCapacity  
+        || !this.vehicle.emptyVehicleWeight  || !this.vehicle.typeFuel
+    ) {
+      throw new Error('Por favor, preencha os campos antes de salvar os dados!');
+    }
+  }
+
 }

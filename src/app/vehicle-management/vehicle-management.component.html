@@ -1,11 +1,11 @@
 <app-toolbar></app-toolbar>
 <div class="container">
   <div
-    *ngIf="showMessage == true"
+    *ngIf="message"
     class="alert alert-warning alert-dismissible fade show"
     role="alert"
   >
-    <strong>Atenção: </strong> {{ msgStatus }}
+    <strong>Atenção: </strong> {{ message }}
     <button
       type="button"
       (click)="closeAlertMessage()"
@@ -23,9 +23,9 @@
         <tr id="buttonAdd">
           <th colspan="7">
             <button
-              *ngIf="this.showForm == false"
+              *ngIf="this.show"
               type="button"
-              (click)="openForm()"
+              (click)="show = !show;"
               class="btn btn-primary"
               data-toggle="button"
               aria-pressed="false"
@@ -34,9 +34,9 @@
               <i class="fa fa-plus"></i>
             </button>
             <button
-              *ngIf="this.showForm == true"
+              *ngIf="!this.show"
               type="button"
-              (click)="openForm()"
+              (click)="show = !show; clean();"
               class="btn btn-primary"
               data-toggle="button"
               aria-pressed="false"
@@ -57,36 +57,28 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="
-            let item of (vehicles
-              | paginate: { itemsPerPage: 5, currentPage: p });
-            let i = index
-          "
-        >
-          <td hidden >{{ item._id }}</td>
-          <td>{{ item.carPlate }}</td>
-          <td>{{ item.weightCapacity }}</td>
-          <td>{{ item.emptyVehicleWeight }}</td>
-          <td>{{ item.fuel }}</td>
-          <td>{{ item.typeFuel }}</td>
-          <td>{{ item.active }}</td>
+        <tr *ngFor="let vehicle of (vehicles | paginate: { itemsPerPage: 5, currentPage: page });">
+          <td hidden >{{ vehicle._id }}</td>
+          <td>{{ vehicle.carPlate }}</td>
+          <td>{{ vehicle.weightCapacity }}</td>
+          <td>{{ vehicle.emptyVehicleWeight }}</td>
+          <td>{{ vehicle.fuel }}</td>
+          <td>{{ vehicle.typeFuel }}</td>
+          <td>{{ vehicle.active }}</td>
           <td>
-            <button
-              (click)="loadValuesForEdit(item)"
-              type="button"
-              class="btn btn-sm btn-primary"
-              data-toggle="button"
-              aria-pressed="false"
-              autocomplete="off"
-            >
+            <button (click)="edit(vehicle)"
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    data-toggle="button"
+                    aria-pressed="false"
+                    autocomplete="off">
               <i class="fa fa-edit"></i>
             </button>
           </td>
         </tr>
       </tbody>
       <pagination-controls
-        (pageChange)="p = $event"
+        (pageChange)="page = $event"
         previousLabel="Anterior"
         nextLabel="Próxima"
         autoHide="true"
@@ -95,7 +87,7 @@
       ></pagination-controls>
     </table>
   </div>
-  <form ngNativeValidate *ngIf="showForm === true">
+  <form ngNativeValidate *ngIf="show === true">
     <div class="row">
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
