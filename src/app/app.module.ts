@@ -41,6 +41,7 @@ import {
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { DecriptEncript } from './_helpers/decriptencript';
 
 registerLocaleData(localePt);
 
@@ -97,7 +98,8 @@ registerLocaleData(localePt);
     AppService,
     ReactiveFormsModule,
     BrowserModule,
-    RouterModule
+    RouterModule,
+    DecriptEncript
   ],
   bootstrap: [AppComponent]
 })
