@@ -1,3 +1,4 @@
+import { LogoutComponent } from './auth/logout/logout.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -27,6 +28,10 @@ export const routes: Routes = [
   {
     path: 'login',
     component: SignInComponent
+  },
+  {
+    path: 'logout',
+    component: LogoutComponent
   },
   // otherwise redirect to home
   { path: '**', redirectTo: '' }

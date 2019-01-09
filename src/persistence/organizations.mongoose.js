@@ -85,7 +85,6 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-const bcrypt = require('bcryptjs');
 
 const URL = 'mongodb://eowyn-reconsidere-enterprise:27017/organization';
 const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
@@ -176,11 +175,7 @@ organizations.route('/user/authenticate').post(function(req, res, next) {
     function(err, org) {
       if (!org) return next(new Error('Login error.'));
       else {
-        if (bcrypt.compareSync(req.body.password, org.users[0].password)) {
-          res.json(org.users[0]);
-        } else {
-          return res.status(400).send('User not found.');
-        }
+        res.json(org.users[0]);
       }
     }
   );
@@ -196,7 +191,7 @@ organizations.route('/add/user/:id').post(function(req, res, next) {
         organizationModel.findById(req.params.id, function(err, org) {
           if (!org) return next(new Error('Could not load Document'));
           else {
-            req.body.password = bcrypt.hashSync(req.body.password, 10);
+            (req.body.password = req.body.password), 10;
             org.users.push(req.body);
             org
               .updateOne(org)

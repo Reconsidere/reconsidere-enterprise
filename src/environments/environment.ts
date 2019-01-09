@@ -3,13 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
+  production: true,
   auth: true,
   database: {
     name: 'Mongo',
     uri: `http://localhost:3000/`
   },
-  secret: 'ABXjghhttl5600096874ttpld#'
+  secret: '154097$#@$^@1ETI'
 };
 
 /*
