@@ -42,6 +42,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { DecriptEncript } from './_helpers/decriptencript';
+import { RecaptchaModule } from 'angular-google-recaptcha';
 
 registerLocaleData(localePt);
 
@@ -86,7 +87,10 @@ registerLocaleData(localePt);
     DxSelectBoxModule,
     DxTextAreaModule,
     DxFormModule,
-    DxTemplateModule
+    DxTemplateModule,
+    RecaptchaModule.forRoot({
+      siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF',
+  }),
   ],
 
   providers: [

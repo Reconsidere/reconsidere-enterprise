@@ -8,3 +8,11 @@ export class User {
   active: boolean;
   token?: string;
 }
+
+export namespace User {
+  export enum Profiles {
+    Vehicle = 'Veículo',
+    Organization = 'Organização',
+    Scheduler = 'Agenda'
+  }
+}

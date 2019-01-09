@@ -1,11 +1,10 @@
-import { Material } from "./material";
-import {Location} from "./location";
-import { User } from "./user";
-import { Vehicle } from "./vehicle";
-import { GeoRoute } from "./georoute";
+import { Material } from './material';
+import { Location } from './location';
+import { User } from './user';
+import { Vehicle } from './vehicle';
+import { GeoRoute } from './georoute';
 
 export class Organization {
-
   _id: string;
   company: string;
   cnpj: string;
@@ -25,4 +24,12 @@ export class Organization {
   classification: string;
   vehicles: [Vehicle];
   georoutes: [GeoRoute];
+}
+
+export namespace Organization {
+  export enum Classification {
+    Cooperativa = 'Cooperativa',
+    Privada = 'Empresa Privada',
+    Municipio = 'Município'
+  }
 }

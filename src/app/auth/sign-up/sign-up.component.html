@@ -18,278 +18,458 @@
   </div>
 
   <form ngNativeValidate>
-    <div class="row">
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="classification">Classificação</label>
-          <select
-            required
-            [(ngModel)]="classification"
-            name="classification"
-            class="form-control"
-            onchange="TypeOrganization(classification)"
-          >
-            <option id="classification" *ngFor="let item of classifications">{{
-              item
-            }}</option>
-          </select>
+    <div class="card">
+      <div class="card-header">Empresa</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="classification">Classificação</label>
+              <select
+                required
+                [(ngModel)]="classification"
+                name="classification"
+                class="form-control"
+                onchange="TypeOrganization(classification)"
+              >
+                <option
+                  id="classification"
+                  *ngFor="let item of classifications"
+                  >{{ item }}</option
+                >
+              </select>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input
-        required
-        [(ngModel)]="email"
-        name="email"
-        type="email"
-        class="form-control"
-        id="email"
-        aria-describedby="email"
-        placeholder="usuario@email.com"
-      />
-    </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
-          <label for="password">Senha</label>
+          <label for="email">Email</label>
           <input
-            minlength="6"
-            maxlength="20"
             required
-            [(ngModel)]="password"
-            name="password"
-            type="password"
+            [(ngModel)]="organization.email"
+            name="email"
+            type="email"
             class="form-control"
-            id="password"
-            aria-describedby="password"
+            id="email"
+            aria-describedby="email"
+            placeholder="empresa@email.com"
           />
         </div>
-      </div>
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="password">Senha</label>
+              <input
+                minlength="6"
+                maxlength="20"
+                required
+                [(ngModel)]="organization.password"
+                name="password"
+                type="password"
+                class="form-control"
+                id="password"
+                aria-describedby="password"
+              />
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="confirmPassword">Confirmação de senha</label>
+              <input
+                minlength="6"
+                maxlength="20"
+                required
+                [(ngModel)]="confirmPasswordOrganization"
+                name="confirmPassword"
+                type="password"
+                class="form-control"
+                id="confirmPassword"
+                aria-describedby="confirmPassword"
+                (blur)="verifyPasswordOrganization()"
+              />
+              <div
+                *ngIf="isValidPasswordOrganization == false"
+                class="input-group is-invalid"
+              >
+                Senha não coincide
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="form-group">
-          <label for="confirmPassword">Confirmação de senha</label>
+          <label for="cnpj">CNPJ</label>
           <input
-            minlength="6"
-            maxlength="20"
             required
-            [(ngModel)]="confirmPassword"
-            name="confirmPassword"
-            type="password"
+            [(ngModel)]="organization.cnpj"
+            name="cnpj"
+            type="text"
             class="form-control"
-            id="confirmPassword"
-            aria-describedby="confirmPassword"
-            (blur)="verifyPassword()"
+            id="cnpj"
+            aria-describedby="cnpj"
+            placeholder="00.000.000/0000-00"
+            mask="00.000.000/0000-00"
+            (blur)="verifyCNPJ()"
           />
-          <div *ngIf="isValidPassword == false" class="input-group is-invalid">
-            Senha não coincide
+          <div *ngIf="isValidCNPJ == false" class="input-group is-invalid">
+            CNPJ inválido
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="company">Nome</label>
+              <input
+                required
+                [(ngModel)]="organization.company"
+                name="company"
+                type="text"
+                class="form-control"
+                id="company"
+                aria-describedby="company"
+              />
+            </div>
+          </div>
+
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="tradingName">Nome fantasia</label>
+              <input
+                required
+                [(ngModel)]="organization.tradingName"
+                name="tradingName"
+                type="text"
+                class="form-control"
+                id="tradingName"
+                aria-describedby="tradingName"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="phone">Telefone</label>
+              <input
+                required
+                [(ngModel)]="organization.phone"
+                name="phone"
+                type="text"
+                class="form-control"
+                id="phone"
+                aria-describedby="phone"
+                placeholder="(00) 0000-0000"
+                mask="(00) 0000-0000"
+              />
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="cellPhone">Celular</label>
+              <input
+                required
+                [(ngModel)]="organization.cellPhone"
+                name="cellPhone"
+                type="text"
+                class="form-control"
+                id="cellPhone"
+                aria-describedby="cellPhone"
+                placeholder="(00) 00000-0000"
+                mask="(00) 00000-0000"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="anil_nepal">
+            <label class="switch switch-left-right">
+              <input
+                class="switch-input"
+                type="checkbox"
+                checklist-value="organization.active"
+                checklist-model="organization.active"
+              />
+
+              <span class="switch-label" data-on="On" data-off="Off"></span>
+              <span class="switch-handle"></span>Ativo
+            </label>
           </div>
         </div>
       </div>
     </div>
-    <div class="form-group">
-      <label for="cnpj">CNPJ</label>
-      <input
-        required
-        [(ngModel)]="cnpj"
-        name="cnpj"
-        type="text"
-        class="form-control"
-        id="cnpj"
-        aria-describedby="cnpj"
-        placeholder="00.000.000/0000-00"
-        mask="00.000.000/0000-00"
-        (blur)="verifyCNPJ()"
-      />
-      <div *ngIf="isValidCNPJ == false" class="input-group is-invalid">
-        CNPJ inválido
+
+    <div class="card">
+      <div class="card-header">Localização</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="cep">CEP</label>
+              <input
+                required
+                [(ngModel)]="organization.location.cep"
+                cep="ngModel"
+                name="cep"
+                type="text"
+                class="form-control"
+                id="cep"
+                aria-describedby="cep"
+                placeholder="00.000-000"
+                mask="00.000-000"
+                #cepVal
+                (blur)="CEPSearch(cepVal.value)"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="publicPlace">Logradouro</label>
+              <input
+                required
+                [(ngModel)]="organization.location.publicPlace"
+                name="publicPlace"
+                type="text"
+                class="form-control"
+                id="publicPlace"
+                aria-describedby="publicPlace"
+              />
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="neighborhood">Bairro</label>
+              <input
+                required
+                [(ngModel)]="organization.location.neighborhood"
+                name="neighborhood"
+                type="text"
+                class="form-control"
+                id="neighborhood"
+                aria-describedby="neighborhood"
+              />
+            </div>
+          </div>
+          <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="number">Número</label>
+              <input
+                required
+                [(ngModel)]="organization.location.number"
+                name="number"
+                type="number"
+                class="form-control"
+                id="number"
+                numbers-only
+                aria-describedby="number"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="county">Município</label>
+              <input
+                required
+                [(ngModel)]="organization.location.county"
+                name="county"
+                type="text"
+                class="form-control"
+                id="county"
+                aria-describedby="county"
+              />
+            </div>
+          </div>
+          <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="state">UF</label>
+              <input
+                required
+                [(ngModel)]="organization.location.state"
+                name="state"
+                type="text"
+                class="form-control"
+                id="state"
+                numbers-only
+                aria-describedby="state"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="complement">Complemento</label>
+              <input
+                required
+                [(ngModel)]="organization.location.complement"
+                name="complement"
+                type="text"
+                class="form-control"
+                id="complement"
+                aria-describedby="complement"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="company">Nome</label>
-          <input
-            required
-            [(ngModel)]="company"
-            name="company"
-            type="text"
-            class="form-control"
-            id="company"
-            aria-describedby="company"
-          />
+    <div class="card">
+      <div class="card-header">Usuários</div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="password">Nome</label>
+              <input
+                [(ngModel)]="user.name"
+                name="name"
+                type="text"
+                class="form-control"
+                id="name"
+                aria-describedby="name"
+              />
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="password">Email</label>
+              <input
+                [(ngModel)]="user.email"
+                name="emailuser"
+                type="email"
+                class="form-control"
+                id="emailuser"
+                aria-describedby="emailuser"
+                placeholder="usuario@email.com"
+              />
+            </div>
+          </div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="userpassword">Senha</label>
+              <input
+                minlength="6"
+                maxlength="20"
+                required
+                [(ngModel)]="user.password"
+                name="userpassword"
+                type="password"
+                class="form-control"
+                id="userpassword"
+                aria-describedby="userpassword"
+              />
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="form-group">
+              <label for="confirmPasswordUser">Confirmação de senha</label>
+              <input
+                minlength="6"
+                maxlength="20"
+                required
+                [(ngModel)]="confirmPasswordUser"
+                name="confirmPasswordUser"
+                type="password"
+                class="form-control"
+                id="confirmPasswordUser"
+                aria-describedby="confirmPasswordUser"
+                (blur)="verifyPasswordUser()"
+              />
+              <div
+                *ngIf="isValidPasswordUser == false"
+                class="input-group is-invalid"
+              >
+                Senha não coincide
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="tradingName">Nome fantasia</label>
-          <input
-            required
-            [(ngModel)]="tradingName"
-            name="tradingName"
-            type="text"
-            class="form-control"
-            id="tradingName"
-            aria-describedby="tradingName"
-          />
+        <div class="card">
+          <div class="card-header">Permissões</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"></div>
+              <div class="anil_nepal">
+                <label
+                  class="switch switch-left-right"
+                  *ngFor="let profile of profiles"
+                >
+                  <input
+                    class="switch-input"
+                    type="checkbox"
+                    checklist-value="profile"
+                    (change)="profileChange(profile, $event.target.checked)"
+                  />
+
+                  <span class="switch-label" data-on="On" data-off="Off"></span>
+                  <span class="switch-handle"></span> {{ profile }}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+            <div class="anil_nepal">
+              <label class="switch switch-left-right">
+                <input
+                  class="switch-input"
+                  type="checkbox"
+                  checklist-value="user.active"
+                  checklist-model="user.active"
+                />
+
+                <span class="switch-label" data-on="On" data-off="Off"></span>
+                <span class="switch-handle"></span>Ativo
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="cep">CEP</label>
-          <input
-            required
-            [(ngModel)]="cep"
-            cep="ngModel"
-            name="cep"
-            type="text"
-            class="form-control"
-            id="cep"
-            aria-describedby="cep"
-            placeholder="00.000-000"
-            mask="00.000-000"
-            #cepVal
-            (blur)="CEPSearch(cepVal.value)"
-          />
-        </div>
-      </div>
+    <div class="card">
+      <div class="card-header">Assinatura</div>
+      <div class="card-body"></div>
     </div>
-    <div class="row">
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="publicPlace">Logradouro</label>
-          <input
-            required
-            [(ngModel)]="publicPlace"
-            name="publicPlace"
-            type="text"
-            class="form-control"
-            id="publicPlace"
-            aria-describedby="publicPlace"
-          />
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="neighborhood">Bairro</label>
-          <input
-            required
-            [(ngModel)]="neighborhood"
-            name="neighborhood"
-            type="text"
-            class="form-control"
-            id="neighborhood"
-            aria-describedby="neighborhood"
-          />
-        </div>
-      </div>
-      <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="number">Número</label>
-          <input
-            required
-            [(ngModel)]="number"
-            name="number"
-            type="number"
-            class="form-control"
-            id="number"
-            numbers-only
-            aria-describedby="number"
-          />
-        </div>
-      </div>
+
+    <div class="card">
+      <div class="card-header">Materiais</div>
+      <div class="card-body"></div>
     </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="county">Município</label>
-          <input
-            required
-            [(ngModel)]="county"
-            name="county"
-            type="text"
-            class="form-control"
-            id="county"
-            aria-describedby="county"
-          />
-        </div>
-      </div>
-      <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="state">UF</label>
-          <input
-            required
-            [(ngModel)]="state"
-            name="state"
-            type="text"
-            class="form-control"
-            id="state"
-            numbers-only
-            aria-describedby="state"
-          />
-        </div>
-      </div>
+
+    <div class="g-recaptcha">
+      <recaptcha
+        [(ngModel)]="myRecaptcha"
+        (scriptLoad)="onScriptLoad()"
+        (scriptError)="onScriptError()"
+      ></recaptcha>
     </div>
-    <div class="row">
-      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="complement">Complemento</label>
-          <input
-            required
-            [(ngModel)]="complement"
-            name="complement"
-            type="text"
-            class="form-control"
-            id="complement"
-            aria-describedby="complement"
-          />
-        </div>
-      </div>
-      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="phone">Telefone</label>
-          <input
-            required
-            [(ngModel)]="phone"
-            name="phone"
-            type="text"
-            class="form-control"
-            id="phone"
-            aria-describedby="phone"
-            placeholder="(00) 0000-0000"
-            mask="(00) 0000-0000"
-          />
-        </div>
-      </div>
-      <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="cellPhone">Celular</label>
-          <input
-            required
-            [(ngModel)]="cellPhone"
-            name="cellPhone"
-            type="text"
-            class="form-control"
-            id="cellPhone"
-            aria-describedby="cellPhone"
-            placeholder="(00) 00000-0000"
-            mask="(00) 00000-0000"
-          />
-        </div>
-      </div>
-    </div>
+
     <div>
+      <button
+        type="submit"
+        id="clean"
+        (click)="clean()"
+        class="btn btn-primary col-md-12"
+      >
+        Limpar Campos
+      </button>
+
       <button
         type="submit"
         id="save"
         (click)="save()"
-        class="btn btn-primary col-md-12"
+        class="btn btn-success col-md-12"
       >
         Salvar
       </button>

@@ -1,4 +1,4 @@
-import { GeoRoute } from "./georoute";
+import { GeoRoute } from './georoute';
 
 export class Vehicle {
   _id: string;
@@ -18,6 +18,6 @@ export namespace Vehicle {
     Etanol = 'Etanol',
     Diesel = 'Diesel',
     Gas = 'Gás',
-    Novo = 'Novo'    
+    Novo = 'Novo'
   }
 }

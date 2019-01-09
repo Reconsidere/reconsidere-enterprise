@@ -1,3 +1,4 @@
+import { User } from './../../../models/user';
 import { Location } from './../../../models/location';
 import { Observable } from 'rxjs/internal/Observable';
 import { Component, OnInit } from '@angular/core';
@@ -15,35 +16,39 @@ import { Organization } from 'src/models/organization';
   styleUrls: ['./sign-up.component.scss']
 })
 export class SignUpComponent implements OnInit {
-  isValidPassword: boolean;
+  isValidPasswordOrganization: boolean;
+  isValidPasswordUser: boolean;
   isValidCNPJ: boolean;
   classifications: string[];
+  profiles: string[];
   organization: Organization;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  cnpj: string;
-  company: string;
-  tradingName: string;
-  classification: string;
-  cep: string;
-  publicPlace: string;
-  neighborhood: string;
-  number: number;
-  county: string;
-  state: string;
-  complement: string;
-  phone: string;
-  cellPhone: string;
+  user: User;
   msgStatus: string;
   showMessage: boolean;
+  confirmPasswordOrganization: string;
+  confirmPasswordUser: string;
+  myRecaptcha: boolean;
 
   constructor(
     private authService: AuthService,
     private cepService: CepService
   ) {
-    this.classifications = ['', 'Cooperativa', 'Empresa Privada', 'Município'];
+    this.classifications = Object.values(Organization.Classification);
+    this.profiles = Object.values(User.Profiles);
     this.organization = new Organization();
+    this.organization.location = new Location(
+      '',
+      '',
+      0,
+      0,
+      '',
+      '',
+      '',
+      0,
+      '',
+      ''
+    );
+    this.user = new User();
   }
 
   ngOnInit() {}
@@ -52,23 +57,65 @@ export class SignUpComponent implements OnInit {
     this.cepService.search(value, this);
   }
 
+  clean() {
+    this.organization = new Organization();
+    this.organization.location = new Location(
+      '',
+      '',
+      0,
+      0,
+      '',
+      '',
+      '',
+      0,
+      '',
+      ''
+    );
+    this.user = new User();
+  }
+
   TypeOrganization(value) {
-    if (value === 'Cooperativa') {
-    } else if (value === 'Empresa Privada') {
-    } else if (value === 'Município') {
+    if (value === Organization.Classification.Cooperativa) {
+    } else if (value === Organization.Classification.Privada) {
+    } else if (value === Organization.Classification.Municipio) {
     }
   }
 
-  verifyPassword() {
-    this.isValidPassword = ConfirmPasswordValidator.MatchPassword(
-      this.password,
-      this.confirmPassword
+  profileChange(value, event) {
+    if (this.user.profiles === undefined && event) {
+      this.user.profiles = [value];
+      return;
+    }
+    if (!event) {
+      this.user.profiles.forEach((item, index) => {
+        if (item === value) {
+          this.user.profiles.splice(index, 1);
+        }
+      });
+      return;
+    }
+    if (!this.user.profiles.includes(value) && event) {
+      this.user.profiles.push(value);
+    }
+  }
+
+  verifyPasswordOrganization() {
+    this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
+      this.organization.password,
+      this.confirmPasswordOrganization
+    );
+    setTimeout(function() {}.bind(this), 1000);
+  }
+  verifyPasswordUser() {
+    this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
+      this.user.password,
+      this.confirmPasswordUser
     );
     setTimeout(function() {}.bind(this), 1000);
   }
 
   verifyCNPJ() {
-    this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.cnpj);
+    this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
     setTimeout(function() {}.bind(this), 1000);
   }
 
@@ -77,29 +124,34 @@ export class SignUpComponent implements OnInit {
   }
   veryfyBeforeSave() {
     if (
-      this.email === undefined ||
-      this.company === undefined ||
-      this.tradingName === undefined ||
-      this.password === undefined ||
-      this.cnpj === undefined ||
-      this.phone === undefined ||
-      this.cellPhone === undefined ||
-      this.classification === undefined ||
-      this.state === undefined ||
-      this.cep === undefined ||
-      this.publicPlace === undefined ||
-      this.neighborhood === undefined ||
-      this.number === undefined ||
-      this.county === undefined ||
-      this.company === undefined
+      this.organization.email === undefined ||
+      this.organization.company === undefined ||
+      this.organization.tradingName === undefined ||
+      this.organization.password === undefined ||
+      this.organization.cnpj === undefined ||
+      this.organization.phone === undefined ||
+      this.organization.cellPhone === undefined ||
+      this.organization.classification === undefined ||
+      this.organization.location.state === undefined ||
+      this.organization.location.cep === undefined ||
+      this.organization.location.publicPlace === undefined ||
+      this.organization.location.neighborhood === undefined ||
+      this.organization.location.number === undefined ||
+      this.organization.location.county === undefined ||
+      this.organization.company === undefined
     ) {
       this.msgStatus =
         'Por favor, preencha os campos antes de salvar os dados!';
       return false;
     }
-    this.showMessage = this.isValidPassword = ConfirmPasswordValidator.MatchPassword(
-      this.password,
-      this.confirmPassword
+    this.showMessage = this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
+      this.organization.password,
+      this.confirmPasswordOrganization
+    );
+
+    this.showMessage = this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
+      this.user.password,
+      this.confirmPasswordUser
     );
 
     if (!this.showMessage) {
@@ -107,13 +159,23 @@ export class SignUpComponent implements OnInit {
       return false;
     }
 
-    this.showMessage = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.cnpj);
+    this.showMessage = this.isValidCNPJ = CNPJValidator.MatchCNPJ(
+      this.organization.cnpj
+    );
     if (!this.showMessage) {
       this.msgStatus = 'CNPJ incorreto.';
       return false;
     } else {
       return true;
     }
+  }
+
+  onScriptLoad() {
+    console.log('Google reCAPTCHA loaded and is ready for use!');
+  }
+
+  onScriptError() {
+    console.log('Something went long when loading the Google reCAPTCHA');
   }
 
   save() {
@@ -123,27 +185,7 @@ export class SignUpComponent implements OnInit {
     }
 
     try {
-      this.organization.email = this.email;
-      this.organization.company = this.company;
-      this.organization.tradingName = this.tradingName;
-      this.organization.password = this.password;
-      this.organization.cnpj = this.cnpj;
-      this.organization.phone = Number(this.phone);
-      this.organization.cellPhone = Number(this.cellPhone);
-      this.organization.classification = this.classification;
-      this.organization.location = new Location(
-        '',
-        this.state,
-        0,
-        0,
-        this.cep,
-        this.publicPlace,
-        this.neighborhood,
-        this.number,
-        this.county,
-        this.company
-      );
-      //this.add(this.organization);
+      this.authService.signup(this.organization);
       this.msgStatus = 'Dados salvos com sucesso';
     } catch (error) {
       this.msgStatus = 'Erro ao salvar!';
