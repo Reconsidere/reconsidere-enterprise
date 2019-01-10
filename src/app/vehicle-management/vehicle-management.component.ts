@@ -11,7 +11,6 @@ import { VehicleManagementService } from 'src/services/vehicle-management.servic
   styleUrls: ['./vehicle-management.component.scss']
 })
 export class VehicleManagementComponent implements OnInit {
-
   page: number;
   message: string;
   show = false;
@@ -23,17 +22,19 @@ export class VehicleManagementComponent implements OnInit {
   organizationMock: Organization;
 
   userProfile: {
-    organizationId: '5c2e3736014dc837908f24c4'
+    organizationId: '5c2e3736014dc837908f24c4';
   };
 
   constructor(private service: VehicleManagementService) {
     this.vehicle = new Vehicle();
-    this.show = true;
   }
 
   ngOnInit() {
     this.page = 1;
     this.vehicles = this.service.loadAll(this.userProfile.organizationId);
+    if (this.vehicles !== undefined) {
+      this.show = true;
+    }
   }
 
   clean() {
@@ -52,7 +53,10 @@ export class VehicleManagementComponent implements OnInit {
   save() {
     try {
       this.veryfyBeforeSave();
-      this.service.createOrUpdate(this.organizationMock._id, this.vehicle);
+      this.service.createOrUpdate(
+        this.userProfile.organizationId,
+        this.vehicle
+      );
       this.show = false;
       this.message = 'Dados salvos com sucesso';
     } catch (error) {
@@ -62,11 +66,15 @@ export class VehicleManagementComponent implements OnInit {
   }
 
   veryfyBeforeSave() {
-    if (!this.vehicle.carPlate || !this.vehicle.weightCapacity
-        || !this.vehicle.emptyVehicleWeight  || !this.vehicle.typeFuel
+    if (
+      !this.vehicle.carPlate ||
+      !this.vehicle.weightCapacity ||
+      !this.vehicle.emptyVehicleWeight ||
+      !this.vehicle.typeFuel
     ) {
-      throw new Error('Por favor, preencha os campos antes de salvar os dados!');
+      throw new Error(
+        'Por favor, preencha os campos antes de salvar os dados!'
+      );
     }
   }
-
 }

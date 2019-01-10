@@ -17,7 +17,7 @@ import { SchedulerService } from 'src/services/scheduler.service';
 import { Schedule } from 'src/models/schedule';
 import { Turn } from 'src/models/turn';
 import { DxSchedulerComponent } from 'devextreme-angular';
-import { UserService } from 'src/services';
+import { UserService, AuthService } from 'src/services';
 import { User } from 'src/models';
 import { first } from 'rxjs/operators';
 
@@ -39,16 +39,18 @@ export class SchedulerComponent implements OnInit {
 
   constructor(
     private servive: SchedulerService,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService
   ) {
     this.appointmentsData = [];
     this.resourcesData = [];
     this.prioritiesData = [];
   }
   ngOnInit() {
+    const id = JSON.parse(localStorage.getItem('currentOrganizationID'));
     this.userService
-      .getAll()
-      .pipe(first())
+      .getAll(id, this.users)
+      .pipe()
       .subscribe(users => {
         this.users = users;
       });

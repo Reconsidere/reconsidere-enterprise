@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { User } from 'src/models';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,28 @@ import { environment } from 'src/environments/environment';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  getAll() {
-    return this.http.get<User[]>(`${config.apiUrl}/users`);
+  getAll(organizationId, users) {
+    return this.http
+      .get(`${config.apiUrl}/${organizationId}/user`)
+      .pipe(
+        map(
+          items => {
+            return this.loadUsers(items, users);
+          },
+          error => {
+            throw new Error('Login incorreto');
+          }
+        )
+      );
+  }
+
+  loadUsers(items, users) {
+    if (users === undefined) {
+      users = items;
+    } else {
+      users.push(items);
+    }
+    return users;
   }
 
   createOrUpdate(organizatioId: string, user: User) {

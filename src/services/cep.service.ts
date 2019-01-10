@@ -10,18 +10,18 @@ export class CepService {
   private adrress: string[];
   constructor(private http: HttpClient) { }
 
-  search(value: string, component: SignUpComponent) {
+  search(value: string, location: Location) {
     value = value.replace(/[^a-zA-Z0-9 ]/g, "");
     return this.http
       .get(`https://viacep.com.br/ws/${value}/json/`)
-      .subscribe(data => this.convertToCEP(data, component), error => console.log(error));
+      .subscribe(data => this.convertToCEP(data, location), error => console.log(error));
   }
-  private convertToCEP(cepNaResposta, component) {
-    component.cep = cepNaResposta.cep;
-    component.publicPlace = cepNaResposta.logradouro;
-    component.complement = cepNaResposta.complemento;
-    component.neighborhood = cepNaResposta.bairro;
-    component.county = cepNaResposta.localidade;
-    component.state = cepNaResposta.uf;
+  private convertToCEP(cepNaResposta, location) {
+    location.cep = cepNaResposta.cep;
+    location.publicPlace = cepNaResposta.logradouro;
+    location.complement = cepNaResposta.complemento;
+    location.neighborhood = cepNaResposta.bairro;
+    location.county = cepNaResposta.localidade;
+    location.state = cepNaResposta.uf;
   }
 }

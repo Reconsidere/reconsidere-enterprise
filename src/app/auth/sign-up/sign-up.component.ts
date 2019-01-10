@@ -9,6 +9,7 @@ import { AuthService } from 'src/services/auth.service';
 import { promise } from 'protractor';
 import { CepService } from 'src/services/cep.service';
 import { Organization } from 'src/models/organization';
+import { UserService } from 'src/services';
 
 @Component({
   selector: 'app-sign-up',
@@ -28,14 +29,17 @@ export class SignUpComponent implements OnInit {
   confirmPasswordOrganization: string;
   confirmPasswordUser: string;
   myRecaptcha: boolean;
-
+  show: boolean;
+  page: number;
   constructor(
     private authService: AuthService,
-    private cepService: CepService
+    private cepService: CepService,
+    private userService: UserService
   ) {
     this.classifications = Object.values(Organization.Classification);
     this.profiles = Object.values(User.Profiles);
     this.organization = new Organization();
+    this.organization.active = true;
     this.organization.location = new Location(
       '',
       '',
@@ -49,16 +53,33 @@ export class SignUpComponent implements OnInit {
       ''
     );
     this.user = new User();
+    this.user.active = true;
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    const id = JSON.parse(localStorage.getItem('currentOrganizationID'));
+    if (id !== undefined) {
+      this.authService
+        .getOrganization(id, this.organization)
+        .subscribe(item => this.loadOrganization(item));
+    }
+    this.page = 1;
+  }
+
+  private loadOrganization(item) {
+    this.organization = item[0];
+    if (this.organization.users !== undefined) {
+      this.show = false;
+    }
+  }
 
   CEPSearch(value) {
-    this.cepService.search(value, this);
+    this.cepService.search(value, this.organization.location);
   }
 
   clean() {
     this.organization = new Organization();
+    this.organization.active = true;
     this.organization.location = new Location(
       '',
       '',
@@ -72,6 +93,7 @@ export class SignUpComponent implements OnInit {
       ''
     );
     this.user = new User();
+    this.user.active = true;
   }
 
   TypeOrganization(value) {
@@ -178,7 +200,47 @@ export class SignUpComponent implements OnInit {
     console.log('Something went long when loading the Google reCAPTCHA');
   }
 
+  addOrUpdateUser() {
+    if (this.organization.users === undefined && this.user._id === undefined) {
+      this.organization.users = [this.user];
+      return;
+    }
+    if (this.user._id !== undefined) {
+      this.organization.users.forEach((item, index) => {
+        if (item._id === this.user._id) {
+          this.organization.users[index] = this.user;
+        }
+      });
+      return;
+    } else {
+      this.organization.users.push(this.user);
+    }
+  }
+
+  editUser(user: any) {
+    this.user = user;
+  }
+
+  /**Remove from the list, if user not exist in database, if user exist dont remove from the list
+   * because delete is blocked. Is permited only remove new user.
+   */
+  removeUser(user) {
+    if (this.user._id === undefined) {
+      this.organization.users.forEach((item, index) => {
+        if (item === user) {
+          this.organization.users.splice(index, 1);
+        }
+      });
+    }
+  }
+
   save() {
+    if (!this.myRecaptcha) {
+      this.showMessage = true;
+      this.msgStatus = 'Por favor, confirme: Não sou um robo';
+      return;
+    }
+
     this.showMessage = true;
     if (!this.veryfyBeforeSave()) {
       return;

@@ -119,15 +119,39 @@ organizations.route('/add').post(function(req, res) {
 });
 
 //Defined get data(index or listing) route
-organizations.route('/').get(function(req, res) {
-  organizationModel.find(function(err, org) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(org);
+// organizations.route('/').get(function(req, res) {
+//   organizationModel.find(function(err, org) {
+//     if (err) {
+//       console.log(err);
+//     } else {
+//       res.json(org);
+//     }
+//   });
+// });
+
+/**Return organization id only.  This parameter id, are the id of user*/
+organizations.route('/organizationid/:id').get(function(req, res) {
+  organizationModel.findOne(
+    { 'users._id': req.params.id },
+    function(err, org) {
+      if (!org) return next(new Error('Not found organization'));
+      else {
+        res.json(org._id);
+      }
     }
-  });
+  );
 });
+
+/**Return organization object */
+organizations.route('/:id').get(function(req, res) {
+    organizationModel.find(function(err, org) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.json(org);
+      }
+    });
+  });
 
 // // Defined edit route
 organizations.route('/edit/:id').get(function(req, res) {
@@ -168,6 +192,17 @@ organizations.route('/update/:id').post(function(req, res, next) {
 });
 
 //#region CRUD - User
+
+organizations.route(':id/user').get(function(req, res) {
+  organizationModel.findById(req.params.id, function(err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org.users);
+    }
+  });
+});
+
 organizations.route('/user/authenticate').post(function(req, res, next) {
   organizationModel.findOne(
     { 'users.email': req.body.email },
