@@ -22,6 +22,7 @@ var OrganizationSchema = new mongoose.Schema({
   ],
   units: [
     {
+      name: String,
       location: {
         country: String,
         state: String,
@@ -162,7 +163,7 @@ organizations.route('/edit/:id').get(function(req, res) {
 });
 
 // //  Defined update route
-organizations.route('/update/:id').post(function(req, res, next) {
+organizations.route('/update/:id').put(function(req, res, next) {
   organizationModel.findById(req.params.id, function(err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
@@ -174,7 +175,7 @@ organizations.route('/update/:id').post(function(req, res, next) {
       org.phone = req.body.phone;
       org.cellPhone = req.body.cellPhone;
       org.classification = req.body.classification;
-      org.location = req.body.location;
+      org.units = req.body.units;
       org.vehicles = req.body.vehicles;
       org.georoutes = req.body.georoutes;
       org.users = req.body.users;

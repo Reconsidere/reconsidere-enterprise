@@ -3,6 +3,7 @@ import { Location } from './location';
 import { User } from './user';
 import { Vehicle } from './vehicle';
 import { GeoRoute } from './georoute';
+import { Units } from './unit';
 
 export class Organization {
   _id: string;
@@ -17,7 +18,7 @@ export class Organization {
   activationDate: Date;
   verificationDate: Date;
   suports: [Material];
-  location: Location;
+  units: [Units];
   users: [User];
   email: string;
   password: string;

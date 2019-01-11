@@ -51,7 +51,28 @@ export class AuthService {
     return true;
   }
 
-  public signup(organization: Organization) {}
+  public signup(organization: Organization) {
+    if (organization._id === undefined) {
+      this.add(organization);
+    } else {
+      this.update(organization._id, organization);
+    }
+  }
+
+  add(organization: Organization) {
+    this.http
+      .post(environment.database.uri + `organization/add/`, organization)
+      .subscribe(res => console.log('Done'));
+  }
+
+  update(organizationId: string, organization: Organization) {
+    this.http
+      .put(
+        environment.database.uri + `organization/update/${organization._id}`,
+        organization
+      )
+      .subscribe(res => console.log('Done'));
+  }
 
   cleanStorage() {
     localStorage.removeItem('currentToken');
@@ -97,11 +118,8 @@ export class AuthService {
   }
 
   getOrganization(id, organization) {
-    return this.http
-      .get<any>(`${environment.database.uri}organization/${id}`);
+    return this.http.get<any>(`${environment.database.uri}organization/${id}`);
   }
-
-
 
   generateToken(user, password): boolean {
     if (user) {
@@ -122,11 +140,11 @@ export class AuthService {
     }
   }
 
-  private encript(value) {
+  encript(value) {
     return this.decriptEncript.set(environment.secret, value);
   }
 
-  private decript(value) {
+  decript(value) {
     return this.decriptEncript.get(environment.secret, value);
   }
 }

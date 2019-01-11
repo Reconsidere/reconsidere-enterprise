@@ -43,6 +43,7 @@ import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { DecriptEncript } from './_helpers/decriptencript';
 import { RecaptchaModule } from 'angular-google-recaptcha';
+import { BooltransformPipe } from '../pipes/booltransform.pipe';
 
 registerLocaleData(localePt);
 
@@ -58,7 +59,8 @@ registerLocaleData(localePt);
     StartcenterComponent,
     SchedulerComponent,
     CepPipe,
-    VehicleManagementComponent
+    VehicleManagementComponent,
+    BooltransformPipe
   ],
   imports: [
     BrowserModule,

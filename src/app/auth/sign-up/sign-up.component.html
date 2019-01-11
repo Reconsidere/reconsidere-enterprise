@@ -203,166 +203,248 @@
     </div>
 
     <div class="card">
-      <div class="card-header">Localização</div>
+      <div class="card-header">Unidade</div>
       <div class="card-body">
-        <div class="row">
-          <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="cep">CEP</label>
-              <input
-                required
-                [(ngModel)]="organization.location.cep"
-                cep="ngModel"
-                name="cep"
-                type="text"
-                class="form-control"
-                id="cep"
-                aria-describedby="cep"
-                placeholder="00.000-000"
-                mask="00.000-000"
-                #cepVal
-                (blur)="CEPSearch(cepVal.value)"
-              />
-            </div>
-          </div>
+        <div class="tableUnits">
+          <table *ngIf="this.showUnit" class="table table-hover table-sm">
+            <thead>
+              <tr id="Titles">
+                <th>Nome</th>
+                <th>Endereço</th>
+                <th>Estado</th>
+                <th>Editar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let unit of (organization.units
+                    | paginate: { itemsPerPage: 5, currentPage: pageUnit })
+                "
+              >
+                <td hidden>{{ unit._id }}</td>
+                <td>{{ unit.name }}</td>
+                <td>{{ unit.location.neighborhood }}</td>
+                <td>{{ unit.location.state }}</td>
+                <td>
+                  <button
+                    (click)="editLocation(unit)"
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    data-toggle="button"
+                    aria-pressed="false"
+                    autocomplete="off"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <pagination-controls
+              (pageChange)="page = $event"
+              previousLabel="Anterior"
+              nextLabel="Próxima"
+              autoHide="true"
+              responsive="true"
+              screenReaderPaginationLabel="Pagination"
+            ></pagination-controls>
+          </table>
         </div>
+
         <div class="row">
           <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
             <div class="form-group">
-              <label for="publicPlace">Logradouro</label>
+              <label for="nameUnit">Nome</label>
               <input
                 required
-                [(ngModel)]="organization.location.publicPlace"
-                name="publicPlace"
+                [(ngModel)]="unit.name"
+                name="nameUnit"
                 type="text"
                 class="form-control"
-                id="publicPlace"
-                aria-describedby="publicPlace"
-              />
-            </div>
-          </div>
-          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="neighborhood">Bairro</label>
-              <input
-                required
-                [(ngModel)]="organization.location.neighborhood"
-                name="neighborhood"
-                type="text"
-                class="form-control"
-                id="neighborhood"
-                aria-describedby="neighborhood"
-              />
-            </div>
-          </div>
-          <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="number">Número</label>
-              <input
-                required
-                [(ngModel)]="organization.location.number"
-                name="number"
-                type="number"
-                class="form-control"
-                id="number"
-                numbers-only
-                aria-describedby="number"
+                id="nameUnit"
+                aria-describedby="nameUnit"
               />
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="county">Município</label>
-              <input
-                required
-                [(ngModel)]="organization.location.county"
-                name="county"
-                type="text"
-                class="form-control"
-                id="county"
-                aria-describedby="county"
-              />
+
+        <div class="card">
+          <div class="card-header">Localização</div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="cep">CEP</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.cep"
+                    cep="ngModel"
+                    name="cep"
+                    type="text"
+                    class="form-control"
+                    id="cep"
+                    aria-describedby="cep"
+                    placeholder="00.000-000"
+                    mask="00.000-000"
+                    #cepVal
+                    (blur)="CEPSearch(cepVal.value)"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="state">UF</label>
-              <input
-                required
-                [(ngModel)]="organization.location.state"
-                name="state"
-                type="text"
-                class="form-control"
-                id="state"
-                numbers-only
-                aria-describedby="state"
-              />
+            <div class="row">
+              <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="publicPlace">Logradouro</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.publicPlace"
+                    name="publicPlace"
+                    type="text"
+                    class="form-control"
+                    id="publicPlace"
+                    aria-describedby="publicPlace"
+                  />
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="neighborhood">Bairro</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.neighborhood"
+                    name="neighborhood"
+                    type="text"
+                    class="form-control"
+                    id="neighborhood"
+                    aria-describedby="neighborhood"
+                  />
+                </div>
+              </div>
+              <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="number">Número</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.number"
+                    name="number"
+                    type="number"
+                    class="form-control"
+                    id="number"
+                    numbers-only
+                    aria-describedby="number"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="county">Município</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.county"
+                    name="county"
+                    type="text"
+                    class="form-control"
+                    id="county"
+                    aria-describedby="county"
+                  />
+                </div>
+              </div>
+              <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="state">UF</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.state"
+                    name="state"
+                    type="text"
+                    class="form-control"
+                    id="state"
+                    numbers-only
+                    aria-describedby="state"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                <div class="form-group">
+                  <label for="complement">Complemento</label>
+                  <input
+                    required
+                    [(ngModel)]="unit.location.complement"
+                    name="complement"
+                    type="text"
+                    class="form-control"
+                    id="complement"
+                    aria-describedby="complement"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="complement">Complemento</label>
-              <input
-                required
-                [(ngModel)]="organization.location.complement"
-                name="complement"
-                type="text"
-                class="form-control"
-                id="complement"
-                aria-describedby="complement"
-              />
-            </div>
-          </div>
-        </div>
+        <button
+          type="button"
+          id="addLocation"
+          (click)="addOrUpdateLocation()"
+          class="btn btn-success col-md-2"
+        >
+          Adicionar
+        </button>
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">Usuários</div>
       <div class="card-body">
-          <div class="tableUsers">
-              <table *ngIf="this.show" class="table table-hover table-sm">
-                <thead>
-                  <tr id="Titles">
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Ativo</th>
-                    <th>Editar</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let user of (organization.users | paginate: { itemsPerPage: 5, currentPage: page });">
-                    <td hidden >{{ user._id }}</td>
-                    <td>{{ user.name }}</td>
-                    <td>{{ user.password }}</td>
-                    <td>{{ user.active }}</td>
-                    <td>
-                      <button (click)="editUser(user)"
-                              type="button"
-                              class="btn btn-sm btn-primary"
-                              data-toggle="button"
-                              aria-pressed="false"
-                              autocomplete="off">
-                        <i class="fa fa-edit"></i>
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-                <pagination-controls
-                  (pageChange)="page = $event"
-                  previousLabel="Anterior"
-                  nextLabel="Próxima"
-                  autoHide="true"
-                  responsive="true"
-                  screenReaderPaginationLabel="Pagination"
-                ></pagination-controls>
-              </table>
-            </div>
-
+        <div class="tableUsers">
+          <table *ngIf="this.show" class="table table-hover table-sm">
+            <thead>
+              <tr id="Titles">
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Ativo</th>
+                <th>Editar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="
+                  let user of (organization.users
+                    | paginate: { itemsPerPage: 5, currentPage: page })
+                "
+              >
+                <td hidden>{{ user._id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.active | booltransform }}</td>
+                <td>
+                  <button
+                    (click)="editUser(user)"
+                    type="button"
+                    class="btn btn-sm btn-primary"
+                    data-toggle="button"
+                    aria-pressed="false"
+                    autocomplete="off"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+            <pagination-controls
+              (pageChange)="page = $event"
+              previousLabel="Anterior"
+              nextLabel="Próxima"
+              autoHide="true"
+              responsive="true"
+              screenReaderPaginationLabel="Pagination"
+            ></pagination-controls>
+          </table>
+        </div>
 
         <div class="row">
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
@@ -478,15 +560,14 @@
           </div>
         </div>
         <button
-        type="submit"
-        id="add"
-        (click)="addOrUpdateUser()"
-        class="btn btn-success col-md-2"
-      >
-        Adicionar
-      </button>
+          type="button"
+          id="add"
+          (click)="addOrUpdateUser()"
+          class="btn btn-success col-md-2"
+        >
+          Adicionar
+        </button>
       </div>
-
     </div>
 
     <div class="card">
