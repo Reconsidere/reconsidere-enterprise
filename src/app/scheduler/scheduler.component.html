@@ -1,54 +1,8 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-  <div
-    *ngIf="showMessage == true"
-    class="alert alert-warning alert-dismissible fade show"
-    role="alert"
-  >
-    <strong>Atenção: </strong> {{ msgStatus }}
-    <button
-      type="button"
-      (click)="closeAlertMessage()"
-      class="close"
-      data-dismiss="alert"
-      aria-label="Close"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-
-  <div class="dx-viewport">
-    <div class="demo-container">
-      <dx-scheduler #targetScheduler
-      (onAppointmentUpdating)="onAppointmentUpdating($event)"
-      (onAppointmentUpdated)="onAppointmentUpdated($event)"
-      (onAppointmentAdding)="onAppointmentAdding($event)"
-      (onAppointmentAdded)="onAppointmentAdded($event)"
-      (onAppointmentFormCreated)="onAppointmentFormCreated($event)"
-      (onAppointmentUpdated) = "onAppointmentUpdated($event)"
-        [dataSource]="appointmentsData"
-        [views]="[
-          'timelineDay',
-          'timelineWeek',
-          'timelineWorkWeek',
-          'timelineMonth'
-        ]"
-        currentView="timelineMonth"
-        [firstDayOfWeek]="0"
-        [startDayHour]="8"
-        [endDayHour]="20"
-        [cellDuration]="60"
-        [groups]="['priority']"
-        [currentDate]="currentDate"
-        [height]="580"
-      >
-        <!-- <dxi-resource
-          fieldExpr="priority"
-          [allowMultiple]="false"
-          [dataSource]="prioritiesData"
-          label="Priority"
-        ></dxi-resource> -->
-      </dx-scheduler>
-    </div>
-  </div>
+  <weekly-scheduler
+    class="scheduler"
+    ng-model="myScopeModel"
+    options="options"
+  ></weekly-scheduler>
 </div>
