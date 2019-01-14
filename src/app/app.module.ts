@@ -1,6 +1,4 @@
 import { AppService } from 'src/services/app.service';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { MatListModule } from '@angular/material/list';
 import { BrowserModule } from '@angular/platform-browser';
@@ -35,6 +33,7 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { DecriptEncript } from './_helpers/decriptencript';
 import { RecaptchaModule } from 'angular-google-recaptcha';
 import { BooltransformPipe } from '../pipes/booltransform.pipe';
+import * as angular from 'angular';
 
 registerLocaleData(localePt);
 
@@ -68,16 +67,11 @@ registerLocaleData(localePt);
     BrowserAnimationsModule,
     NgxPaginationModule,
     FlatpickrModule.forRoot(),
-    CalendarModule.forRoot({
-      provide: DateAdapter,
-      useFactory: adapterFactory
-    }),
     CommonModule,
     RecaptchaModule.forRoot({
-      siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF',
-  }),
+      siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF'
+    }),
   ],
-
 
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
