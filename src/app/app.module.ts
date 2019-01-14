@@ -29,15 +29,6 @@ import { VehicleManagementComponent } from './vehicle-management/vehicle-managem
 import { NgxPaginationModule } from 'ngx-pagination';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
-import {
-  DxSchedulerModule,
-  DxCheckBoxModule,
-  DxSelectBoxModule,
-  DxDataGridModule,
-  DxTextAreaModule,
-  DxFormModule,
-  DxTemplateModule
-} from 'devextreme-angular';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
@@ -82,18 +73,11 @@ registerLocaleData(localePt);
       useFactory: adapterFactory
     }),
     CommonModule,
-    DxSchedulerModule,
-    DxCheckBoxModule,
-    DxSelectBoxModule,
-    DxDataGridModule,
-    DxSelectBoxModule,
-    DxTextAreaModule,
-    DxFormModule,
-    DxTemplateModule,
     RecaptchaModule.forRoot({
       siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF',
   }),
   ],
+
 
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
