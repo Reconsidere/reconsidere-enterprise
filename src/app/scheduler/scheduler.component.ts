@@ -7,16 +7,11 @@ import {
   NgModule,
   ViewChild
 } from '@angular/core';
-import { GeoRoute } from 'src/models/georoute';
-import { Priority } from 'src/models/priority';
-import { Appointment } from 'src/models/appointment';
-import { Resource } from 'src/models/resource';
 import { Organization } from 'src/models/organization';
 import { HttpClient } from '@angular/common/http';
 import { SchedulerService } from 'src/services/scheduler.service';
 import { Schedule } from 'src/models/schedule';
 import { Turn } from 'src/models/turn';
-import { DxSchedulerComponent } from 'devextreme-angular';
 import { UserService, AuthService } from 'src/services';
 import { User } from 'src/models';
 import { first } from 'rxjs/operators';
@@ -27,7 +22,6 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./scheduler.component.scss']
 })
 export class SchedulerComponent implements OnInit {
-  @ViewChild('targetScheduler') scheduler: DxSchedulerComponent;
   msgStatus: string;
   showMessage: boolean;
   users: User[] = [];

@@ -1,4 +1,3 @@
-import { Priority } from 'src/models/priority';
 import { Vehicle } from './../models/vehicle';
 import { Organization } from 'src/models/organization';
 import { Injectable } from '@angular/core';
