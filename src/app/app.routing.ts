@@ -4,9 +4,9 @@ import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { RouterModule, Routes } from '@angular/router';
 import { ModuleWithProviders } from '@angular/core/src/metadata/ng_module';
 import { VehicleManagementComponent } from './vehicle-management/vehicle-management.component';
-import { AuthGuard } from './_guards';
 import { SignInComponent } from './auth/sign-in/sign-in.component';
 import { StartcenterComponent } from './startcenter/startcenter.component';
+import { AuthGuard } from './_guards/auth.guard';
 
 export const routes: Routes = [
   {
