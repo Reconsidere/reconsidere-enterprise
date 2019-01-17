@@ -52,12 +52,16 @@ export class SignUpComponent implements OnInit {
 
   ngOnInit() {
     this.authService.isAuthenticated();
-    const id = JSON.parse(localStorage.getItem('currentOrganizationID'));
-    if (id !== null && id !== undefined) {
-      this.authService
-        .getOrganization(id, this.organization)
-        .subscribe(item => this.loadOrganization(item));
-    }
+
+    // if (localStorage.getItem('currentOrganizationID') === undefined) {
+    //   this.authService.getOrganizationId();
+    // }
+    // const id = JSON.parse(localStorage.getItem('currentOrganizationID'));
+    // if (id !== null && id !== undefined) {
+    //   this.authService
+    //     .getOrganization(id, this.organization)
+    //     .subscribe(item => this.loadOrganization(item));
+    // }
     this.page = 1;
     this.pageUnit = 1;
   }
@@ -152,6 +156,7 @@ export class SignUpComponent implements OnInit {
       this.organization.cellPhone === undefined ||
       this.organization.classification === undefined ||
       this.organization.company === undefined ||
+      this.organization.units === undefined ||
       this.organization.units.length <= 0
     ) {
       this.msgStatus =

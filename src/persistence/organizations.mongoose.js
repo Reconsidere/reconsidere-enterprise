@@ -132,27 +132,24 @@ organizations.route('/add').post(function(req, res) {
 
 /**Return organization id only.  This parameter id, are the id of user*/
 organizations.route('/organizationid/:id').get(function(req, res) {
-  organizationModel.findOne(
-    { 'users._id': req.params.id },
-    function(err, org) {
-      if (!org) return next(new Error('Not found organization'));
-      else {
-        res.json(org._id);
-      }
+  organizationModel.findOne({ 'users._id': req.params.id }, function(err, org) {
+    if (!org) return next(new Error('Not found organization'));
+    else {
+      res.json(org._id);
     }
-  );
+  });
 });
 
 /**Return organization object */
 organizations.route('/:id').get(function(req, res) {
-    organizationModel.find(function(err, org) {
-      if (err) {
-        console.log(err);
-      } else {
-        res.json(org);
-      }
-    });
+  organizationModel.find(function(err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org);
+    }
   });
+});
 
 // // Defined edit route
 organizations.route('/edit/:id').get(function(req, res) {
@@ -365,7 +362,7 @@ organizations.route('/add/scheduler/:id').post(function(req, res, next) {
   });
 });
 
-organizations.route('/update/scheduler/:id').post(function(req, res, next) {
+organizations.route('/update/scheduler/:id').put(function(req, res, next) {
   organizationModel.findById(req.params.id, function(err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
@@ -394,6 +391,29 @@ organizations.route('/update/scheduler/:id').post(function(req, res, next) {
     }
   });
 });
+
+organizations
+  .route('/remove/scheduler/:organizationId/:id')
+  .delete(function(req, res) {
+    organizationModel.findById(req.params.organizationId, function(err, org) {
+      if (!org) return next(new Error('Could not load Document'));
+      else {
+        var route = org.georoutes.id(req.params.id);
+        if (!route) {
+          org.georoutes.pull(route);
+          org
+            .update(org)
+            .then(org => {
+              res.json('delete complete');
+            })
+            .catch(err => {
+              res.status(400).send('unable to delete the value in database');
+            });
+        }
+      }
+    });
+  });
+
 //#endregion
 
 // // Defined delete | remove | destroy route

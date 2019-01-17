@@ -1,8 +1,149 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-  <weekly-scheduler
-    class="scheduler"
-    ng-model="myScopeModel"
-    options="options"
-  ></weekly-scheduler>
+  <div
+    *ngIf="message"
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
+  >
+    <strong>Atenção: </strong> {{ message }}
+    <button
+      type="button"
+      (click)="closeAlertMessage()"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="tableScheduler">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <button
+            (click)="newRoute()"
+            type="button"
+            class="btn btn-sm btn-primary"
+            data-toggle="button"
+            aria-pressed="false"
+            autocomplete="off"
+          >
+            <i class="fa fa-plus"></i>
+          </button>
+        </tr>
+        <tr id="Titles">
+          <th>Nome</th>
+          <th>Data inicial</th>
+          <th>Data final</th>
+          <th>Hora inicial</th>
+          <th>Hora final</th>
+          <th>Salvar</th>
+          <th>Remover</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template
+          ngFor
+          let-route
+          [ngForOf]="
+            georoutes | paginate: { itemsPerPage: 5, currentPage: page }
+          "
+          let-i="index"
+        >
+          <ng-template ngFor let-schedule [ngForOf]="route.schedules">
+            <ng-template ngFor let-turn [ngForOf]="schedule.turns">
+              <tr>
+                <td hidden>{{ route._id }}</td>
+                <td>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="route.name"
+                  />
+                </td>
+                <td>
+                  <p-calendar
+                    name="startDate"
+                    dateFormat="dd/mm/yy"
+                    (ngModelChange)="schedule.startDate = $event"
+                    [ngModel]="schedule.startDate | dateconvert"
+                    [minDate]="minDateValue"
+                    [maxDate]="maxDateValue"
+                    [readonlyInput]="true"
+                  ></p-calendar>
+                </td>
+                <td>
+                  <p-calendar
+                    name="endDate"
+                    dateFormat="dd/mm/yy"
+                    (ngModelChange)="schedule.endDate = $event"
+                    [ngModel]="schedule.endDate | dateconvert"
+                    [minDate]="minDateValue"
+                    [maxDate]="maxDateValue"
+                    [readonlyInput]="true"
+                  ></p-calendar>
+                </td>
+                <td>
+                  <p-calendar
+                    name="startTime"
+                    pattern="HH:mm"
+                    timeOnly="true"
+                    (ngModelChange)="turn.startTime = $event"
+                    [ngModel]="turn.startTime | dateconvert"
+                    hourFormat="24"
+                    [readonlyInput]="true"
+                  ></p-calendar>
+                </td>
+                <td>
+                  <p-calendar
+                    name="endTime"
+                    pattern="HH:mm"
+                    timeOnly="true"
+                    (ngModelChange)="turn.endTime = $event"
+                    [ngModel]="turn.endTime | dateconvert"
+                    showTime="true"
+                    hourFormat="24"
+                    [readonlyInput]="true"
+                  ></p-calendar>
+                </td>
+                <td>
+                  <button
+                    (click)="save(route)"
+                    type="button"
+                    class="btn btn-sm btn-success"
+                    data-toggle="button"
+                    aria-pressed="false"
+                    autocomplete="off"
+                  >
+                    <i class="fa fa-save"></i>
+                  </button>
+                </td>
+                <td>
+                  <button
+                    (click)="removeRoute(route._id)"
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    data-toggle="button"
+                    aria-pressed="false"
+                    autocomplete="off"
+                  >
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+          </ng-template>
+        </ng-template>
+      </tbody>
+      <pagination-controls
+        (pageChange)="page = $event"
+        previousLabel="Anterior"
+        nextLabel="Próxima"
+        autoHide="true"
+        responsive="true"
+        screenReaderPaginationLabel="Pagination"
+      ></pagination-controls>
+    </table>
+  </div>
 </div>

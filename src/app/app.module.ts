@@ -33,7 +33,9 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { DecriptEncript } from './_helpers/decriptencript';
 import { RecaptchaModule } from 'angular-google-recaptcha';
 import { BooltransformPipe } from '../pipes/booltransform.pipe';
-import * as angular from 'angular';
+import {CalendarModule} from 'primeng/calendar';
+import { DateconvertPipe } from '../pipes/dateconvert.pipe';
+
 
 registerLocaleData(localePt);
 
@@ -50,7 +52,8 @@ registerLocaleData(localePt);
     SchedulerComponent,
     CepPipe,
     VehicleManagementComponent,
-    BooltransformPipe
+    BooltransformPipe,
+    DateconvertPipe,
   ],
   imports: [
     BrowserModule,
@@ -71,6 +74,7 @@ registerLocaleData(localePt);
     RecaptchaModule.forRoot({
       siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF'
     }),
+    CalendarModule,
   ],
 
   providers: [

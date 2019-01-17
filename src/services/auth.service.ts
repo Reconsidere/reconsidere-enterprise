@@ -21,7 +21,6 @@ export class AuthService {
   result: any;
   private currenTokenSubject: BehaviorSubject<any>;
   public currentToken: Observable<any>;
-  private userID: string;
 
   constructor(
     private http: HttpClient,
@@ -75,7 +74,7 @@ export class AuthService {
 
   cleanStorage() {
     localStorage.removeItem('currentToken');
-    localStorage.removeItem('currentOrganizationID');
+    localStorage.removeItem('currentUserId');
     this.currenTokenSubject.next(null);
   }
 
@@ -105,16 +104,13 @@ export class AuthService {
         )
       );
   }
-  private getOrganizationId() {
-    return this.http
-      .get(
-        `${environment.database.uri}organization/organizationid/${this.userID}`
-      )
-      .subscribe(id => this.setId(id));
+   getOrganizationId(): Observable<string> {
+     const id = JSON.parse(localStorage.getItem('currentUserId'));
+     return this.http
+      .get<string>(
+        `${environment.database.uri}organization/organizationid/${id}`);
   }
-  setId(id) {
-    return localStorage.setItem('currentOrganizationID', JSON.stringify(id));
-  }
+
 
   getOrganization(id, organization) {
     return this.http.get<any>(`${environment.database.uri}organization/${id}`);
@@ -132,12 +128,12 @@ export class AuthService {
         });
       }
       localStorage.setItem('currentToken', JSON.stringify(user.token));
+      localStorage.setItem('currentUserId', JSON.stringify(user._id));
       this.currenTokenSubject.next(user.token);
-      this.userID = user._id;
-      this.getOrganizationId();
       return true;
     }
   }
+
 
   encript(value) {
     return this.decriptEncript.set(environment.secret, value);

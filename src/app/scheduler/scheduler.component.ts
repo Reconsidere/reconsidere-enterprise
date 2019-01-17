@@ -7,14 +7,13 @@ import {
   NgModule,
   ViewChild
 } from '@angular/core';
-import { Organization } from 'src/models/organization';
-import { HttpClient } from '@angular/common/http';
 import { SchedulerService } from 'src/services/scheduler.service';
-import { Schedule } from 'src/models/schedule';
-import { Turn } from 'src/models/turn';
 import { UserService, AuthService } from 'src/services';
 import { User } from 'src/models';
-import { first } from 'rxjs/operators';
+import { GeoRoute } from 'src/models/georoute';
+import { Schedule } from 'src/models/schedule';
+import { Turn } from 'src/models/turn';
+import * as ptBr from 'date-fns/locale/pt';
 
 @Component({
   selector: 'app-scheduler',
@@ -22,27 +21,108 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./scheduler.component.scss']
 })
 export class SchedulerComponent implements OnInit {
-  msgStatus: string;
-  showMessage: boolean;
+  message: string;
+  show = false;
   users: User[] = [];
+  georoutes: [GeoRoute];
+  page: number;
+  organizationId: string;
 
   constructor(
-    private servive: SchedulerService,
-    private userService: UserService
+    private schedulerServive: SchedulerService,
+    private userService: UserService,
+    private authService: AuthService
   ) {}
   ngOnInit() {
-    const id = JSON.parse(localStorage.getItem('currentOrganizationID'));
-    this.userService
-      .getAll(id, this.users)
+    this.page = 1;
+    this.getGeoroutes();
+  }
+  setId(id) {
+    this.organizationId = id;
+    this.schedulerServive
+      .getAll(this.organizationId)
       .pipe()
-      .subscribe(users => {
-        this.users = users;
+      .subscribe(georoutes => {
+        this.loadGeoroutes(georoutes);
       });
-
-    this.servive.get(id).subscribe(x => this.loadGeoroutes(x));
   }
 
-  loadGeoroutes(value) {}
+  loadGeoroutes(values) {
+    if (values === undefined) {
+      this.newRoute();
+    } else {
+      this.georoutes = values;
+    }
+  }
 
-  veryfyBeforeSave(object) {}
+  newRoute() {
+    const turn = new Turn();
+    turn.startTime = new Date();
+    turn.endTime = new Date();
+
+    const scheduler = new Schedule();
+    scheduler.startDate = new Date();
+    scheduler.endDate = new Date();
+    scheduler.turns = [turn];
+
+    const georout = new GeoRoute();
+    georout.name = 'Nova rota';
+    georout.schedules = [scheduler];
+
+    if (this.georoutes === undefined || this.georoutes.length <= 0) {
+      this.georoutes = [georout];
+    } else {
+      this.georoutes.push(georout);
+    }
+  }
+
+  removeRoute(id) {
+    try {
+      this.schedulerServive.remove(this.organizationId, id);
+      this.message = 'Dados salvos com sucesso';
+      this.getGeoroutes();
+    } catch (error) {
+      this.message = error;
+      console.log(error);
+    }
+  }
+
+  veryfyBeforeSave(route: GeoRoute) {
+    if (route.name === undefined) {
+      route.schedules.forEach(schedule => {
+        if (
+          schedule.startDate === undefined ||
+          schedule.endDate === undefined ||
+          this.organizationId === undefined ||
+          this.organizationId === ''
+        ) {
+          throw new Error(
+            'Por favor, preencha os campos antes de salvar os dados!'
+          );
+        }
+        schedule.turns.forEach(turn => {
+          if (turn.startTime === undefined || turn.endTime === undefined) {
+            throw new Error(
+              'Por favor, preencha os campos antes de salvar os dados!'
+            );
+          }
+        });
+      });
+    }
+  }
+
+  save(route) {
+    try {
+      this.veryfyBeforeSave(route);
+      this.schedulerServive.createOrUpdate(this.organizationId, route);
+      this.message = 'Dados salvos com sucesso';
+    } catch (error) {
+      this.message = error;
+      console.log(error);
+    }
+  }
+
+  private getGeoroutes() {
+    this.authService.getOrganizationId().subscribe(id => this.setId(id));
+  }
 }
