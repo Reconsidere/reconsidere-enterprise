@@ -11,6 +11,8 @@ import { CepService } from 'src/services/cep.service';
 import { Organization } from 'src/models/organization';
 import { UserService } from 'src/services';
 import { Units } from 'src/models/unit';
+import { Profile } from 'src/models/profile';
+import { access } from 'fs';
 
 @Component({
   selector: 'app-sign-up',
@@ -25,6 +27,7 @@ export class SignUpComponent implements OnInit {
   profiles: string[];
   organization: Organization;
   user: User;
+  profile: Profile;
   msgStatus: string;
   showMessage: boolean;
   confirmPasswordOrganization: string;
@@ -48,6 +51,7 @@ export class SignUpComponent implements OnInit {
     this.unit.location = new Location();
     this.user = new User();
     this.user.active = true;
+    this.profile = new Profile();
   }
 
   ngOnInit() {
@@ -82,11 +86,13 @@ export class SignUpComponent implements OnInit {
   }
 
   clean() {
-    this.organization = new Organization();
+     this.organization = new Organization();
     this.organization.active = true;
+    this.unit = new Units();
     this.unit.location = new Location();
     this.user = new User();
     this.user.active = true;
+    this.profile = new Profile();
   }
 
   TypeOrganization(value) {
@@ -97,20 +103,20 @@ export class SignUpComponent implements OnInit {
   }
 
   profileChange(value, event) {
-    if (this.user.profiles === undefined && event) {
-      this.user.profiles = [value];
-      return;
-    }
-    if (!event) {
-      this.user.profiles.forEach((item, index) => {
+    if (this.profile === undefined && event) {
+      this.profile.access = [value];
+    } else if (this.profile !== undefined && event) {
+      if (this.profile.access === undefined) {
+        this.profile.access = [value];
+      } else {
+        this.profile.access.push(value);
+      }
+    } else if (!event) {
+      this.profile.access.forEach((item, index) => {
         if (item === value) {
-          this.user.profiles.splice(index, 1);
+          this.profile.access.splice(index, 1);
         }
       });
-      return;
-    }
-    if (!this.user.profiles.includes(value) && event) {
-      this.user.profiles.push(value);
     }
   }
 
@@ -120,9 +126,12 @@ export class SignUpComponent implements OnInit {
       this.confirmPasswordOrganization
     );
     setTimeout(function() {}.bind(this), 1000);
+    this.organization.password = this.authService.encript(
+      this.organization.password
+    );
   }
   verifyPasswordUser() {
-    if (this.user._id !== undefined || this.user._id !== '') {
+    if (this.user._id !== undefined) {
       this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
         this.authService.decript(this.user.password),
         this.confirmPasswordUser
@@ -133,6 +142,7 @@ export class SignUpComponent implements OnInit {
         this.user.password,
         this.confirmPasswordUser
       );
+      this.user.password = this.authService.encript(this.user);
     }
     setTimeout(function() {}.bind(this), 1000);
   }
@@ -161,20 +171,6 @@ export class SignUpComponent implements OnInit {
     ) {
       this.msgStatus =
         'Por favor, preencha os campos antes de salvar os dados!';
-      return false;
-    }
-    this.showMessage = this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
-      this.organization.password,
-      this.confirmPasswordOrganization
-    );
-
-    this.showMessage = this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
-      this.user.password,
-      this.confirmPasswordUser
-    );
-
-    if (!this.showMessage) {
-      this.msgStatus = 'Verifique se as senhas são iguais.';
       return false;
     }
 
@@ -254,14 +250,22 @@ export class SignUpComponent implements OnInit {
     }
 
     if (this.organization.users === undefined && this.user._id === undefined) {
+      if (this.user === undefined || this.user.profiles === undefined) {
+        this.user.profiles = [this.profile];
+      } else {
+        this.user.profiles.push(this.profile);
+      }
       this.organization.users = [this.user];
       this.user = new User();
+      this.profile = new Profile();
+      this.confirmPasswordUser = undefined;
     } else if (this.user._id !== undefined) {
       this.organization.users.forEach((item, index) => {
         if (item._id === this.user._id) {
           this.organization.users[index] = this.user;
           this.user = new User();
-          this.confirmPasswordUser = '';
+          this.profile = new Profile();
+          this.confirmPasswordUser = undefined;
           return;
         }
       });

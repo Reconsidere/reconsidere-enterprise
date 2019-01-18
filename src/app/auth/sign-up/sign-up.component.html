@@ -30,7 +30,7 @@
                 [(ngModel)]="this.organization.classification"
                 name="classification"
                 class="form-control"
-                onchange="TypeOrganization(classification)"
+                (onchange)="TypeOrganization(classification)"
               >
                 <option
                   id="classification"
@@ -519,7 +519,20 @@
           <div class="card-header">Permissões</div>
           <div class="card-body">
             <div class="row">
-              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12"></div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                    <div class="form-group">
+                      <label for="password">Nome</label>
+                      <input
+                        [(ngModel)]="profile.name"
+                        name="nameProfile"
+                        type="text"
+                        class="form-control"
+                        id="nameProfile"
+                        aria-describedby="nameProfile"
+                      />
+                    </div>
+                  </div>
+              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
               <div class="anil_nepal">
                 <label
                   class="switch switch-left-right"
@@ -537,6 +550,7 @@
                   <span class="switch-handle"></span> {{ profile }}
                 </label>
               </div>
+            </div>
             </div>
           </div>
         </div>

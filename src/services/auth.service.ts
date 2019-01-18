@@ -59,7 +59,7 @@ export class AuthService {
 
   add(organization: Organization) {
     this.http
-      .post(environment.database.uri + `organization/add/`, organization)
+      .post(environment.database.uri + `organization/add`, organization)
       .subscribe(res => console.log('Done'));
   }
 
@@ -104,13 +104,12 @@ export class AuthService {
         )
       );
   }
-   getOrganizationId(): Observable<string> {
-     const id = JSON.parse(localStorage.getItem('currentUserId'));
-     return this.http
-      .get<string>(
-        `${environment.database.uri}organization/organizationid/${id}`);
+  getOrganizationId(): Observable<string> {
+    const id = JSON.parse(localStorage.getItem('currentUserId'));
+    return this.http.get<string>(
+      `${environment.database.uri}organization/organizationid/${id}`
+    );
   }
-
 
   getOrganization(id, organization) {
     return this.http.get<any>(`${environment.database.uri}organization/${id}`);
@@ -133,7 +132,6 @@ export class AuthService {
       return true;
     }
   }
-
 
   encript(value) {
     return this.decriptEncript.set(environment.secret, value);
