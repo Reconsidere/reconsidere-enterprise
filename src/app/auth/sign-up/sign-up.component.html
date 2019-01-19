@@ -1,21 +1,21 @@
 <div *ngIf="menu"><app-toolbar></app-toolbar></div>
 <div class="container">
   <div
-    *ngIf="showMessage == true"
-    class="alert alert-warning alert-dismissible fade show"
-    role="alert"
+  *ngIf="message"
+  class="alert alert-warning alert-dismissible fade show"
+  role="alert"
+>
+  <strong>Atenção: </strong> {{ message }}
+  <button
+    type="button"
+    (click)="closeMessage()"
+    class="close"
+    data-dismiss="alert"
+    aria-label="Close"
   >
-    <strong>Atenção: </strong> {{ msgStatus }}
-    <button
-      type="button"
-      (click)="closeAlertMessage()"
-      class="close"
-      data-dismiss="alert"
-      aria-label="Close"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
   <form ngNativeValidate>
     <div class="card">

@@ -1,21 +1,21 @@
 <app-toolbar></app-toolbar>
 <div class="container">
   <div
-    *ngIf="message"
-    class="alert alert-warning alert-dismissible fade show"
-    role="alert"
+  *ngIf="message"
+  class="alert alert-warning alert-dismissible fade show"
+  role="alert"
+>
+  <strong>Atenção: </strong> {{ message }}
+  <button
+    type="button"
+    (click)="closeMessage()"
+    class="close"
+    data-dismiss="alert"
+    aria-label="Close"
   >
-    <strong>Atenção: </strong> {{ message }}
-    <button
-      type="button"
-      (click)="closeAlertMessage()"
-      class="close"
-      data-dismiss="alert"
-      aria-label="Close"
-    >
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
   <div class="tableScheduler">
     <table class="table table-sm">

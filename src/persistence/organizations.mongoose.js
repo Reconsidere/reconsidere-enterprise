@@ -399,15 +399,15 @@ organizations
       if (!org) return next(new Error('Could not load Document'));
       else {
         var route = org.georoutes.id(req.params.id);
-        if (!route) {
-          org.georoutes.pull(route);
+        if (route) {
+          route.remove({ _id: req.params.id });
           org
             .update(org)
             .then(org => {
-              res.json('delete complete');
+              res.json('remove complete');
             })
             .catch(err => {
-              res.status(400).send('unable to delete the value in database');
+              res.status(400).send('unable to delete schedule the database');
             });
         }
       }

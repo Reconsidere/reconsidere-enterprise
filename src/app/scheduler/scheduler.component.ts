@@ -76,10 +76,14 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
+  closeMessage() {
+    this.message = undefined;
+  }
+
   removeRoute(id) {
     try {
       this.schedulerServive.remove(this.organizationId, id);
-      this.message = 'Dados salvos com sucesso';
+      this.message = 'Dados removidos com sucesso';
       this.getGeoroutes();
     } catch (error) {
       this.message = error;

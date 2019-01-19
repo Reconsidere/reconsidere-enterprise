@@ -38,7 +38,7 @@ export class SignUpComponent implements OnInit {
   user: User;
   profile: Profile;
   msgStatus: string;
-  showMessage: boolean;
+  message: boolean;
   confirmPasswordOrganization: string;
   confirmPasswordUser: string;
   myRecaptcha: boolean;
@@ -112,6 +112,11 @@ export class SignUpComponent implements OnInit {
     this.profile = new Profile();
   }
 
+  closeMessage() {
+    this.message = undefined;
+  }
+
+
   TypeOrganization(value) {
     if (value === Organization.Classification.Cooperativa) {
     } else if (value === Organization.Classification.Privada) {
@@ -178,7 +183,7 @@ export class SignUpComponent implements OnInit {
   }
 
   closeAlertMessage() {
-    this.showMessage = false;
+    this.message = false;
   }
   veryfyBeforeSave() {
     if (
@@ -199,10 +204,10 @@ export class SignUpComponent implements OnInit {
       return false;
     }
 
-    this.showMessage = this.isValidCNPJ = CNPJValidator.MatchCNPJ(
+    this.message = this.isValidCNPJ = CNPJValidator.MatchCNPJ(
       this.organization.cnpj
     );
-    if (!this.showMessage) {
+    if (!this.message) {
       this.msgStatus = 'CNPJ incorreto.';
       return false;
     } else {
@@ -219,7 +224,7 @@ export class SignUpComponent implements OnInit {
   }
 
   addOrUpdateLocation() {
-    this.showMessage = true;
+    this.message = true;
     if (!this.veryfyBeforeAddLocation()) {
       return;
     }
@@ -251,7 +256,7 @@ export class SignUpComponent implements OnInit {
 
   veryfyBeforeAddLocation() {
     if (this.unit.location === undefined) {
-      this.showMessage = true;
+      this.message = true;
       this.msgStatus =
         'Verifique se todos os dados da localização foram inseridos.';
       return false;
@@ -264,7 +269,7 @@ export class SignUpComponent implements OnInit {
       this.unit.location.number === undefined ||
       this.unit.location.county === undefined
     ) {
-      this.showMessage = true;
+      this.message = true;
       this.msgStatus =
         'Verifique se todos os dados do usuário foram inseridos.';
       return false;
@@ -273,7 +278,7 @@ export class SignUpComponent implements OnInit {
   }
 
   addOrUpdateUser() {
-    this.showMessage = true;
+    this.message = true;
     if (!this.veryfyBeforeAddUser()) {
       return;
     }
@@ -316,7 +321,7 @@ export class SignUpComponent implements OnInit {
 
   veryfyBeforeAddUser() {
     if (this.user === undefined) {
-      this.showMessage = true;
+      this.message = true;
       this.msgStatus =
         'Verifique se todos os dados do usuário foram inseridos.';
       return false;
@@ -327,7 +332,7 @@ export class SignUpComponent implements OnInit {
       this.user.password === undefined ||
       this.user.active === undefined
     ) {
-      this.showMessage = true;
+      this.message = true;
       this.msgStatus =
         'Verifique se todos os dados do usuário foram inseridos.';
       return false;
@@ -348,7 +353,7 @@ export class SignUpComponent implements OnInit {
     this.organization.units.forEach((item, index) => {
       if (item === unit) {
         this.organization.units.splice(index, 1);
-        this.showMessage = true;
+        this.message = true;
         this.msgStatus = 'Unidade removida';
       } else {
       }
@@ -363,7 +368,7 @@ export class SignUpComponent implements OnInit {
       this.organization.users.forEach((item, index) => {
         if (item === user) {
           this.organization.users.splice(index, 1);
-          this.showMessage = true;
+          this.message = true;
           this.msgStatus = 'Usuário removida';
         } else {
         }
@@ -373,12 +378,12 @@ export class SignUpComponent implements OnInit {
 
   save() {
     if (!this.myRecaptcha) {
-      this.showMessage = true;
+      this.message = true;
       this.msgStatus = 'Por favor, confirme: Não sou um robo';
       return;
     }
 
-    this.showMessage = true;
+    this.message = true;
     if (!this.veryfyBeforeSave()) {
       return;
     }
