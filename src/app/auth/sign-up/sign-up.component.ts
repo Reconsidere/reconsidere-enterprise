@@ -1,7 +1,14 @@
+import { first } from 'rxjs/operators';
 import { User } from './../../../models/user';
 import { Location } from './../../../models/location';
 import { Observable } from 'rxjs/internal/Observable';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  QueryList
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/validations/confirm-password.validator';
 import { CNPJValidator } from 'src/validations/valid-cnpj.validator';
@@ -13,6 +20,8 @@ import { UserService } from 'src/services';
 import { Units } from 'src/models/unit';
 import { Profile } from 'src/models/profile';
 import { access } from 'fs';
+import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-sign-up',
@@ -38,10 +47,17 @@ export class SignUpComponent implements OnInit {
   showUnit: boolean;
   page: number;
   pageUnit: number;
+  pageUser: number;
+  organizationId: string;
+  returnUrl: string;
+  isChecked: boolean;
+  menu: boolean;
+
   constructor(
     private authService: AuthService,
     private cepService: CepService,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {
     this.classifications = Object.values(Organization.Classification);
     this.profiles = Object.values(User.Profiles);
@@ -56,18 +72,22 @@ export class SignUpComponent implements OnInit {
 
   ngOnInit() {
     this.authService.isAuthenticated();
-
-    // if (localStorage.getItem('currentOrganizationID') === undefined) {
-    //   this.authService.getOrganizationId();
-    // }
-    // const id = JSON.parse(localStorage.getItem('currentOrganizationID'));
-    // if (id !== null && id !== undefined) {
-    //   this.authService
-    //     .getOrganization(id, this.organization)
-    //     .subscribe(item => this.loadOrganization(item));
-    // }
     this.page = 1;
     this.pageUnit = 1;
+    this.pageUser = 1;
+    this.authService.getOrganizationId().subscribe(id => this.setId(id));
+  }
+
+  setId(id) {
+    this.organizationId = id;
+    if (id !== undefined) {
+      this.menu = true;
+      this.authService
+        .getOrganization(this.organizationId, this.organization)
+        .subscribe(item => this.loadOrganization(item), error => error);
+    } else {
+      this.menu = false;
+    }
   }
 
   private loadOrganization(item) {
@@ -75,10 +95,7 @@ export class SignUpComponent implements OnInit {
     if (this.organization.users !== undefined) {
       this.show = true;
     }
-    this.organization.password = this.authService.decript(
-      this.organization.password
-    );
-    this.confirmPasswordOrganization = this.organization.password;
+    this.confirmPasswordOrganization =  this.organization.password;
   }
 
   CEPSearch(value) {
@@ -86,7 +103,7 @@ export class SignUpComponent implements OnInit {
   }
 
   clean() {
-     this.organization = new Organization();
+    this.organization = new Organization();
     this.organization.active = true;
     this.unit = new Units();
     this.unit.location = new Location();
@@ -102,16 +119,16 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  profileChange(value, event) {
-    if (this.profile === undefined && event) {
+  profileChange(value, checked) {
+    if (this.profile === undefined && checked) {
       this.profile.access = [value];
-    } else if (this.profile !== undefined && event) {
+    } else if (this.profile !== undefined && checked) {
       if (this.profile.access === undefined) {
         this.profile.access = [value];
       } else {
         this.profile.access.push(value);
       }
-    } else if (!event) {
+    } else if (!checked) {
       this.profile.access.forEach((item, index) => {
         if (item === value) {
           this.profile.access.splice(index, 1);
@@ -121,14 +138,22 @@ export class SignUpComponent implements OnInit {
   }
 
   verifyPasswordOrganization() {
-    this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
-      this.organization.password,
-      this.confirmPasswordOrganization
-    );
+    if (this.organization._id !== undefined) {
+      this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
+        this.authService.decript(this.organization.password),
+        this.confirmPasswordOrganization
+      );
+      setTimeout(function() {}.bind(this), 1000);
+    } else {
+      this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
+        this.organization.password,
+        this.confirmPasswordOrganization
+      );
+      this.organization.password = this.authService.encript(
+        this.organization.password
+      );
+    }
     setTimeout(function() {}.bind(this), 1000);
-    this.organization.password = this.authService.encript(
-      this.organization.password
-    );
   }
   verifyPasswordUser() {
     if (this.user._id !== undefined) {
@@ -142,7 +167,7 @@ export class SignUpComponent implements OnInit {
         this.user.password,
         this.confirmPasswordUser
       );
-      this.user.password = this.authService.encript(this.user);
+      this.user.password = this.authService.encript(this.user.password);
     }
     setTimeout(function() {}.bind(this), 1000);
   }
@@ -214,10 +239,14 @@ export class SignUpComponent implements OnInit {
     } else {
       this.organization.units.push(this.unit);
     }
-    this.unit = new Units();
-    this.unit.location = new Location();
+    this.cleanLocation();
     this.showUnit = true;
     this.msgStatus = 'Usuário adicionado com sucesso';
+  }
+
+  cleanLocation() {
+    this.unit = new Units();
+    this.unit.location = new Location();
   }
 
   veryfyBeforeAddLocation() {
@@ -248,33 +277,41 @@ export class SignUpComponent implements OnInit {
     if (!this.veryfyBeforeAddUser()) {
       return;
     }
-
+    this.user.profiles = [this.profile];
     if (this.organization.users === undefined && this.user._id === undefined) {
-      if (this.user === undefined || this.user.profiles === undefined) {
-        this.user.profiles = [this.profile];
-      } else {
-        this.user.profiles.push(this.profile);
-      }
       this.organization.users = [this.user];
-      this.user = new User();
-      this.profile = new Profile();
-      this.confirmPasswordUser = undefined;
+      this.cleanUser();
+    } else if (
+      this.organization.users !== undefined &&
+      this.user._id === undefined
+    ) {
+      this.organization.users.push(this.user);
+      this.cleanUser();
     } else if (this.user._id !== undefined) {
       this.organization.users.forEach((item, index) => {
         if (item._id === this.user._id) {
           this.organization.users[index] = this.user;
-          this.user = new User();
-          this.profile = new Profile();
-          this.confirmPasswordUser = undefined;
+          this.cleanUser();
           return;
         }
       });
     } else {
       this.organization.users.push(this.user);
-      this.user = new User();
+      this.cleanUser();
     }
     this.show = true;
     this.msgStatus = 'Usuário adicionado com sucesso';
+  }
+  cleanUser() {
+    this.user = new User();
+    this.profile = new Profile();
+    this.user.active = true;
+    if (this.isChecked !== undefined) {
+      this.isChecked = undefined;
+    } else {
+      this.isChecked = false;
+    }
+    this.confirmPasswordUser = undefined;
   }
 
   veryfyBeforeAddUser() {
@@ -300,7 +337,7 @@ export class SignUpComponent implements OnInit {
 
   editUser(user: any) {
     this.user = user;
-    this.user.password = this.authService.decript(user.password);
+    this.user.password = this.authService.encript(user.password);
     this.confirmPasswordUser = user.password;
   }
   editLocation(unit: any) {
@@ -308,9 +345,11 @@ export class SignUpComponent implements OnInit {
   }
 
   removeUnit(unit) {
-    this.organization.users.forEach((item, index) => {
-      if (item._id === unit._id) {
+    this.organization.units.forEach((item, index) => {
+      if (item === unit) {
         this.organization.units.splice(index, 1);
+        this.showMessage = true;
+        this.msgStatus = 'Unidade removida';
       } else {
       }
     });
@@ -324,6 +363,8 @@ export class SignUpComponent implements OnInit {
       this.organization.users.forEach((item, index) => {
         if (item === user) {
           this.organization.users.splice(index, 1);
+          this.showMessage = true;
+          this.msgStatus = 'Usuário removida';
         } else {
         }
       });
@@ -344,6 +385,9 @@ export class SignUpComponent implements OnInit {
 
     try {
       this.authService.signup(this.organization);
+      if (this.organization._id === undefined) {
+        this.router.navigate(['/']);
+      }
       this.msgStatus = 'Dados salvos com sucesso';
     } catch (error) {
       this.msgStatus = 'Erro ao salvar!';

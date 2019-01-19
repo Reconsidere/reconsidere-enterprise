@@ -106,9 +106,13 @@ export class AuthService {
   }
   getOrganizationId(): Observable<string> {
     const id = JSON.parse(localStorage.getItem('currentUserId'));
-    return this.http.get<string>(
-      `${environment.database.uri}organization/organizationid/${id}`
-    );
+    if (id !== null) {
+      return this.http.get<string>(
+        `${environment.database.uri}organization/organizationid/${id}`
+      );
+    } else {
+      return new Observable<string>();
+    }
   }
 
   getOrganization(id, organization) {
