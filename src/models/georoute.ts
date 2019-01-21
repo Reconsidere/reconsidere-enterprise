@@ -4,4 +4,5 @@ export class GeoRoute {
   _id: string;
   name: string;
   schedules: [Schedule];
+  expand: boolean;
 }

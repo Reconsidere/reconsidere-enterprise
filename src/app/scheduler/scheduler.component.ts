@@ -76,19 +76,20 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  closeMessage() {
-    this.message = undefined;
+  newScheduler(): Schedule {
+    const turn = new Turn();
+    turn.startTime = new Date();
+    turn.endTime = new Date();
+
+    const scheduler = new Schedule();
+    scheduler.startDate = new Date();
+    scheduler.endDate = new Date();
+    scheduler.turns = [turn];
+    return scheduler;
   }
 
-  removeRoute(id) {
-    try {
-      this.schedulerServive.remove(this.organizationId, id);
-      this.message = 'Dados removidos com sucesso';
-      this.getGeoroutes();
-    } catch (error) {
-      this.message = error;
-      console.log(error);
-    }
+  closeMessage() {
+    this.message = undefined;
   }
 
   veryfyBeforeSave(route: GeoRoute) {
@@ -113,6 +114,33 @@ export class SchedulerComponent implements OnInit {
         });
       });
     }
+  }
+
+  addScheduler(route) {
+    this.georoutes.forEach((items, index) => {
+      if (items === route) {
+        if (items.schedules !== undefined) {
+          items.schedules.push(this.newScheduler());
+        } else {
+          items.schedules = [this.newScheduler()];
+        }
+      }
+    });
+    console.log(this.georoutes);
+  }
+
+  removeSchedule(schedule) {
+    this.georoutes.forEach((items, index) => {
+      items.schedules.forEach((item, i) => {
+        if (item === schedule) {
+          items.schedules.splice(i, 1);
+        }
+      });
+    });
+  }
+
+  expand(route) {
+    route.expand = !route.expand;
   }
 
   save(route) {

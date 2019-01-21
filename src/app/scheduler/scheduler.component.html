@@ -1,21 +1,21 @@
 <app-toolbar></app-toolbar>
 <div class="container">
   <div
-  *ngIf="message"
-  class="alert alert-warning alert-dismissible fade show"
-  role="alert"
->
-  <strong>Atenção: </strong> {{ message }}
-  <button
-    type="button"
-    (click)="closeMessage()"
-    class="close"
-    data-dismiss="alert"
-    aria-label="Close"
+    *ngIf="message"
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
   >
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+    <strong>Atenção: </strong> {{ message }}
+    <button
+      type="button"
+      (click)="closeMessage()"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
   <div class="tableScheduler">
     <table class="table table-sm">
@@ -38,7 +38,6 @@
           <th>Data final</th>
           <th>Hora inicial</th>
           <th>Hora final</th>
-          <th>Salvar</th>
           <th>Remover</th>
         </tr>
       </thead>
@@ -51,17 +50,42 @@
           "
           let-i="index"
         >
+          <tr>
+            <td hidden>{{ route._id }}</td>
+            <td>
+              <input
+                class="form-control"
+                type="text"
+                [(ngModel)]="route.name"
+              />
+            </td>
+            <td>
+              <button
+                (click)="expand(route)"
+                type="button"
+                class="btn btn-sm btn-primary ml-1"
+                data-toggle="button"
+                aria-pressed="false"
+                autocomplete="off"
+              >
+                <i class="fa fa-caret-down"></i>
+              </button>
+              <button
+                (click)="addScheduler(route)"
+                type="button"
+                class="btn btn-sm btn-primary ml-1"
+                data-toggle="button"
+                aria-pressed="false"
+                autocomplete="off"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </td>
+          </tr>
           <ng-template ngFor let-schedule [ngForOf]="route.schedules">
             <ng-template ngFor let-turn [ngForOf]="schedule.turns">
-              <tr>
-                <td hidden>{{ route._id }}</td>
-                <td>
-                  <input
-                    class="form-control"
-                    type="text"
-                    [(ngModel)]="route.name"
-                  />
-                </td>
+              <tr *ngIf="route.expand">
+                <td></td>
                 <td>
                   <p-calendar
                     name="startDate"
@@ -109,19 +133,7 @@
                 </td>
                 <td>
                   <button
-                    (click)="save(route)"
-                    type="button"
-                    class="btn btn-sm btn-success"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                  >
-                    <i class="fa fa-save"></i>
-                  </button>
-                </td>
-                <td>
-                  <button
-                    (click)="removeRoute(route._id)"
+                    (click)="removeSchedule(schedule)"
                     type="button"
                     class="btn btn-sm btn-danger"
                     data-toggle="button"
@@ -134,6 +146,18 @@
               </tr>
             </ng-template>
           </ng-template>
+          <tr *ngIf="route.expand">
+            <td colspan="6">
+              <button
+                type="submit"
+                id="save"
+                (click)="save(route)"
+                class="btn btn-success col-md-12"
+              >
+                Salvar
+              </button>
+            </td>
+          </tr>
         </ng-template>
       </tbody>
       <pagination-controls
