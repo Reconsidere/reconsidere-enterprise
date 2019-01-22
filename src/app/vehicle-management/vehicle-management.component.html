@@ -8,7 +8,7 @@
     <strong>Atenção: </strong> {{ message }}
     <button
       type="button"
-      (click)="closeAlertMessage()"
+      (click)="closeMessage()"
       class="close"
       data-dismiss="alert"
       aria-label="Close"
@@ -16,192 +16,139 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-
   <div class="tableVehicles">
-    <table class="table table-hover table-sm">
+    <table class="table table-sm">
       <thead>
-        <tr id="buttonAdd">
-          <th colspan="7">
-            <button
-              *ngIf="this.show"
-              type="button"
-              (click)="show = !show;"
-              class="btn btn-primary"
-              data-toggle="button"
-              aria-pressed="false"
-              autocomplete="off"
-            >
-              <i class="fa fa-plus"></i>
-            </button>
-            <button
-              *ngIf="!this.show"
-              type="button"
-              (click)="show = !show; clean();"
-              class="btn btn-primary"
-              data-toggle="button"
-              aria-pressed="false"
-              autocomplete="off"
-            >
-              <i class="fa fa-minus"></i>
-            </button>
-          </th>
+        <tr>
+          <button
+            id="newVehicle"
+            (click)="newVehicle()"
+            type="button"
+            class="btn btn-sm btn-primary"
+            data-toggle="button"
+            aria-pressed="false"
+            autocomplete="off"
+          >
+            <i class="fa fa-plus"></i>
+          </button>
         </tr>
         <tr id="Titles">
           <th>Placa</th>
           <th>Capacidade de Carga</th>
           <th>Peso do Veículo Vazio</th>
           <th>Combustível</th>
-          <th>Tipo Combustível</th>
+          <th colspan="2">Tipo Combustível</th>
           <th>Ativo</th>
-          <th>Editar</th>
+          <th>Remover</th>
+          <th>Salvar</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let vehicle of (vehicles | paginate: { itemsPerPage: 5, currentPage: page });">
-          <td hidden >{{ vehicle._id }}</td>
-          <td>{{ vehicle.carPlate }}</td>
-          <td>{{ vehicle.weightCapacity }}</td>
-          <td>{{ vehicle.emptyVehicleWeight }}</td>
-          <td>{{ vehicle.fuel }}</td>
-          <td>{{ vehicle.typeFuel }}</td>
-          <td>{{ vehicle.active }}</td>
+        <tr
+          *ngFor="
+            let vehicle of (vehicles
+              | paginate: { itemsPerPage: 5, currentPage: page })
+          "
+        >
+          <td hidden>{{ vehicle._id }}</td>
           <td>
-            <button (click)="edit(vehicle)"
-                    type="button"
-                    class="btn btn-sm btn-primary"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off">
-              <i class="fa fa-edit"></i>
+            <input
+              required
+              [(ngModel)]="vehicle.carPlate"
+              name="carPlate"
+              type="text"
+              class="form-control"
+              pattern="[a-zA-Z]{3}-[0-9]{4}"
+              id="carPlate"
+              aria-describedby="carPlate"
+              placeholder="AAA-0000"
+              mask="SSS-0000"
+            />
+          </td>
+          <td>
+            <input
+              required
+              [(ngModel)]="vehicle.weightCapacity"
+              name="weightCapacity"
+              type="number"
+              class="form-control"
+              id="weightCapacity"
+              aria-describedby="weightCapacity"
+              placeholder="0.0"
+            />
+          </td>
+          <td>
+            <input
+              required
+              [(ngModel)]="vehicle.emptyVehicleWeight"
+              name="emptyVehicleWeight"
+              type="number"
+              class="form-control"
+              id="emptyVehicleWeight"
+              aria-describedby="emptyVehicleWeight"
+              placeholder="0.0"
+            />
+          </td>
+          <td>
+            <input
+              required
+              [(ngModel)]="vehicle.fuel"
+              name="fuel"
+              type="number"
+              class="form-control"
+              id="fuel"
+              aria-describedby="fuel"
+              placeholder="0.0"
+            />
+          </td>
+          <td colspan="2">
+            <select
+              required
+              [(ngModel)]="vehicle.typeFuel"
+              name="typeFuel"
+              class="form-control"
+            >
+              <option id="typeFuel" *ngFor="let item of typesFuel">{{
+                item
+              }}</option>
+            </select>
+          </td>
+          <td class="custom-control custom-checkbox">
+            <input
+              [(ngModel)]="vehicle.active"
+              name="active"
+              type="checkbox"
+              class="custom-control-input"
+              id="active"
+            />
+            <label class="custom-control-label" for="active">Ativo</label>
+          </td>
+          <td>
+            <button
+              (click)="remove(vehicle._id)"
+              type="button"
+              class="btn btn-sm btn-danger"
+              data-toggle="button"
+              aria-pressed="false"
+              autocomplete="off"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+          <td>
+            <button
+              (click)="save(vehicle)"
+              type="button"
+              class="btn btn-sm btn-success"
+              data-toggle="button"
+              aria-pressed="false"
+              autocomplete="off"
+            >
+              <i class="fa fa-save"></i>
             </button>
           </td>
         </tr>
       </tbody>
-      <pagination-controls
-        (pageChange)="page = $event"
-        previousLabel="Anterior"
-        nextLabel="Próxima"
-        autoHide="true"
-        responsive="true"
-        screenReaderPaginationLabel="Pagination"
-      ></pagination-controls>
     </table>
   </div>
-  <form ngNativeValidate *ngIf="show === true">
-    <div class="row">
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="carPlate">Placa</label>
-          <input
-            required
-            [(ngModel)]="vehicle.carPlate"
-            name="carPlate"
-            type="text"
-            class="form-control"
-            pattern="[a-zA-Z]{3}-[0-9]{4}"
-            id="carPlate"
-            aria-describedby="carPlate"
-            placeholder="AAA-0000"
-            mask="SSS-0000"
-          />
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="weightCapacity">Capacidade de Carga</label>
-          <input
-            required
-            [(ngModel)]="vehicle.weightCapacity"
-            name="weightCapacity"
-            type="number"
-            class="form-control"
-            id="weightCapacity"
-            aria-describedby="weightCapacity"
-            placeholder="0.0"
-          />
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="fuel">Combustível</label>
-          <input
-            required
-            [(ngModel)]="vehicle.fuel"
-            name="fuel"
-            type="number"
-            class="form-control"
-            id="fuel"
-            aria-describedby="fuel"
-            placeholder="0.0"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="fuel">Tipo Combustível</label>
-          <select
-            required
-            [(ngModel)]="vehicle.typeFuel"
-            name="typeFuel"
-            class="form-control"
-          >
-            <option id="typeFuel" *ngFor="let item of typesFuel">{{
-              item
-            }}</option>
-          </select>
-        </div>
-      </div>
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="weightCapacity">Peso do Veículo Vazio</label>
-          <input
-            required
-            [(ngModel)]="vehicle.emptyVehicleWeight"
-            name="emptyVehicleWeight"
-            type="number"
-            class="form-control"
-            id="emptyVehicleWeight"
-            aria-describedby="emptyVehicleWeight"
-            placeholder="0.0"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-check form-group">
-          <input
-            [(ngModel)]="vehicle.active"
-            name="active"
-            class="form-control"
-            type="checkbox"
-            class="form-check-input"
-            id="active"
-          />
-          <label class="form-check-label" for="active">Ativo</label>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <button
-        type="submit"
-        id="clean"
-        (click)="clean()"
-        class="btn btn-primary col-md-12"
-      >
-        Limpar Campos
-      </button>
-      <button
-        type="submit"
-        id="save"
-        (click)="save()"
-        class="btn btn-success col-md-12"
-      >
-        Salvar
-      </button>
-    </div>
-  </form>
 </div>

@@ -22,6 +22,7 @@
       <thead>
         <tr>
           <button
+            id="newRoute"
             (click)="newRoute()"
             type="button"
             class="btn btn-sm btn-primary"
@@ -34,6 +35,7 @@
         </tr>
         <tr id="Titles">
           <th>Nome</th>
+          <th></th>
           <th>Data inicial</th>
           <th>Data final</th>
           <th>Hora inicial</th>
@@ -57,6 +59,7 @@
                 class="form-control"
                 type="text"
                 [(ngModel)]="route.name"
+                required
               />
             </td>
             <td>
@@ -86,6 +89,7 @@
             <ng-template ngFor let-turn [ngForOf]="schedule.turns">
               <tr *ngIf="route.expand">
                 <td></td>
+                <td></td>
                 <td>
                   <p-calendar
                     name="startDate"
@@ -95,6 +99,7 @@
                     [minDate]="minDateValue"
                     [maxDate]="maxDateValue"
                     [readonlyInput]="true"
+                    required
                   ></p-calendar>
                 </td>
                 <td>
@@ -106,6 +111,7 @@
                     [minDate]="minDateValue"
                     [maxDate]="maxDateValue"
                     [readonlyInput]="true"
+                    required
                   ></p-calendar>
                 </td>
                 <td>
@@ -117,6 +123,7 @@
                     [ngModel]="turn.startTime | dateconvert"
                     hourFormat="24"
                     [readonlyInput]="true"
+                    required
                   ></p-calendar>
                 </td>
                 <td>
@@ -129,6 +136,7 @@
                     showTime="true"
                     hourFormat="24"
                     [readonlyInput]="true"
+                    required
                   ></p-calendar>
                 </td>
                 <td>
@@ -147,7 +155,7 @@
             </ng-template>
           </ng-template>
           <tr *ngIf="route.expand">
-            <td colspan="6">
+            <td colspan="7">
               <button
                 type="submit"
                 id="save"

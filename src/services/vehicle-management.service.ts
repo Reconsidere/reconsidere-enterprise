@@ -9,8 +9,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class VehicleManagementService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   createOrUpdate(organizatioId: string, vehicle: Vehicle) {
     if (vehicle._id) {
@@ -22,24 +21,40 @@ export class VehicleManagementService {
 
   add(organizationId: string, vehicle: Vehicle) {
     this.http
-      .post(environment.database.uri + `${organizationId}/vehicle/add/`, vehicle)
+      .post(
+        environment.database.uri +
+          `organization/add/vehicle/${organizationId}/`,
+        vehicle
+      )
       .subscribe(res => console.log('Done'));
   }
 
   update(organizationId: string, vehicle: Vehicle) {
     this.http
-      .put(environment.database.uri + `${organizationId}/vehicle/update/${vehicle._id}`, vehicle)
+      .put(environment.database.uri + `organization/update/vehicle/${organizationId}`, vehicle)
       .subscribe(res => console.log('Done'));
   }
 
   get(organizationId: string, id: string): Observable<Vehicle[]> {
-    return this.http
-      .get<Vehicle[]>(environment.database.uri + `${organizationId}/vehicle/${id}`);
+    return this.http.get<Vehicle[]>(
+      environment.database.uri + `organization/${organizationId}/vehicle/${id}`
+    );
   }
 
-  loadAll(organizationId: string): Observable<Vehicle[]> {
+  loadAll(organizationId: string) {
     return this.http
-      .get<Vehicle[]>(environment.database.uri + `${organizationId}/vehicle/all`);
+      .get<Vehicle[]>(
+        environment.database.uri + `organization/vehicle/${organizationId}`
+      )
+      .pipe();
   }
 
+  remove(organizationId, id: string) {
+    this.http
+      .delete(
+        environment.database.uri +
+          `organization/remove/vehicle/${organizationId}/${id}`
+      )
+      .subscribe(res => console.log('Done'));
+  }
 }

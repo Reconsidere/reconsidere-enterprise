@@ -14,63 +14,87 @@ export class VehicleManagementComponent implements OnInit {
   page: number;
   message: string;
   show = false;
+  organizationId: string;
 
-  vehicle: any;
-  vehicles: Observable<Vehicle[]>;
+  vehicles: Vehicle[];
   typesFuel = Object.values(Vehicle.Fuel);
 
-  organizationMock: Organization;
-
-  userProfile: {
-    organizationId: '5c2e3736014dc837908f24c4';
-  };
-
-  constructor(private service: VehicleManagementService) {
-    this.vehicle = new Vehicle();
-  }
+  constructor(
+    private vehicleService: VehicleManagementService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
     this.page = 1;
-    this.vehicles = this.service.loadAll(this.userProfile.organizationId);
-    if (this.vehicles !== undefined) {
-      this.show = true;
+    this.getVehicles();
+  }
+
+  private getVehicles() {
+    this.authService.getOrganizationId().subscribe(id => this.setId(id));
+  }
+
+  setId(id) {
+    if (id !== undefined) {
+      this.organizationId = id;
+      this.vehicleService
+        .loadAll(id)
+        .subscribe(route => this.loadRoutes(route));
+    } else {
+      this.newVehicle();
     }
   }
 
-  clean() {
-    this.vehicle = new Vehicle();
+  loadRoutes(vehicles) {
+    if (vehicles !== undefined) {
+      this.vehicles = vehicles;
+    } else {
+      this.newVehicle();
+    }
   }
 
-  closeMessage() {
-    this.message = undefined;
+  newVehicle() {
+    const vehicle = new Vehicle();
+    vehicle.active = true;
+    if (this.vehicles === undefined) {
+      this.vehicles = [vehicle];
+    } else {
+      this.vehicles.push(vehicle);
+    }
   }
 
-  edit(vehicle: any) {
-    this.vehicle = vehicle;
-    this.show = true;
-  }
-
-  save() {
+  remove(id) {
     try {
-      this.veryfyBeforeSave();
-      this.service.createOrUpdate(
-        this.userProfile.organizationId,
-        this.vehicle
-      );
-      this.show = false;
+      this.vehicleService.remove(this.organizationId, id);
       this.message = 'Dados salvos com sucesso';
+      this.getVehicles();
     } catch (error) {
       this.message = error;
       console.log(error);
     }
   }
 
-  veryfyBeforeSave() {
+  closeMessage() {
+    this.message = undefined;
+  }
+
+  save(vehicle) {
+    try {
+      this.veryfyBeforeSave(vehicle);
+      this.vehicleService.createOrUpdate(this.organizationId, vehicle);
+      this.message = 'Dados salvos com sucesso';
+      this.getVehicles();
+    } catch (error) {
+      this.message = error;
+      console.log(error);
+    }
+  }
+
+  veryfyBeforeSave(vehicle) {
     if (
-      !this.vehicle.carPlate ||
-      !this.vehicle.weightCapacity ||
-      !this.vehicle.emptyVehicleWeight ||
-      !this.vehicle.typeFuel
+      !vehicle.carPlate ||
+      !vehicle.weightCapacity ||
+      !vehicle.emptyVehicleWeight ||
+      !vehicle.typeFuel
     ) {
       throw new Error(
         'Por favor, preencha os campos antes de salvar os dados!'

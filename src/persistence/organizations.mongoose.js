@@ -301,7 +301,7 @@ organizations.route('/add/vehicle/:id').post(function(req, res, next) {
   });
 });
 
-organizations.route('/update/vehicle/:id').post(function(req, res, next) {
+organizations.route('/update/vehicle/:id').put(function(req, res, next) {
   organizationModel.findById(req.params.id, function(err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
@@ -330,6 +330,28 @@ organizations.route('/update/vehicle/:id').post(function(req, res, next) {
     }
   });
 });
+
+organizations
+  .route('/remove/vehicle/:organizationId/:id')
+  .delete(function(req, res) {
+    organizationModel.findById(req.params.organizationId, function(err, org) {
+      if (!org) return next(new Error('Could not load Document'));
+      else {
+        var vehicle = org.vehicles.id(req.params.id);
+        if (vehicle) {
+          vehicle.remove({ _id: req.params.id });
+          org
+            .update(org)
+            .then(org => {
+              res.json('remove complete');
+            })
+            .catch(err => {
+              res.status(400).send('unable to delete schedule the database');
+            });
+        }
+      }
+    });
+  });
 
 //#endregion
 
