@@ -1,3 +1,7 @@
+.container {
+  overflow: auto !important;
+}
+
 #newRoute{
   margin-bottom: 5px;
 }
@@ -22,12 +26,70 @@ table th,
 table td {
   padding: .625em;
   text-align: center;
+  border:none;
+}
+
+select {
+  margin-left: 3em;
+  padding:  5.000px;
 }
 
 table th {
   font-size: .70em;
   letter-spacing: .1em;
   text-transform: uppercase;
+}
+
+@media screen and (max-width: 1024px) {
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1.3em;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    display: block;
+    margin-bottom: .625em;
+  }
+
+  table td {
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+
+  select {
+    margin-left: 3em;
+    padding:  5.000px;
+  }
+
+  table td::before {
+    /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
 }
 
 @media screen and (max-width: 600px) {
@@ -61,6 +123,11 @@ table th {
     text-align: right;
   }
 
+  select {
+    margin-left: 3em;
+    padding:  5.000px;
+  }
+
   table td::before {
     /*
     * aria-label has no advantage, it won't be read inside a table
@@ -76,3 +143,10 @@ table th {
     border-bottom: 0;
   }
 }
+
+.titleGroup{
+  vertical-align : middle;
+  text-align:center;
+}
+
+

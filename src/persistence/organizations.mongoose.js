@@ -64,11 +64,14 @@ var OrganizationSchema = new mongoose.Schema({
   georoutes: [
     {
       name: String,
+      archived: Boolean,
+      status: String,
       schedules: [
         {
           startDate: Date,
           endDate: Date,
-          turns: [{ startTime: Date, endTime: Date }]
+          startTime: Date,
+          endTime: Date
         }
       ]
     }

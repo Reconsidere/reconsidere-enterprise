@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Organization } from 'src/models/organization';
 import { Schedule } from 'src/models/schedule';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,7 @@ export class SchedulerService {
       .subscribe(res => console.log('Done'));
   }
 
-  getAll(id) {
+  getAll(id): Observable<GeoRoute[]> {
     const uri = environment.database.uri + `organization/scheduler/${id}`;
     return this.http.get<GeoRoute[]>(uri).pipe();
   }

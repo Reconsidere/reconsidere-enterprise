@@ -41,7 +41,7 @@ export class VehicleManagementService {
     );
   }
 
-  loadAll(organizationId: string) {
+  loadAll(organizationId: string): Observable<Vehicle[]> {
     return this.http
       .get<Vehicle[]>(
         environment.database.uri + `organization/vehicle/${organizationId}`

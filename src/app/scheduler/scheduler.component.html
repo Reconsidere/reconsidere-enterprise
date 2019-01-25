@@ -18,7 +18,7 @@
   </div>
 
   <div class="tableScheduler">
-    <table class="table table-sm">
+    <table class="table table-sm" x>
       <thead>
         <tr>
           <button
@@ -35,11 +35,12 @@
         </tr>
         <tr id="Titles">
           <th>Nome</th>
-          <th></th>
+          <th colspan="2"></th>
           <th>Data inicial</th>
           <th>Data final</th>
           <th>Hora inicial</th>
           <th>Hora final</th>
+          <th>Veículo</th>
           <th>Remover</th>
         </tr>
       </thead>
@@ -54,7 +55,7 @@
         >
           <tr>
             <td hidden>{{ route._id }}</td>
-            <td>
+            <td colspan="2">
               <input
                 class="form-control"
                 type="text"
@@ -62,7 +63,7 @@
                 required
               />
             </td>
-            <td>
+            <td class="tdStyle">
               <button
                 (click)="expand(route)"
                 type="button"
@@ -85,11 +86,22 @@
               </button>
             </td>
           </tr>
-          <ng-template ngFor let-schedule [ngForOf]="route.schedules">
-            <ng-template ngFor let-turn [ngForOf]="schedule.turns">
+          <ng-template
+            ngFor
+            let-group
+            [ngForOf]="route.schedules | groupby: ['startDate','endDate']"
+          >
+            <ng-template
+              ngFor
+              let-schedule
+              [ngForOf]="group.value"
+              let-igroup="index"
+            >
               <tr *ngIf="route.expand">
-                <td></td>
-                <td></td>
+                <td colspan="3"></td>
+                <td  class="titleGroup" [attr.rowspan]="group.value.length" *ngIf="igroup == 0">
+                    {{group.key | date:'dd/MM/yyyy'}}
+                </td>
                 <td>
                   <p-calendar
                     name="startDate"
@@ -119,8 +131,8 @@
                     name="startTime"
                     pattern="HH:mm"
                     timeOnly="true"
-                    (ngModelChange)="turn.startTime = $event"
-                    [ngModel]="turn.startTime | dateconvert"
+                    (ngModelChange)="schedule.startTime = $event"
+                    [ngModel]="schedule.startTime | dateconvert"
                     hourFormat="24"
                     [readonlyInput]="true"
                     required
@@ -131,14 +143,26 @@
                     name="endTime"
                     pattern="HH:mm"
                     timeOnly="true"
-                    (ngModelChange)="turn.endTime = $event"
-                    [ngModel]="turn.endTime | dateconvert"
+                    (ngModelChange)="schedule.endTime = $event"
+                    [ngModel]="schedule.endTime | dateconvert"
                     showTime="true"
                     hourFormat="24"
                     [readonlyInput]="true"
                     required
                   ></p-calendar>
                 </td>
+                <td>
+                  <select
+                    required
+                    [(ngModel)]="schedule.vehicle"
+                    name="vehicle"
+                  >
+                    <option id="vehicle" *ngFor="let item of vehicles">{{
+                      item.carPlate
+                    }}</option>
+                  </select>
+                </td>
+
                 <td>
                   <button
                     (click)="removeSchedule(schedule)"
@@ -155,7 +179,7 @@
             </ng-template>
           </ng-template>
           <tr *ngIf="route.expand">
-            <td colspan="7">
+            <td colspan="9">
               <button
                 type="submit"
                 id="save"
@@ -163,6 +187,18 @@
                 class="btn btn-success col-md-12"
               >
                 Salvar
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="route.expand">
+            <td colspan="9">
+              <button
+                type="submit"
+                id="remove"
+                (click)="remove(route)"
+                class="btn btn-danger col-md-12"
+              >
+                Remover rota
               </button>
             </td>
           </tr>

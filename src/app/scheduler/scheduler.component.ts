@@ -1,3 +1,4 @@
+import { VehicleManagementService } from 'src/services/vehicle-management.service';
 import { AbstractControl } from '@angular/forms';
 import { routes } from './../app.routing';
 import {
@@ -14,6 +15,7 @@ import { GeoRoute } from 'src/models/georoute';
 import { Schedule } from 'src/models/schedule';
 import { Turn } from 'src/models/turn';
 import * as ptBr from 'date-fns/locale/pt';
+import { Vehicle } from 'src/models/vehicle';
 
 @Component({
   selector: 'app-scheduler',
@@ -27,24 +29,57 @@ export class SchedulerComponent implements OnInit {
   georoutes: [GeoRoute];
   page: number;
   organizationId: string;
+  vehicles: Vehicle[];
 
   constructor(
     private schedulerServive: SchedulerService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private vehicleService: VehicleManagementService
   ) {}
   ngOnInit() {
     this.page = 1;
-    this.getGeoroutes();
+    this.loadValues();
   }
+  private loadValues() {
+    this.authService.getOrganizationId().subscribe(id => this.setId(id));
+  }
+
   setId(id) {
     this.organizationId = id;
-    this.schedulerServive
-      .getAll(this.organizationId)
-      .pipe()
-      .subscribe(georoutes => {
-        this.loadGeoroutes(georoutes);
-      });
+    this.getGeoroutes();
+    this.getVehicles();
+  }
+
+  getVehicles() {
+    if (this.organizationId !== undefined) {
+      this.vehicleService
+        .loadAll(this.organizationId)
+        .subscribe(vehicle => this.loadVehicles(vehicle));
+    } else {
+      this.vehicles = [];
+    }
+  }
+
+  loadVehicles(vehicles) {
+    if (vehicles !== undefined) {
+      this.vehicles = vehicles;
+    } else {
+      this.vehicles = [];
+    }
+  }
+
+  private getGeoroutes() {
+    if (this.organizationId !== undefined) {
+      this.schedulerServive
+        .getAll(this.organizationId)
+        .pipe()
+        .subscribe(georoutes => {
+          this.loadGeoroutes(georoutes);
+        });
+    } else {
+      this.newRoute();
+    }
   }
 
   loadGeoroutes(values) {
@@ -56,18 +91,25 @@ export class SchedulerComponent implements OnInit {
   }
 
   newRoute() {
-    const turn = new Turn();
-    turn.startTime = new Date();
-    turn.endTime = new Date();
-
-    const scheduler = new Schedule();
-    scheduler.startDate = new Date();
-    scheduler.endDate = new Date();
-    scheduler.turns = [turn];
-
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
     const georout = new GeoRoute();
     georout.name = 'Nova rota';
+    const scheduler = new Schedule();
+    scheduler.startDate = new Date();
+    scheduler.endDate = tomorrow;
+    scheduler.startTime = new Date();
+    scheduler.endTime = new Date();
     georout.schedules = [scheduler];
+    georout.schedules.push(scheduler);
+
+    const scheduler3 = new Schedule();
+    scheduler3.startDate = new Date();
+    scheduler3.endDate = tomorrow;
+    scheduler3.startTime = new Date();
+    scheduler3.endTime = new Date();
+    georout.schedules.push(scheduler3);
+    georout.schedules.push(scheduler3);
 
     if (this.georoutes === undefined || this.georoutes.length <= 0) {
       this.georoutes = [georout];
@@ -76,15 +118,12 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  newScheduler(): Schedule {
-    const turn = new Turn();
-    turn.startTime = new Date();
-    turn.endTime = new Date();
+  groupBy(schedules: Schedule[]) {
+    return schedules.filter(x => x.startDate);
+  }
 
+  newScheduler(): Schedule {
     const scheduler = new Schedule();
-    scheduler.startDate = new Date();
-    scheduler.endDate = new Date();
-    scheduler.turns = [turn];
     return scheduler;
   }
 
@@ -92,28 +131,33 @@ export class SchedulerComponent implements OnInit {
     this.message = undefined;
   }
 
+  rowspanStartDate() {}
+
   veryfyBeforeSave(route: GeoRoute) {
-    if (route.name === undefined) {
-      route.schedules.forEach(schedule => {
-        if (
-          schedule.startDate === undefined ||
-          schedule.endDate === undefined ||
-          this.organizationId === undefined ||
-          this.organizationId === ''
-        ) {
-          throw new Error(
-            'Por favor, preencha os campos antes de salvar os dados!'
-          );
-        }
-        schedule.turns.forEach(turn => {
-          if (turn.startTime === undefined || turn.endTime === undefined) {
-            throw new Error(
-              'Por favor, preencha os campos antes de salvar os dados!'
-            );
-          }
-        });
-      });
+    if (route.name === undefined || route.vehicle._id === undefined) {
+      throw new Error(
+        'Por favor, preencha os campos antes de salvar os dados!'
+      );
     }
+    if (route.schedules.length <= 0) {
+      throw new Error(
+        'Por favor, preencha os campos antes de salvar os dados!'
+      );
+    }
+    route.schedules.forEach(schedule => {
+      if (
+        schedule.startDate === undefined ||
+        schedule.endDate === undefined ||
+        schedule.startTime === undefined ||
+        schedule.endTime === undefined ||
+        this.organizationId === undefined ||
+        this.organizationId === ''
+      ) {
+        throw new Error(
+          'Por favor, preencha os campos antes de salvar os dados!'
+        );
+      }
+    });
   }
 
   addScheduler(route) {
@@ -139,6 +183,8 @@ export class SchedulerComponent implements OnInit {
     });
   }
 
+  remove(route) {}
+
   expand(route) {
     route.expand = !route.expand;
   }
@@ -152,9 +198,5 @@ export class SchedulerComponent implements OnInit {
       this.message = error;
       console.log(error);
     }
-  }
-
-  private getGeoroutes() {
-    this.authService.getOrganizationId().subscribe(id => this.setId(id));
   }
 }
