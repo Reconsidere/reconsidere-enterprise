@@ -1,4 +1,5 @@
 import { Turn } from './turn';
+import { Vehicle } from './vehicle';
 
 export class Schedule {
   _id: string;
@@ -8,6 +9,7 @@ export class Schedule {
   endTime: Date;
   archived: boolean;
   status: string;
+  vehicle: Vehicle;
   constructor() {}
 }
 

@@ -6,5 +6,4 @@ export class GeoRoute {
   name: string;
   schedules: [Schedule];
   expand: boolean;
-  vehicle: Vehicle;
 }

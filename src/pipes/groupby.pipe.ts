@@ -7,9 +7,18 @@ import { Schedule } from 'src/models/schedule';
 })
 export class GroupbyPipe implements PipeTransform {
   result: any[];
-  transform(value: Array<any>, fields: Array<any>): Array<any> {
-    let values = [];
-    fields.forEach(field => {
+  transform(value: Array<any>, field: any) {
+    if (field === '_id') {
+      const groupedObj = value.reduce((prev, cur) => {
+        if (!prev[cur.vehicle[field]]) {
+          prev[cur.vehicle[field]] = [cur.vehicle];
+        } else {
+          prev[cur.vehicle[field]].push(cur.vehicle);
+        }
+        return prev;
+      }, {});
+      return this.size(groupedObj)[0].value;
+    } else {
       const groupedObj = value.reduce((prev, cur) => {
         if (!prev[cur[field]]) {
           prev[cur[field]] = [cur];
@@ -18,11 +27,13 @@ export class GroupbyPipe implements PipeTransform {
         }
         return prev;
       }, {});
-      values = Object.keys(groupedObj).map(key => ({
-        key,
-        value: groupedObj[key]
-      }));
-    });
-    return values;
+      return this.size(groupedObj)[0].value;
+    }
+  }
+
+  private size(groupedObj: any) {
+    return Object.keys(groupedObj).map(key => ({
+      value: groupedObj[key]
+    }));
   }
 }

@@ -18,7 +18,7 @@
   </div>
 
   <div class="tableScheduler">
-    <table class="table table-sm" x>
+    <table class="table table-sm">
       <thead>
         <tr>
           <button
@@ -36,11 +36,11 @@
         <tr id="Titles">
           <th>Nome</th>
           <th colspan="2"></th>
+          <th>Veículo</th>
           <th>Data inicial</th>
           <th>Data final</th>
           <th>Hora inicial</th>
           <th>Hora final</th>
-          <th>Veículo</th>
           <th>Remover</th>
         </tr>
       </thead>
@@ -86,23 +86,34 @@
               </button>
             </td>
           </tr>
-          <ng-template
-            ngFor
-            let-group
-            [ngForOf]="route.schedules | groupby: ['startDate','endDate']"
-          >
-            <ng-template
-              ngFor
-              let-schedule
-              [ngForOf]="group.value"
-              let-igroup="index"
-            >
-              <tr *ngIf="route.expand">
-                <td colspan="3"></td>
-                <td  class="titleGroup" [attr.rowspan]="group.value.length" *ngIf="igroup == 0">
-                    {{group.key | date:'dd/MM/yyyy'}}
-                </td>
-                <td>
+          <ng-template ngFor let-group [ngForOf]="groupList" let-igroup="index">
+            <tr *ngIf="route.expand">
+              <td colspan="3"></td>
+              <td class="titleGroup">
+                <!-- [attr.rowspan]="group.rows" -->
+                {{ group.key }}
+              </td>
+              <!-- <td class="titleGroup">
+
+                {{ group.startDate | date: 'dd/MM/yyyy' }}
+              </td> -->
+            </tr>
+          </ng-template>
+          <!-- <td
+                class="titleGroup"
+                [attr.rowspan]="route.schedules | groupby: 'startDate'"
+                *ngIf="igroup == 0"
+              >
+                {{ schedule.startDate | date: 'dd/MM/yyyy' }}
+              </td>
+              <td
+                class="titleGroup"
+                [attr.rowspan]="route.schedules | groupby: 'endDate'"
+                *ngIf="igroup == 0"
+              >
+                {{ schedule.endDate | date: 'dd/MM/yyyy' }}
+              </td> -->
+          <!-- <td  class="titleGroup" rowspan="4" *ngIf="igroup == 0">
                   <p-calendar
                     name="startDate"
                     dateFormat="dd/mm/yy"
@@ -113,71 +124,70 @@
                     [readonlyInput]="true"
                     required
                   ></p-calendar>
-                </td>
-                <td>
-                  <p-calendar
-                    name="endDate"
-                    dateFormat="dd/mm/yy"
-                    (ngModelChange)="schedule.endDate = $event"
-                    [ngModel]="schedule.endDate | dateconvert"
-                    [minDate]="minDateValue"
-                    [maxDate]="maxDateValue"
-                    [readonlyInput]="true"
-                    required
-                  ></p-calendar>
-                </td>
-                <td>
-                  <p-calendar
-                    name="startTime"
-                    pattern="HH:mm"
-                    timeOnly="true"
-                    (ngModelChange)="schedule.startTime = $event"
-                    [ngModel]="schedule.startTime | dateconvert"
-                    hourFormat="24"
-                    [readonlyInput]="true"
-                    required
-                  ></p-calendar>
-                </td>
-                <td>
-                  <p-calendar
-                    name="endTime"
-                    pattern="HH:mm"
-                    timeOnly="true"
-                    (ngModelChange)="schedule.endTime = $event"
-                    [ngModel]="schedule.endTime | dateconvert"
-                    showTime="true"
-                    hourFormat="24"
-                    [readonlyInput]="true"
-                    required
-                  ></p-calendar>
-                </td>
-                <td>
-                  <select
-                    required
-                    [(ngModel)]="schedule.vehicle"
-                    name="vehicle"
-                  >
-                    <option id="vehicle" *ngFor="let item of vehicles">{{
-                      item.carPlate
-                    }}</option>
-                  </select>
-                </td>
+                </td> -->
+          <!-- <td  class="titleGroup" [attr.rowspan]="group.value.length" *ngIf="igroup == 0">
+                    {{group.key | date:'dd/MM/yyyy'}}
+                </td> -->
+          <!-- <td>
+                <p-calendar
+                  name="endDate"
+                  dateFormat="dd/mm/yy"
+                  (ngModelChange)="schedule.endDate = $event"
+                  [ngModel]="schedule.endDate | dateconvert"
+                  [minDate]="minDateValue"
+                  [maxDate]="maxDateValue"
+                  [readonlyInput]="true"
+                  required
+                ></p-calendar>
+              </td>
+            <td>
+                <select required [(ngModel)]="schedule.vehicle" name="vehicle">
+                  <option id="vehicle" *ngFor="let item of vehicles">{{
+                    item.carPlate
+                  }}</option>
+                </select>
+              </td>
 
-                <td>
-                  <button
-                    (click)="removeSchedule(schedule)"
-                    type="button"
-                    class="btn btn-sm btn-danger"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            </ng-template>
-          </ng-template>
+            -->
+          <!-- <td>
+                <p-calendar
+                  name="startTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  (ngModelChange)="schedule.startTime = $event"
+                  [ngModel]="schedule.startTime | dateconvert"
+                  hourFormat="24"
+                  [readonlyInput]="true"
+                  required
+                ></p-calendar>
+              </td>
+              <td>
+                <p-calendar
+                  name="endTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  (ngModelChange)="schedule.endTime = $event"
+                  [ngModel]="schedule.endTime | dateconvert"
+                  showTime="true"
+                  hourFormat="24"
+                  [readonlyInput]="true"
+                  required
+                ></p-calendar>
+              </td>
+
+              <td>
+                <button
+                  (click)="removeSchedule(schedule)"
+                  type="button"
+                  class="btn btn-sm btn-danger"
+                  data-toggle="button"
+                  aria-pressed="false"
+                  autocomplete="off"
+                >
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td> -->
+
           <tr *ngIf="route.expand">
             <td colspan="9">
               <button

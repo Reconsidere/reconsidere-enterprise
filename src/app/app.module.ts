@@ -76,7 +76,7 @@ registerLocaleData(localePt);
     RecaptchaModule.forRoot({
       siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF'
     }),
-    CalendarModule,
+    CalendarModule
   ],
 
   providers: [
