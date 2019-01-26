@@ -157,6 +157,11 @@ export class SchedulerComponent implements OnInit {
 
     console.log(this.groupList);
 
+
+    /**
+     * Esta parte de baixo comentada seria um reduce para agrupar o que for igual, so que teria quer ser de multiplso fields, pensando em testar este método para ver se resolve o resto de duplicar as datas
+     * ou fazer na mão.
+     */
     // const args = ['vehicle._id', 'startDate', 'endDate'];
 
     // args.forEach(function(filterobj) {
