@@ -100,7 +100,6 @@ export class SchedulerComponent implements OnInit {
     vehicle._id = '123';
     vehicle.active = true;
     vehicle.carPlate = '1234-aaaa';
-    tomorrow.setDate(tomorrow.getDate() + 1);
     const georout = new GeoRoute();
     georout.name = 'Nova rota';
     const scheduler = new Schedule();
@@ -116,21 +115,30 @@ export class SchedulerComponent implements OnInit {
     vehicle2.active = true;
     vehicle2.carPlate = '1234-xxl';
 
+    const tomorrow3 = new Date();
     const scheduler2 = new Schedule();
     scheduler2.startDate = new Date();
-    scheduler2.endDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
+    scheduler2.endDate = new Date(tomorrow3.setDate(tomorrow3.getDate() + 1));
     scheduler2.startTime = new Date();
     scheduler2.endTime = new Date();
     scheduler2.vehicle = vehicle2;
     georout.schedules.push(scheduler2);
 
+
+
+    const vehicle3 = new Vehicle();
+    vehicle3._id = '123';
+    vehicle3.active = true;
+    vehicle3.carPlate = '1234-xxl';
+
     const tomorrow2 = new Date();
+    const tomorrow5 = new Date();
     const scheduler3 = new Schedule();
-    scheduler3.startDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
-    scheduler3.endDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 2));
+    scheduler3.startDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 1));
+    scheduler3.endDate = new Date(tomorrow5.setDate(tomorrow5.getDate() + 2));
     scheduler3.startTime = new Date();
     scheduler3.endTime = new Date();
-    scheduler3.vehicle = vehicle2;
+    scheduler3.vehicle = vehicle3;
     georout.schedules.push(scheduler3);
 
     if (this.georoutes === undefined || this.georoutes.length <= 0) {
@@ -162,7 +170,6 @@ export class SchedulerComponent implements OnInit {
     this.orderbyFieldDate('startDate');
     this.calculateStartDateRows();
     this.orderbyFieldDate('endDate');
-    console.log(this.groupList);
     this.calculateEndDateRows();
   }
 
