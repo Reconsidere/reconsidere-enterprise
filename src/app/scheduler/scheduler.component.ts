@@ -105,7 +105,7 @@ export class SchedulerComponent implements OnInit {
     georout.name = 'Nova rota';
     const scheduler = new Schedule();
     scheduler.startDate = new Date();
-    scheduler.endDate = tomorrow;
+    scheduler.endDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
     scheduler.startTime = new Date();
     scheduler.endTime = new Date();
     scheduler.vehicle = vehicle;
@@ -117,8 +117,8 @@ export class SchedulerComponent implements OnInit {
     vehicle2.carPlate = '1234-xxl';
 
     const scheduler2 = new Schedule();
-    scheduler2.startDate = new Date(tomorrow.setDate(tomorrow.getDate() + 6));
-    scheduler2.endDate = tomorrow;
+    scheduler2.startDate = new Date();
+    scheduler2.endDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
     scheduler2.startTime = new Date();
     scheduler2.endTime = new Date();
     scheduler2.vehicle = vehicle2;
@@ -126,8 +126,8 @@ export class SchedulerComponent implements OnInit {
 
     const tomorrow2 = new Date();
     const scheduler3 = new Schedule();
-    scheduler3.startDate = new Date();
-    scheduler3.endDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 5));
+    scheduler3.startDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
+    scheduler3.endDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 2));
     scheduler3.startTime = new Date();
     scheduler3.endTime = new Date();
     scheduler3.vehicle = vehicle2;
@@ -159,17 +159,18 @@ export class SchedulerComponent implements OnInit {
 
     this.orderbyFieldVehicle('_id');
     this.calculateVehicleRows();
-    this.orderbyField('startDate');
+    this.orderbyFieldDate('startDate');
     this.calculateStartDateRows();
-    this.orderbyField('endDate');
+    this.orderbyFieldDate('endDate');
+    console.log(this.groupList);
     this.calculateEndDateRows();
   }
 
-  orderbyField(field: string) {
+  orderbyFieldDate(field: string) {
     this.groupList.sort((a: any, b: any) => {
-      if (a[field] < b[field]) {
+      if (a[field].toDateString() > b[field].toDateString()) {
         return -1;
-      } else if (a[field] > b[field]) {
+      } else if (a[field].toDateString() < b[field].toDateString()) {
         return 1;
       } else {
         return 0;
@@ -177,11 +178,13 @@ export class SchedulerComponent implements OnInit {
     });
   }
 
+
+
   orderbyFieldVehicle(field: string) {
     this.groupList.sort((a: any, b: any) => {
-      if (a.vehicle[field] < b.vehicle[field]) {
+      if (a.vehicle[field] > b.vehicle[field]) {
         return -1;
-      } else if (a.vehicle[field] > b.vehicle[field]) {
+      } else if (a.vehicle[field] < b.vehicle[field]) {
         return 1;
       } else {
         return 0;

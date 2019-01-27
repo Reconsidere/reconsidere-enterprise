@@ -89,14 +89,26 @@
           <ng-template ngFor let-group [ngForOf]="groupList" let-igroup="index">
             <tr *ngIf="route.expand">
               <td colspan="3"></td>
-              <td class="titleGroup" [attr.rowspan]="group.rowsVehicle" *ngIf="!group.matchPreviousRowVehicle">
-                {{ group.vehicle._id}}
+              <td
+                class="titleGroup"
+                [attr.rowspan]="group.rowsVehicle"
+                *ngIf="!group.matchPreviousRowVehicle"
+              >
+                {{ group.vehicle._id }}
               </td>
-              <td class="titleGroup" [attr.rowspan]="group.rowsStartDate" *ngIf="!group.matchPreviousRowStartDate">
+              <td
+                class="titleGroup"
+                [attr.rowspan]="group.rowsStartDate"
+                *ngIf="!group.matchPreviousRowStartDate"
+              >
                 <!-- [attr.rowspan]="group.rows" -->
                 {{ group.startDate | date: 'dd/MM/yyyy' }}
               </td>
-              <td class="titleGroup" [attr.rowspan]="group.rowsEndDate" *ngIf="!group.matchPreviousRowEndDate">
+              <td
+                class="titleGroup"
+                [attr.rowspan]="group.rowsEndDate"
+                *ngIf="!group.matchPreviousRowEndDate"
+              >
                 {{ group.endDate | date: 'dd/MM/yyyy' }}
               </td>
               <td>
