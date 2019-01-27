@@ -89,9 +89,40 @@
           <ng-template ngFor let-group [ngForOf]="groupList" let-igroup="index">
             <tr *ngIf="route.expand">
               <td colspan="3"></td>
-              <td class="titleGroup">
+              <td class="titleGroup" [attr.rowspan]="group.rowsVehicle" *ngIf="!group.matchPreviousRowVehicle">
+                {{ group.vehicle._id}}
+              </td>
+              <td class="titleGroup" [attr.rowspan]="group.rowsStartDate" *ngIf="!group.matchPreviousRowStartDate">
                 <!-- [attr.rowspan]="group.rows" -->
-                {{ group.key }}
+                {{ group.startDate | date: 'dd/MM/yyyy' }}
+              </td>
+              <td class="titleGroup" [attr.rowspan]="group.rowsEndDate" *ngIf="!group.matchPreviousRowEndDate">
+                {{ group.endDate | date: 'dd/MM/yyyy' }}
+              </td>
+              <td>
+                <p-calendar
+                  name="startTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  (ngModelChange)="group.startTime = $event"
+                  [ngModel]="group.startTime | dateconvert"
+                  hourFormat="24"
+                  [readonlyInput]="true"
+                  required
+                ></p-calendar>
+              </td>
+              <td>
+                <p-calendar
+                  name="endTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  (ngModelChange)="group.endTime = $event"
+                  [ngModel]="group.endTime | dateconvert"
+                  showTime="true"
+                  hourFormat="24"
+                  [readonlyInput]="true"
+                  required
+                ></p-calendar>
               </td>
               <!-- <td class="titleGroup">
 
@@ -188,7 +219,7 @@
                 </button>
               </td> -->
 
-          <tr *ngIf="route.expand">
+          <!-- <tr *ngIf="route.expand">
             <td colspan="9">
               <button
                 type="submit"
@@ -211,7 +242,7 @@
                 Remover rota
               </button>
             </td>
-          </tr>
+          </tr> -->
         </ng-template>
       </tbody>
       <pagination-controls

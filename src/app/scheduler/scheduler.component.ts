@@ -18,6 +18,7 @@ import * as ptBr from 'date-fns/locale/pt';
 import { Vehicle } from 'src/models/vehicle';
 import { group } from '@angular/animations';
 import { forEach } from '@angular/router/src/utils/collection';
+import { TouchSequence } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-scheduler',
@@ -111,21 +112,22 @@ export class SchedulerComponent implements OnInit {
     georout.schedules = [scheduler];
 
     const vehicle2 = new Vehicle();
-    vehicle2._id = '1234';
+    vehicle2._id = '123';
     vehicle2.active = true;
     vehicle2.carPlate = '1234-xxl';
 
     const scheduler2 = new Schedule();
-    scheduler2.startDate = new Date(tomorrow.setDate(tomorrow.getDate() + 2));
+    scheduler2.startDate = new Date(tomorrow.setDate(tomorrow.getDate() + 6));
     scheduler2.endDate = tomorrow;
     scheduler2.startTime = new Date();
     scheduler2.endTime = new Date();
     scheduler2.vehicle = vehicle2;
     georout.schedules.push(scheduler2);
 
+    const tomorrow2 = new Date();
     const scheduler3 = new Schedule();
     scheduler3.startDate = new Date();
-    scheduler3.endDate = tomorrow;
+    scheduler3.endDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 5));
     scheduler3.startTime = new Date();
     scheduler3.endTime = new Date();
     scheduler3.vehicle = vehicle2;
@@ -142,57 +144,49 @@ export class SchedulerComponent implements OnInit {
 
   groupBy() {
     this.georoutes.forEach(route => {
-      const helper = {};
       if (this.groupList === undefined || this.groupList.length <= 0) {
-        this.groupList = route.schedules.reduce(this.groupAll(helper), []);
+        this.groupList = route.schedules;
       } else {
-        this.groupList.push(route.schedules.reduce(this.groupAll(helper), []));
+        this.groupList.push(route.schedules);
       }
+      // const helper = {};
+      // if (this.groupList === undefined || this.groupList.length <= 0) {
+      //   this.groupList = route.schedules.reduce(this.groupAll(helper), []);
+      // } else {
+      //   this.groupList.push(route.schedules.reduce(this.groupAll(helper), []));
+      // }
     });
 
-    /** ate aqui esta grupado por id veiculo data inicio e data fim
-     * o problema que por existir dois veiculos com dis diferentes ele gera duas datas
-     * do emsmo dia por ter dois veiculos diferente
-     **/
-
-    console.log(this.groupList);
-
-
-    /**
-     * Esta parte de baixo comentada seria um reduce para agrupar o que for igual, so que teria quer ser de multiplso fields, pensando em testar este método para ver se resolve o resto de duplicar as datas
-     * ou fazer na mão.
-     */
-    // const args = ['vehicle._id', 'startDate', 'endDate'];
-
-    // args.forEach(function(filterobj) {
-    //   let filterkey = Object.keys(filterobj)[0];
-    //   let filtervalue = filterobj[filterkey];
-    //   myobjects.forEach(function(objectToFilter) {
-    //     if (objectToFilter[filterkey] != filtervalue && filtervalue != '') {
-    //       // object didn't match a filter value so remove it from array via filter
-    //       returnobjects = returnobjects.filter(obj => obj !== objectToFilter);
-    //     }
-    //   });
-    // });
-
-    // const field = 'startDate';
-    // const groupedObj = this.groupList.reduce((prev, cur) => {
-    //   if (!prev[cur[field]]) {
-    //     prev[cur[field]] = [cur];
-    //   } else {
-    //     prev[cur[field]].push(cur);
-    //   }
-    //   return prev;
-    // }, {});
-    // this.groupList = this.group(groupedObj);
-    // console.log(this.groupList);
+    this.orderbyFieldVehicle('_id');
+    this.calculateVehicleRows();
+    this.orderbyField('startDate');
+    this.calculateStartDateRows();
+    this.orderbyField('endDate');
+    this.calculateEndDateRows();
   }
 
-  private group(groupedObj: any) {
-    return Object.keys(groupedObj).map(key => ({
-      key: key,
-      value: groupedObj[key]
-    }));
+  orderbyField(field: string) {
+    this.groupList.sort((a: any, b: any) => {
+      if (a[field] < b[field]) {
+        return -1;
+      } else if (a[field] > b[field]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
+  }
+
+  orderbyFieldVehicle(field: string) {
+    this.groupList.sort((a: any, b: any) => {
+      if (a.vehicle[field] < b.vehicle[field]) {
+        return -1;
+      } else if (a.vehicle[field] > b.vehicle[field]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
   }
 
   private groupAll(helper: {}): (
@@ -221,8 +215,6 @@ export class SchedulerComponent implements OnInit {
   closeMessage() {
     this.message = undefined;
   }
-
-  rowspanStartDate() {}
 
   veryfyBeforeSave(route: GeoRoute) {
     if (route.name === undefined) {
@@ -289,6 +281,90 @@ export class SchedulerComponent implements OnInit {
     } catch (error) {
       this.message = error;
       console.log(error);
+    }
+  }
+
+  calculateStartDateRows() {
+    let isPReviousShow = false;
+    if (this.groupList.length > 0) {
+      this.groupList[0].matchPreviousRowStartDate = false;
+      for (let i = 0; i < this.groupList.length; i++) {
+        const field = this.groupList[i].startDate.toDateString();
+        let rows = 1;
+        if (isPReviousShow) {
+          return;
+        }
+        for (let j = i + 1; j < this.groupList.length; j++) {
+          if (
+            this.groupList[j].startDate.toDateString() === field &&
+            !this.groupList[j].matchPreviousRowStartDate
+          ) {
+            rows++;
+            this.groupList[j].matchPreviousRowStartDate = true;
+            isPReviousShow = true;
+          } else {
+            this.groupList[j].matchPreviousRowStartDate = false;
+            break;
+          }
+        }
+        this.groupList[i].rowsStartDate = rows;
+      }
+    }
+  }
+
+  calculateEndDateRows() {
+    let isPReviousShow = false;
+    if (this.groupList.length > 0) {
+      this.groupList[0].matchPreviousRowEndDate = false;
+      for (let i = 0; i < this.groupList.length; i++) {
+        const field = this.groupList[i].endDate.toDateString();
+        let rows = 1;
+        if (isPReviousShow) {
+          return;
+        }
+        for (let j = i + 1; j < this.groupList.length; j++) {
+          if (
+            this.groupList[j].endDate.toDateString() === field &&
+            !this.groupList[j].matchPreviousRowEndDate
+          ) {
+            rows++;
+            this.groupList[j].matchPreviousRowEndDate = true;
+            isPReviousShow = true;
+          } else {
+            this.groupList[j].matchPreviousRowEndDate = false;
+            break;
+          }
+        }
+        this.groupList[i].rowsEndDate = rows;
+      }
+    }
+  }
+
+  calculateVehicleRows() {
+    let isPReviousShow = false;
+    if (this.groupList.length > 0) {
+      this.groupList[0].matchPreviousRowVehicle = false;
+      for (let i = 0; i < this.groupList.length; i++) {
+        let rows = 1;
+        if (isPReviousShow) {
+          return;
+        }
+        const field = this.groupList[i].vehicle._id;
+        for (let j = i + 1; j < this.groupList.length; j++) {
+          if (
+            this.groupList[j].vehicle._id === field &&
+            !this.groupList[j].matchPreviousRowVehicle
+          ) {
+            rows++;
+            this.groupList[j].matchPreviousRowVehicle = true;
+            isPReviousShow = true;
+          } else {
+            this.groupList[j].matchPreviousRowVehicle = false;
+            break;
+          }
+        }
+        this.groupList[i].rowsVehicle = rows;
+      }
     }
   }
 }
