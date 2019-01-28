@@ -87,11 +87,12 @@ export class SchedulerComponent implements OnInit {
   }
 
   loadGeoroutes(values) {
-    if (values === undefined) {
-      this.newRoute();
-    } else {
-      this.georoutes = values;
-    }
+    // if (values === undefined) {
+    //   this.newRoute();
+    // } else {
+    //   this.georoutes = values;
+    // }
+    this.newRoute();
   }
 
   newRoute() {
@@ -108,10 +109,14 @@ export class SchedulerComponent implements OnInit {
     scheduler.startTime = new Date();
     scheduler.endTime = new Date();
     scheduler.vehicle = vehicle;
-    georout.schedules = [scheduler];
+    if (georout.schedules === undefined || georout.schedules.length <= 0) {
+      georout.schedules = [scheduler];
+    } else {
+      georout.schedules.push(scheduler);
+    }
 
     const vehicle2 = new Vehicle();
-    vehicle2._id = '123';
+    vehicle2._id = '1234';
     vehicle2.active = true;
     vehicle2.carPlate = '1234-xxl';
 
@@ -123,8 +128,6 @@ export class SchedulerComponent implements OnInit {
     scheduler2.endTime = new Date();
     scheduler2.vehicle = vehicle2;
     georout.schedules.push(scheduler2);
-
-
 
     const vehicle3 = new Vehicle();
     vehicle3._id = '123';
@@ -152,32 +155,35 @@ export class SchedulerComponent implements OnInit {
 
   groupBy() {
     this.georoutes.forEach(route => {
-      if (this.groupList === undefined || this.groupList.length <= 0) {
-        this.groupList = route.schedules;
-      } else {
-        this.groupList.push(route.schedules);
-      }
-      // const helper = {};
-      // if (this.groupList === undefined || this.groupList.length <= 0) {
-      //   this.groupList = route.schedules.reduce(this.groupAll(helper), []);
-      // } else {
-      //   this.groupList.push(route.schedules.reduce(this.groupAll(helper), []));
-      // }
+      this.orderbyFieldVehicle('_id', route.schedules);
+      this.calculateVehicleRows(route.schedules);
+      this.orderbyFieldDate('startDate', route.schedules);
+      this.calculateStartDateRows(route.schedules);
+      this.orderbyFieldDate('endDate', route.schedules);
+      this.calculateEndDateRows(route.schedules);
+
+      console.log(route.schedules);
     });
 
-    this.orderbyFieldVehicle('_id');
-    this.calculateVehicleRows();
-    this.orderbyFieldDate('startDate');
-    this.calculateStartDateRows();
-    this.orderbyFieldDate('endDate');
-    this.calculateEndDateRows();
+    // if (this.groupList === undefined || this.groupList.length <= 0) {
+    //   this.groupList = route.schedules;
+    // } else {
+    //   this.groupList.push(route.schedules);
+    // }
+    // const helper = {};
+    // if (this.groupList === undefined || this.groupList.length <= 0) {
+    //   this.groupList = route.schedules.reduce(this.groupAll(helper), []);
+    // } else {
+    //   this.groupList.push(route.schedules.reduce(this.groupAll(helper), []));
+    // }
   }
 
-  orderbyFieldDate(field: string) {
-    this.groupList.sort((a: any, b: any) => {
-      if (a[field].toDateString() > b[field].toDateString()) {
+
+  orderbyFieldDate(field: string, schedule: Schedule[]) {
+    schedule.sort((a: any, b: any) => {
+      if (a[field].toDateString() < b[field].toDateString()) {
         return -1;
-      } else if (a[field].toDateString() < b[field].toDateString()) {
+      } else if (a[field].toDateString() > b[field].toDateString()) {
         return 1;
       } else {
         return 0;
@@ -185,13 +191,11 @@ export class SchedulerComponent implements OnInit {
     });
   }
 
-
-
-  orderbyFieldVehicle(field: string) {
-    this.groupList.sort((a: any, b: any) => {
-      if (a.vehicle[field] > b.vehicle[field]) {
+  orderbyFieldVehicle(field: string, schedule: Schedule[]) {
+    schedule.sort((a: any, b: any) => {
+      if (a.vehicle[field] < b.vehicle[field]) {
         return -1;
-      } else if (a.vehicle[field] < b.vehicle[field]) {
+      } else if (a.vehicle[field] > b.vehicle[field]) {
         return 1;
       } else {
         return 0;
@@ -199,23 +203,23 @@ export class SchedulerComponent implements OnInit {
     });
   }
 
-  private groupAll(helper: {}): (
-    previousValue: any[],
-    currentValue: Schedule,
-    currentIndex: number,
-    array: Schedule[]
-  ) => any[] {
-    return function(r, o) {
-      const key = o.vehicle._id + '-' + o.startDate + '-' + o.endDate;
-      if (!helper[key]) {
-        helper[key] = Object.assign({}, o);
-        r.push(helper[key]);
-      } else {
-        helper[key].key += o.vehicle._id + o.startDate + o.endDate;
-      }
-      return r;
-    };
-  }
+  // private groupAll(helper: {}): (
+  //   previousValue: any[],
+  //   currentValue: Schedule,
+  //   currentIndex: number,
+  //   array: Schedule[]
+  // ) => any[] {
+  //   return function(r, o) {
+  //     const key = o.vehicle._id + '-' + o.startDate + '-' + o.endDate;
+  //     if (!helper[key]) {
+  //       helper[key] = Object.assign({}, o);
+  //       r.push(helper[key]);
+  //     } else {
+  //       helper[key].key += o.vehicle._id + o.startDate + o.endDate;
+  //     }
+  //     return r;
+  //   };
+  // }
 
   newScheduler(): Schedule {
     const scheduler = new Schedule();
@@ -294,86 +298,122 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  calculateStartDateRows() {
+  calculateStartDateRows(schedules: any[]) {
     let isPReviousShow = false;
-    if (this.groupList.length > 0) {
-      this.groupList[0].matchPreviousRowStartDate = false;
-      for (let i = 0; i < this.groupList.length; i++) {
-        const field = this.groupList[i].startDate.toDateString();
+    let x = 0;
+    if (schedules.length > 0) {
+      schedules[0].matchPreviousRowStartDate = false;
+      for (let i = 0; i < schedules.length; i++) {
         let rows = 1;
-        if (isPReviousShow) {
-          return;
-        }
-        for (let j = i + 1; j < this.groupList.length; j++) {
+        // if (isPReviousShow) {
+        //   schedules[x].rowsStartDate = rows;
+        //   x++;
+        //   return;
+        // }
+        // rows = 1;
+        const field = schedules[i].startDate.toDateString();
+        for (let j = i + 1; j < schedules.length; j++) {
           if (
-            this.groupList[j].startDate.toDateString() === field &&
-            !this.groupList[j].matchPreviousRowStartDate
+            isPReviousShow &&
+            schedules[j].startDate.toDateString() !== field &&
+            !schedules[j].matchPreviousRowStartDate
+          ) {
+            schedules[j].rowsStartDate = rows;
+            schedules[j].matchPreviousRowStartDate = false;
+          } else if (
+            schedules[j].startDate.toDateString() === field &&
+            !schedules[j].matchPreviousRowStartDate
           ) {
             rows++;
-            this.groupList[j].matchPreviousRowStartDate = true;
+            schedules[j].matchPreviousRowStartDate = true;
             isPReviousShow = true;
           } else {
-            this.groupList[j].matchPreviousRowStartDate = false;
+            schedules[j].matchPreviousRowStartDate = false;
             break;
           }
         }
-        this.groupList[i].rowsStartDate = rows;
+        schedules[i].rowsStartDate = rows;
+        x++;
       }
     }
   }
 
-  calculateEndDateRows() {
+  calculateEndDateRows(schedules: any[]) {
+    let x = 0;
     let isPReviousShow = false;
-    if (this.groupList.length > 0) {
-      this.groupList[0].matchPreviousRowEndDate = false;
-      for (let i = 0; i < this.groupList.length; i++) {
-        const field = this.groupList[i].endDate.toDateString();
+    if (schedules.length > 0) {
+      schedules[0].matchPreviousRowEndDate = false;
+      for (let i = 0; i < schedules.length; i++) {
         let rows = 1;
-        if (isPReviousShow) {
-          return;
-        }
-        for (let j = i + 1; j < this.groupList.length; j++) {
+        //x++;
+        // if (isPReviousShow) {
+        //   schedules[x].rowsEndDate = rows;
+        //   return;
+        // }
+        //rows = 1;
+        const field = schedules[i].endDate.toDateString();
+        for (let j = i + 1; j < schedules.length; j++) {
           if (
-            this.groupList[j].endDate.toDateString() === field &&
-            !this.groupList[j].matchPreviousRowEndDate
+            isPReviousShow &&
+            schedules[j].endDate.toDateString() !== field &&
+            !schedules[j].matchPreviousRowEndDate
+          ) {
+            schedules[j].rowsEndDate = rows;
+            schedules[j].matchPreviousRowEndDate = false;
+          } else if (
+            schedules[j].endDate.toDateString() === field &&
+            !schedules[j].matchPreviousRowEndDate
           ) {
             rows++;
-            this.groupList[j].matchPreviousRowEndDate = true;
+            schedules[j].matchPreviousRowEndDate = true;
             isPReviousShow = true;
           } else {
-            this.groupList[j].matchPreviousRowEndDate = false;
+            schedules[j].matchPreviousRowEndDate = false;
             break;
           }
         }
-        this.groupList[i].rowsEndDate = rows;
+        schedules[i].rowsEndDate = rows;
+        x++;
       }
     }
   }
 
-  calculateVehicleRows() {
+  calculateVehicleRows(schedules: any[]) {
     let isPReviousShow = false;
-    if (this.groupList.length > 0) {
-      this.groupList[0].matchPreviousRowVehicle = false;
-      for (let i = 0; i < this.groupList.length; i++) {
+    let x = 0;
+    if (schedules.length > 0) {
+      schedules[0].matchPreviousRowVehicle = false;
+      for (let i = 0; i < schedules.length; i++) {
         let rows = 1;
-        if (isPReviousShow) {
-          return;
-        }
-        const field = this.groupList[i].vehicle._id;
-        for (let j = i + 1; j < this.groupList.length; j++) {
+        // if (isPReviousShow) {
+        //   schedules[x].rowsVehicle = rows;
+        //   x++;
+        //   return;
+        // }
+        // rows = 1;
+        const field = schedules[i].vehicle._id;
+        for (let j = i + 1; j < schedules.length; j++) {
           if (
-            this.groupList[j].vehicle._id === field &&
-            !this.groupList[j].matchPreviousRowVehicle
+            isPReviousShow &&
+            schedules[j].vehicle._id !== field &&
+            !schedules[j].matchPreviousRowVehicle
+          ) {
+            schedules[j].rowsVehicle = rows;
+            schedules[j].matchPreviousRowVehicle = false;
+          } else if (
+            schedules[j].vehicle._id === field &&
+            !schedules[j].matchPreviousRowVehicle
           ) {
             rows++;
-            this.groupList[j].matchPreviousRowVehicle = true;
+            schedules[j].matchPreviousRowVehicle = true;
             isPReviousShow = true;
           } else {
-            this.groupList[j].matchPreviousRowVehicle = false;
+            schedules[j].matchPreviousRowVehicle = false;
             break;
           }
         }
-        this.groupList[i].rowsVehicle = rows;
+        schedules[i].rowsVehicle = rows;
+        x++;
       }
     }
   }

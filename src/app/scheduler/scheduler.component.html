@@ -41,7 +41,6 @@
           <th>Data final</th>
           <th>Hora inicial</th>
           <th>Hora final</th>
-          <th>Remover</th>
         </tr>
       </thead>
       <tbody>
@@ -86,38 +85,39 @@
               </button>
             </td>
           </tr>
-          <ng-template ngFor let-group [ngForOf]="groupList" let-igroup="index">
+          <ng-template ngFor let-schedule [ngForOf]="route.schedules" let-igroup="index">
             <tr *ngIf="route.expand">
               <td colspan="3"></td>
               <td
                 class="titleGroup"
-                [attr.rowspan]="group.rowsVehicle"
-                *ngIf="!group.matchPreviousRowVehicle"
+                [attr.rowspan]="schedule.rowsVehicle"
+                *ngIf="!schedule.matchPreviousRowVehicle"
               >
-                {{ group.vehicle._id }}
+                {{ schedule.vehicle._id }}
               </td>
-              <td
+              <!-- <td
                 class="titleGroup"
-                [attr.rowspan]="group.rowsStartDate"
-                *ngIf="!group.matchPreviousRowStartDate"
+                [attr.rowspan]="schedule.rowsStartDate"
+                *ngIf="!schedule.matchPreviousRowStartDate"
               >
-                <!-- [attr.rowspan]="group.rows" -->
-                {{ group.startDate | date: 'dd/MM/yyyy' }}
+
+                {{ schedule.startDate | date: 'dd/MM/yyyy' }}
               </td>
-              <td
+              -->
+              <!-- <td
                 class="titleGroup"
-                [attr.rowspan]="group.rowsEndDate"
-                *ngIf="!group.matchPreviousRowEndDate"
+                [attr.rowspan]="schedule.rowsEndDate"
+                *ngIf="!schedule.matchPreviousRowEndDate"
               >
-                {{ group.endDate | date: 'dd/MM/yyyy' }}
-              </td>
+                {{ schedule.endDate | date: 'dd/MM/yyyy' }}
+              </td> -->
               <!-- <td>
                 <p-calendar
                   name="startTime"
                   pattern="HH:mm"
                   timeOnly="true"
-                  (ngModelChange)="group.startTime = $event"
-                  [ngModel]="group.startTime | dateconvert"
+                  (ngModelChange)="schedule.startTime = $event"
+                  [ngModel]="schedule.startTime | dateconvert"
                   hourFormat="24"
                   [readonlyInput]="true"
                   required
@@ -128,8 +128,8 @@
                   name="endTime"
                   pattern="HH:mm"
                   timeOnly="true"
-                  (ngModelChange)="group.endTime = $event"
-                  [ngModel]="group.endTime | dateconvert"
+                  (ngModelChange)="schedule.endTime = $event"
+                  [ngModel]="schedule.endTime | dateconvert"
                   showTime="true"
                   hourFormat="24"
                   [readonlyInput]="true"
