@@ -90,28 +90,28 @@
               <td colspan="3"></td>
               <td
                 class="titleGroup"
-                [attr.rowspan]="schedule.rowsVehicle"
-                *ngIf="!schedule.matchPreviousRowVehicle"
+                [attr.rowspan] = "schedule.rowsVehicle"
+                *ngIf="schedule.showVehicle"
               >
-                {{ schedule.vehicle._id }}
+                {{ schedule.vehicle._id}}
               </td>
-              <!-- <td
+              <td
                 class="titleGroup"
                 [attr.rowspan]="schedule.rowsStartDate"
-                *ngIf="!schedule.matchPreviousRowStartDate"
+                *ngIf="schedule.showStartDate"
               >
 
                 {{ schedule.startDate | date: 'dd/MM/yyyy' }}
               </td>
-              -->
-              <!-- <td
+
+              <td
                 class="titleGroup"
                 [attr.rowspan]="schedule.rowsEndDate"
-                *ngIf="!schedule.matchPreviousRowEndDate"
+                *ngIf="schedule.showEndDate"
               >
                 {{ schedule.endDate | date: 'dd/MM/yyyy' }}
-              </td> -->
-              <!-- <td>
+              </td>
+              <td>
                 <p-calendar
                   name="startTime"
                   pattern="HH:mm"
@@ -135,11 +135,7 @@
                   [readonlyInput]="true"
                   required
                 ></p-calendar>
-              </td> -->
-              <!-- <td class="titleGroup">
-
-                {{ group.startDate | date: 'dd/MM/yyyy' }}
-              </td> -->
+              </td>
             </tr>
           </ng-template>
           <!-- <td

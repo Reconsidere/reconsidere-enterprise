@@ -3,7 +3,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { MatListModule } from '@angular/material/list';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { APP_BASE_HREF, CommonModule } from '@angular/common';
+import { APP_BASE_HREF, CommonModule, DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ROUTING, routes } from './app.routing';
@@ -35,6 +35,7 @@ import { RecaptchaModule } from 'angular-google-recaptcha';
 import { BooltransformPipe } from '../pipes/booltransform.pipe';
 import {CalendarModule} from 'primeng/calendar';
 import { DateconvertPipe } from '../pipes/dateconvert.pipe';
+import { GroupbyPipe } from '../pipes/groupby.pipe';
 
 
 registerLocaleData(localePt);
@@ -54,6 +55,7 @@ registerLocaleData(localePt);
     VehicleManagementComponent,
     BooltransformPipe,
     DateconvertPipe,
+    GroupbyPipe,
   ],
   imports: [
     BrowserModule,
@@ -87,7 +89,8 @@ registerLocaleData(localePt);
     ReactiveFormsModule,
     BrowserModule,
     RouterModule,
-    DecriptEncript
+    DecriptEncript,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
