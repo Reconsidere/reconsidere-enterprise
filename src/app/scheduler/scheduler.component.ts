@@ -45,6 +45,10 @@ export class SchedulerComponent implements OnInit {
     private datePipe: DatePipe
   ) {}
 
+  trick() {
+    return this.georoutes;
+  }
+
   ngOnInit() {
     this.page = 1;
     this.loadValues();

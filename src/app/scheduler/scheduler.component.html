@@ -19,98 +19,32 @@
 
   <div class="tableScheduler">
     <table class="table table-sm">
-      <thead>
-        <tr>
-          <button
-            id="newRoute"
-            (click)="newRoute()"
-            type="button"
-            class="btn btn-sm btn-primary"
-            data-toggle="button"
-            aria-pressed="false"
-            autocomplete="off"
-          >
-            <i class="fa fa-plus"></i>
-          </button>
-        </tr>
-        <tr>
-          <th colspan="3"></th>
-          <th>
-            <input
-              #filterSearch
-              (input)="(filterSearch)"
-              name="carPlate"
-              type="text"
-              class="form-control"
-            />
-          </th>
-          <th>
-            <p-calendar
-              name="startDate"
-              dateFormat="dd/mm/yy"
-              #filterSearch
-              (input)="(filterSearch)"
-              name="startDate"
-              [readonlyInput]="true"
-            ></p-calendar>
-          </th>
-          <th>
-            <p-calendar
-              name="endDate"
-              dateFormat="dd/mm/yy"
-              #filterSearch
-              (input)="(filterSearch)"
-              name="endDate"
-              [readonlyInput]="true"
-            ></p-calendar>
-          </th>
-          <th>
-              <p-calendar
-                name="startTime"
-                pattern="HH:mm"
-                timeOnly="true"
-                hourFormat="24"
-                #filterSearch
-                (input)="(filterSearch)"
-                name="startTime"
-                [readonlyInput]="true"
-              ></p-calendar>
-            </th>
-            <th>
-                <p-calendar
-                  name="endTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  hourFormat="24"
-                  #filterSearch
-                  (input)="(filterSearch)"
-                  name="endTime"
-                  [readonlyInput]="true"
-                ></p-calendar>
-              </th>
-        </tr>
-        <tr id="Titles">
-          <th>Nome</th>
-          <th colspan="2"></th>
-          <th>Veículo</th>
-          <th>Data inicial</th>
-          <th>Data final</th>
-          <th>Hora inicial</th>
-          <th>Hora final</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-template
-          ngFor
-          let-route
-          [ngForOf]="
-            georoutes | paginate: { itemsPerPage: 5, currentPage: page }
-          "
-          let-i="index"
-        >
+      <ng-template
+        ngFor
+        let-route
+        [ngForOf]="georoutes | paginate: { itemsPerPage: 5, currentPage: page }"
+        let-i="index"
+      >
+        <thead>
+          <tr>
+            <button
+              id="newRoute"
+              (click)="newRoute()"
+              type="button"
+              class="btn btn-sm btn-primary"
+              data-toggle="button"
+              aria-pressed="false"
+              autocomplete="off"
+            >
+              <i class="fa fa-plus"></i>
+            </button>
+          </tr>
+          <tr id="Titles">
+            <th>Nome</th>
+          </tr>
           <tr>
             <td hidden>{{ route._id }}</td>
-            <td colspan="2">
+            <td>
               <input
                 class="form-control"
                 type="text"
@@ -118,6 +52,7 @@
                 required
               />
             </td>
+
             <td class="tdStyle">
               <button
                 (click)="expand(route)"
@@ -141,7 +76,68 @@
               </button>
             </td>
           </tr>
-
+          <tr>
+            <th colspan="1"></th>
+            <th>
+              <input
+                #filterSearch
+                (input)="(filterSearch)"
+                name="carPlate"
+                type="text"
+                class="inputFilter"
+              />
+            </th>
+            <th>
+              <p-calendar
+                name="startDate"
+                dateFormat="dd/mm/yy"
+                #filterSearch
+                (input)="(filterSearch)"
+                [readonlyInput]="true"
+              ></p-calendar>
+            </th>
+            <th>
+              <p-calendar
+                name="endDate"
+                dateFormat="dd/mm/yy"
+                #filterSearch
+                (input)="(filterSearch)"
+                [readonlyInput]="true"
+              ></p-calendar>
+            </th>
+            <th>
+              <p-calendar
+                name="startTime"
+                pattern="HH:mm"
+                timeOnly="true"
+                hourFormat="24"
+                #filterSearch
+                (input)="(filterSearch)"
+                [readonlyInput]="true"
+              ></p-calendar>
+            </th>
+            <th>
+              <p-calendar
+                name="endTime"
+                pattern="HH:mm"
+                timeOnly="true"
+                hourFormat="24"
+                #filterSearch
+                (input)="(filterSearch)"
+                [readonlyInput]="true"
+              ></p-calendar>
+            </th>
+          </tr>
+          <tr *ngIf="route.expand" id="Titles">
+            <th colspan="1"></th>
+            <th>Veículo</th>
+            <th>Data inicial</th>
+            <th>Data final</th>
+            <th>Hora inicial</th>
+            <th>Hora final</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="route.expand">
           <ng-template
             ngFor
             let-schedule
@@ -151,7 +147,7 @@
             let-igroup="index"
           >
             <tr *ngIf="route.expand">
-              <td colspan="3"></td>
+              <td colspan="1"></td>
               <td
                 class="titleGroup"
                 [attr.rowspan]="schedule.rowsVehicle"
@@ -314,16 +310,16 @@
               </button>
             </td>
           </tr> -->
-        </ng-template>
-      </tbody>
-      <pagination-controls
-        (pageChange)="page = $event"
-        previousLabel="Anterior"
-        nextLabel="Próxima"
-        autoHide="true"
-        responsive="true"
-        screenReaderPaginationLabel="Pagination"
-      ></pagination-controls>
+        </tbody>
+        <pagination-controls
+          (pageChange)="page = $event"
+          previousLabel="Anterior"
+          nextLabel="Próxima"
+          autoHide="true"
+          responsive="true"
+          screenReaderPaginationLabel="Pagination"
+        ></pagination-controls>
+      </ng-template>
     </table>
   </div>
 </div>
