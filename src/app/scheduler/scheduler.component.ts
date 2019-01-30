@@ -36,7 +36,6 @@ export class SchedulerComponent implements OnInit {
   page: number;
   organizationId: string;
   vehicles: Vehicle[];
-  groupList: any[];
 
   constructor(
     private schedulerServive: SchedulerService,
@@ -337,6 +336,51 @@ export class SchedulerComponent implements OnInit {
       }
     });
   }
+
+  // filter(items, element, index) {
+  //   if (!items || !element) {
+  //     return;
+  //   }
+
+  //   const field = element.name;
+  //   const value = element.value;
+
+  //   if (!value && items.length <= 0) {
+  //     items =  items;
+  //     return;
+  //   }
+  //   if (value && items.length <= 0) {
+  //     items =  items;
+  //   }
+
+  //   if (!field || !value) {
+  //     return items;
+  //   }
+
+  //   if (field === 'carPlate') {
+  //     this.georoutes[index].schedules = items.filter(singleItem =>
+  //       singleItem.vehicle[field].toLowerCase().includes(value.toLowerCase())
+  //     );
+
+  //     return this.georoutes[index].schedules;
+  //   }
+
+  //   if (field === 'startDate' || field === 'endDate') {
+  //     this.georoutes[index].schedules = items.filter(singleItem =>
+  //       this.datePipe
+  //         .transform(singleItem[field], 'dd/mm/yyyy')
+  //         .toLowerCase()
+  //         .includes(this.datePipe.transform(value, 'dd/mm/yyyy').toLowerCase())
+  //     );
+  //     return this.georoutes[index].schedules;
+  //   }
+
+  //   this.georoutes[index].schedules = items.filter(singleItem =>
+  //     singleItem[field].toLowerCase().includes(value.toLowerCase())
+  //   );
+
+  //   return this.georoutes[index].schedules;
+  // }
 
   newScheduler(): Schedule {
     const scheduler = new Schedule();

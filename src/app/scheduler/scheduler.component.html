@@ -33,6 +33,62 @@
             <i class="fa fa-plus"></i>
           </button>
         </tr>
+        <tr>
+          <th colspan="3"></th>
+          <th>
+            <input
+              #filterSearch
+              (input)="(filterSearch)"
+              name="carPlate"
+              type="text"
+              class="form-control"
+            />
+          </th>
+          <th>
+            <p-calendar
+              name="startDate"
+              dateFormat="dd/mm/yy"
+              #filterSearch
+              (input)="(filterSearch)"
+              name="startDate"
+              [readonlyInput]="true"
+            ></p-calendar>
+          </th>
+          <th>
+            <p-calendar
+              name="endDate"
+              dateFormat="dd/mm/yy"
+              #filterSearch
+              (input)="(filterSearch)"
+              name="endDate"
+              [readonlyInput]="true"
+            ></p-calendar>
+          </th>
+          <th>
+              <p-calendar
+                name="startTime"
+                pattern="HH:mm"
+                timeOnly="true"
+                hourFormat="24"
+                #filterSearch
+                (input)="(filterSearch)"
+                name="startTime"
+                [readonlyInput]="true"
+              ></p-calendar>
+            </th>
+            <th>
+                <p-calendar
+                  name="endTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  hourFormat="24"
+                  #filterSearch
+                  (input)="(filterSearch)"
+                  name="endTime"
+                  [readonlyInput]="true"
+                ></p-calendar>
+              </th>
+        </tr>
         <tr id="Titles">
           <th>Nome</th>
           <th colspan="2"></th>
@@ -85,22 +141,29 @@
               </button>
             </td>
           </tr>
-          <ng-template ngFor let-schedule [ngForOf]="route.schedules" let-igroup="index">
+
+          <ng-template
+            ngFor
+            let-schedule
+            [ngForOf]="
+              route.schedules | termFilter: filterSearch.value:filterSearch
+            "
+            let-igroup="index"
+          >
             <tr *ngIf="route.expand">
               <td colspan="3"></td>
               <td
                 class="titleGroup"
-                [attr.rowspan] = "schedule.rowsVehicle"
+                [attr.rowspan]="schedule.rowsVehicle"
                 *ngIf="schedule.showVehicle"
               >
-                {{ schedule.vehicle._id}}
+                {{ schedule.vehicle.carPlate }}
               </td>
               <td
                 class="titleGroup"
                 [attr.rowspan]="schedule.rowsStartDate"
                 *ngIf="schedule.showStartDate"
               >
-
                 {{ schedule.startDate | date: 'dd/MM/yyyy' }}
               </td>
 
@@ -116,9 +179,9 @@
                   name="startTime"
                   pattern="HH:mm"
                   timeOnly="true"
+                  hourFormat="24"
                   (ngModelChange)="schedule.startTime = $event"
                   [ngModel]="schedule.startTime | dateconvert"
-                  hourFormat="24"
                   [readonlyInput]="true"
                   required
                 ></p-calendar>
