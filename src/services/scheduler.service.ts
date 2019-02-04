@@ -12,15 +12,11 @@ import { Observable } from 'rxjs';
 export class SchedulerService {
   constructor(private http: HttpClient) {}
 
-  createOrUpdate(organizatioId: string, georoute: GeoRoute) {
-    if (georoute._id) {
-      this.update(organizatioId, georoute);
-    } else {
-      this.add(organizatioId, georoute);
-    }
+  createOrUpdate(organizatioId: string, georoute: GeoRoute[]) {
+    this.add(organizatioId, georoute);
   }
 
-  private add(organizationId, georoute: GeoRoute) {
+  private add(organizationId, georoute: GeoRoute[]) {
     this.http
       .post(
         environment.database.uri +

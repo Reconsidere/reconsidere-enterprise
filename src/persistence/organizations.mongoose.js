@@ -71,7 +71,17 @@ var OrganizationSchema = new mongoose.Schema({
           startDate: Date,
           endDate: Date,
           startTime: Date,
-          endTime: Date
+          endTime: Date,
+          situation: String,
+          archived: Boolean,
+          vehicle: {
+            carPlate: String,
+            emptyVehicleWeight: Number,
+            weightCapacity: Number,
+            active: Boolean,
+            fuel: Number,
+            typeFuel: String
+          }
         }
       ]
     }
@@ -90,7 +100,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const URL = 'mongodb://eowyn-reconsidere-enterprise:27017/organization';
+const URL = 'mongodb://eowynreconsideredb:271Eq088@docdb-2019-01-15-22-36-15.cqnawh2jjso4.us-east-2.docdb.amazonaws.com:27017/?ssl_ca_certs=rds-combined-ca-bundle.pem';
 const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
 const options = {
   autoIndex: false, // Don't build indexes
@@ -101,14 +111,9 @@ const options = {
   bufferMaxEntries: 0
 };
 
-mongoose
-  .connect(
-    TestURL,
-    options
-  )
-  .catch(err => {
-    console.error('Erro ao conectar no banco: ' + err.stack);
-  });
+mongoose.connect(URL, options).catch(err => {
+  console.error('Erro ao conectar no banco: ' + err.stack);
+});
 
 organizations.route('/add').post(function(req, res) {
   var organization = new organizationModel(req.body);
@@ -374,9 +379,9 @@ organizations.route('/add/scheduler/:id').post(function(req, res, next) {
   organizationModel.findById(req.params.id, function(err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
-      org.georoutes.push(req.body);
+      org.georoutes = req.body;
       org
-        .update(org)
+        .save(org)
         .then(org => {
           res.json('Update complete');
         })

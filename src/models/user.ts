@@ -11,8 +11,9 @@ export class User {
 
 export namespace User {
   export enum Profiles {
-    Vehicle = 'Veículo',
-    Organization = 'Organização',
-    Scheduler = 'Agenda'
+    Administrator = 'Administrador',
+    Coordinator = 'Coordenador',
+    Manager = 'Gerente',
+    Operational = 'Operacional'
   }
 }

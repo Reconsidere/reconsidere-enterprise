@@ -8,8 +8,9 @@ export class Schedule {
   startTime: Date;
   endTime: Date;
   archived: boolean;
-  status: string;
+  situation: string;
   vehicle: Vehicle;
+  readonly: boolean;
   constructor() {}
 }
 
@@ -21,10 +22,4 @@ export namespace Schedule {
   }
 }
 
-export namespace Schedule {
-  export enum Status {
-    Draft = 'Rascunho',
-    InOperation = 'Em operação',
-    Inactive = 'Inativo'
-  }
-}
+

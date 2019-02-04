@@ -30,7 +30,7 @@
                 [(ngModel)]="this.organization.classification"
                 name="classification"
                 class="form-control"
-                (onchange)="TypeOrganization(classification)"
+                (change)="TypeOrganization(this.organization.classification)"
               >
                 <option
                   id="classification"
@@ -96,7 +96,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group" *ngIf="dynamicCnpj" >
           <label for="cnpj">CNPJ</label>
           <input
             required
@@ -578,7 +578,8 @@
                       data-on="On"
                       data-off="Off"
                     ></span>
-                    <span class="switch-handle"></span> {{ profile }}
+                    <span class="switch-handle"></span>
+                    <span class="spacingText">{{ profile }}</span> 
                   </label>
                 </div>
               </div>

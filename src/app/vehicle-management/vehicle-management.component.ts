@@ -66,7 +66,7 @@ export class VehicleManagementComponent implements OnInit {
     try {
       this.vehicleService.remove(this.organizationId, id);
       this.message = 'Dados salvos com sucesso';
-      //this.getVehicles();
+      this.vehicles.splice(id, 1);
     } catch (error) {
       this.message = error;
       console.log(error);
@@ -82,7 +82,6 @@ export class VehicleManagementComponent implements OnInit {
       this.veryfyBeforeSave(vehicle);
       this.vehicleService.createOrUpdate(this.organizationId, vehicle);
       this.message = 'Dados salvos com sucesso';
-      //this.getVehicles();
     } catch (error) {
       this.message = error;
       console.log(error);

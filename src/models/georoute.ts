@@ -6,4 +6,14 @@ export class GeoRoute {
   name: string;
   schedules: [Schedule];
   expand: boolean;
+  status: string;
+  archived: boolean;
+}
+
+export namespace GeoRoute {
+  export enum Status {
+    Draft = 'Rascunho',
+    InOperation = 'Em operação',
+    Inactive = 'Inativo'
+  }
 }

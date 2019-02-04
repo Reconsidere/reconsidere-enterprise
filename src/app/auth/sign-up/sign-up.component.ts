@@ -52,6 +52,7 @@ export class SignUpComponent implements OnInit {
   returnUrl: string;
   isChecked: boolean;
   menu: boolean;
+  dynamicCnpj: boolean;
 
   constructor(
     private authService: AuthService,
@@ -72,6 +73,7 @@ export class SignUpComponent implements OnInit {
 
   ngOnInit() {
     this.authService.isAuthenticated();
+    this.dynamicCnpj = true;
     this.page = 1;
     this.pageUnit = 1;
     this.pageUser = 1;
@@ -95,7 +97,7 @@ export class SignUpComponent implements OnInit {
     if (this.organization.users !== undefined) {
       this.show = true;
     }
-    this.confirmPasswordOrganization =  this.organization.password;
+    this.confirmPasswordOrganization = this.organization.password;
   }
 
   CEPSearch(value) {
@@ -116,11 +118,14 @@ export class SignUpComponent implements OnInit {
     this.message = undefined;
   }
 
-
   TypeOrganization(value) {
     if (value === Organization.Classification.Cooperativa) {
+      this.dynamicCnpj = true;
     } else if (value === Organization.Classification.Privada) {
+      this.dynamicCnpj = true;
     } else if (value === Organization.Classification.Municipio) {
+      this.organization.cnpj = '';
+      this.dynamicCnpj = false;
     }
   }
 
@@ -154,9 +159,11 @@ export class SignUpComponent implements OnInit {
         this.organization.password,
         this.confirmPasswordOrganization
       );
-      this.organization.password = this.authService.encript(
-        this.organization.password
-      );
+      if (this.isValidPasswordOrganization) {
+        this.organization.password = this.authService.encript(
+          this.organization.password
+        );
+      }
     }
     setTimeout(function() {}.bind(this), 1000);
   }
@@ -172,7 +179,9 @@ export class SignUpComponent implements OnInit {
         this.user.password,
         this.confirmPasswordUser
       );
-      this.user.password = this.authService.encript(this.user.password);
+      if (this.isValidPasswordUser) {
+        this.user.password = this.authService.encript(this.user.password);
+      }
     }
     setTimeout(function() {}.bind(this), 1000);
   }
@@ -191,7 +200,6 @@ export class SignUpComponent implements OnInit {
       this.organization.company === undefined ||
       this.organization.tradingName === undefined ||
       this.organization.password === undefined ||
-      this.organization.cnpj === undefined ||
       this.organization.phone === undefined ||
       this.organization.cellPhone === undefined ||
       this.organization.classification === undefined ||
@@ -202,6 +210,15 @@ export class SignUpComponent implements OnInit {
       this.msgStatus =
         'Por favor, preencha os campos antes de salvar os dados!';
       return false;
+    }
+    if (
+      this.organization.classification !== Organization.Classification.Municipio
+    ) {
+      if (this.organization.cnpj === undefined) {
+        this.msgStatus =
+          'Por favor, preencha os campos antes de salvar os dados!';
+        return false;
+      }
     }
 
     this.message = this.isValidCNPJ = CNPJValidator.MatchCNPJ(
@@ -224,6 +241,7 @@ export class SignUpComponent implements OnInit {
   }
 
   addOrUpdateLocation() {
+    let add = false;
     this.message = true;
     if (!this.veryfyBeforeAddLocation()) {
       return;
@@ -234,14 +252,16 @@ export class SignUpComponent implements OnInit {
       unit.name = this.unit.name;
       unit.location = this.unit.location;
       this.organization.units = [unit];
-    } else if (this.unit._id !== undefined) {
-      this.organization.units.forEach((item, index) => {
-        if (item._id === this.unit._id) {
+    } else if (this.organization.units !== undefined) {
+      this.organization.units.forEach((unit, index) => {
+        if (this.unit === unit) {
+          this.organization.units[index] = unit;
           this.organization.units[index].name = this.unit.name;
-          this.organization.units[index].location = this.unit.location;
+          add = true;
         }
       });
-    } else {
+    }
+    if (!add) {
       this.organization.units.push(this.unit);
     }
     this.cleanLocation();
@@ -278,6 +298,7 @@ export class SignUpComponent implements OnInit {
   }
 
   addOrUpdateUser() {
+    let add = false;
     this.message = true;
     if (!this.veryfyBeforeAddUser()) {
       return;
@@ -286,22 +307,16 @@ export class SignUpComponent implements OnInit {
     if (this.organization.users === undefined && this.user._id === undefined) {
       this.organization.users = [this.user];
       this.cleanUser();
-    } else if (
-      this.organization.users !== undefined &&
-      this.user._id === undefined
-    ) {
-      this.organization.users.push(this.user);
-      this.cleanUser();
-    } else if (this.user._id !== undefined) {
-      this.organization.users.forEach((item, index) => {
-        if (item._id === this.user._id) {
-          this.organization.users[index] = this.user;
-          this.cleanUser();
-          return;
+    } else if (this.organization.users !== undefined) {
+      this.organization.users.forEach((user, index) => {
+        if (this.user === user) {
+          this.organization.users[index] = user;
+          add = true;
         }
       });
-    } else {
-      this.organization.users.push(this.user);
+      if (!add) {
+        this.organization.users.push(this.user);
+      }
       this.cleanUser();
     }
     this.show = true;
@@ -369,7 +384,7 @@ export class SignUpComponent implements OnInit {
         if (item === user) {
           this.organization.users.splice(index, 1);
           this.message = true;
-          this.msgStatus = 'Usuário removida';
+          this.msgStatus = 'Usuário removido';
         } else {
         }
       });

@@ -8,7 +8,8 @@ import {
   NgModule,
   ViewChild,
   ChangeDetectorRef,
-  AfterViewChecked
+  AfterViewChecked,
+  ElementRef
 } from '@angular/core';
 import { SchedulerService } from 'src/services/scheduler.service';
 import { UserService, AuthService } from 'src/services';
@@ -36,6 +37,8 @@ export class SchedulerComponent implements OnInit {
   page: number;
   organizationId: string;
   vehicles: Vehicle[];
+  search: ElementRef;
+  searchRoute: ElementRef;
 
   constructor(
     private schedulerServive: SchedulerService,
@@ -45,11 +48,9 @@ export class SchedulerComponent implements OnInit {
     private datePipe: DatePipe
   ) {}
 
-  trick() {
-    return this.georoutes;
-  }
-
   ngOnInit() {
+    this.search = new ElementRef<any>('');
+    this.searchRoute = new ElementRef<any>('');
     this.page = 1;
     this.loadValues();
   }
@@ -96,27 +97,32 @@ export class SchedulerComponent implements OnInit {
   }
 
   loadGeoroutes(values) {
-    // if (values === undefined) {
-    //   this.newRoute();
-    // } else {
-    //   this.georoutes = values;
-    // }
-    this.newRoute();
+    if (values === undefined) {
+      this.newRoute();
+    } else {
+      this.georoutes = values;
+      this.georoutes.forEach(route => {
+        route.schedules.forEach(schedule => {
+          schedule.readonly = true;
+          this.verifyConflict(schedule);
+        });
+      });
+    }
+    //this.newRoute();
   }
 
   newRoute() {
     const tomorrow = new Date();
     const vehicle = new Vehicle();
-    vehicle._id = '123';
-    vehicle.active = true;
-    vehicle.carPlate = '1234-aaaa';
     const georout = new GeoRoute();
     georout.name = 'Nova rota';
     const scheduler = new Schedule();
+    scheduler.situation = 'Sem conflitos';
     scheduler.startDate = new Date();
-    scheduler.endDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
+    scheduler.endDate = new Date();
     scheduler.startTime = new Date();
     scheduler.endTime = new Date();
+    scheduler.readonly = false;
     scheduler.vehicle = vehicle;
     if (georout.schedules === undefined || georout.schedules.length <= 0) {
       georout.schedules = [scheduler];
@@ -124,41 +130,73 @@ export class SchedulerComponent implements OnInit {
       georout.schedules.push(scheduler);
     }
 
-    const vehicle2 = new Vehicle();
-    vehicle2._id = '123';
-    vehicle2.active = true;
-    vehicle2.carPlate = '1234-xxl';
-
-    const tomorrow3 = new Date();
-    const scheduler2 = new Schedule();
-    scheduler2.startDate = new Date();
-    scheduler2.endDate = new Date(tomorrow3.setDate(tomorrow3.getDate() + 1));
-    scheduler2.startTime = new Date();
-    scheduler2.endTime = new Date();
-    scheduler2.vehicle = vehicle2;
-    georout.schedules.push(scheduler2);
-
-    const vehicle3 = new Vehicle();
-    vehicle3._id = '1234';
-    vehicle3.active = true;
-    vehicle3.carPlate = '1234-xxl';
-
-    const tomorrow2 = new Date();
-    const tomorrow5 = new Date();
-    const scheduler3 = new Schedule();
-    scheduler3.startDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 1));
-    scheduler3.endDate = new Date(tomorrow5.setDate(tomorrow5.getDate() + 1));
-    scheduler3.startTime = new Date();
-    scheduler3.endTime = new Date();
-    scheduler3.vehicle = vehicle3;
-    georout.schedules.push(scheduler3);
-
     if (this.georoutes === undefined || this.georoutes.length <= 0) {
       this.georoutes = [georout];
     } else {
       this.georoutes.push(georout);
     }
 
+    // vehicle._id = '123';
+    // vehicle.active = true;
+    // vehicle.carPlate = '1234-aaaa';
+    // const georout = new GeoRoute();
+    // georout.name = 'Nova rota';
+    // georout.status = GeoRoute.Status.Draft;
+    // const scheduler = new Schedule();
+    // scheduler.situation = 'Sem conflitos';
+    // scheduler.startDate = new Date();
+    // scheduler.endDate = new Date(tomorrow.setDate(tomorrow.getDate() + 1));
+    // scheduler.startTime = new Date();
+    // scheduler.endTime = new Date();
+    // scheduler.vehicle = vehicle;
+    // if (georout.schedules === undefined || georout.schedules.length <= 0) {
+    //   georout.schedules = [scheduler];
+    // } else {
+    //   georout.schedules.push(scheduler);
+    // }
+
+    // const vehicle2 = new Vehicle();
+    // vehicle2._id = '123';
+    // vehicle2.active = true;
+    // vehicle2.carPlate = '1234-xxl';
+
+    // const tomorrow3 = new Date();
+    // const scheduler2 = new Schedule();
+    // scheduler2.situation = 'Sem conflitos';
+    // scheduler2.startDate = new Date();
+    // scheduler2.endDate = new Date(tomorrow3.setDate(tomorrow3.getDate() + 1));
+    // scheduler2.startTime = new Date();
+    // scheduler2.endTime = new Date();
+    // scheduler2.vehicle = vehicle2;
+    // georout.schedules.push(scheduler2);
+
+    // const vehicle3 = new Vehicle();
+    // vehicle3._id = '1234';
+    // vehicle3.active = true;
+    // vehicle3.carPlate = '1234-xxl';
+
+    // const tomorrow2 = new Date();
+    // const tomorrow5 = new Date();
+    // const scheduler3 = new Schedule();
+    // scheduler3.situation = 'Sem conflitos';
+    // scheduler3.startDate = new Date(tomorrow2.setDate(tomorrow2.getDate() + 1));
+    // scheduler3.endDate = new Date(tomorrow5.setDate(tomorrow5.getDate() + 1));
+    // scheduler3.startTime = new Date();
+    // scheduler3.endTime = new Date();
+    // scheduler3.vehicle = vehicle3;
+    // georout.schedules.push(scheduler3);
+
+    // if (this.georoutes === undefined || this.georoutes.length <= 0) {
+    //   this.georoutes = [georout];
+    // } else {
+    //   this.georoutes.push(georout);
+    // }
+
+    //this.orderBy();
+  }
+
+  //#region orderall
+  orderBy() {
     this.georoutes.forEach(route => {
       let index = 0;
       const first = false;
@@ -207,7 +245,9 @@ export class SchedulerComponent implements OnInit {
       });
     });
   }
+  //#endregion
 
+  //#region rowspan
   rowspanVehicle(
     value: any,
     list: any[],
@@ -310,7 +350,9 @@ export class SchedulerComponent implements OnInit {
       }
     });
   }
+  //#endregion
 
+  //#region orderby
   orderbyFieldDate(field: string, schedule: Schedule[]) {
     schedule.sort((a: any, b: any) => {
       if (
@@ -341,53 +383,74 @@ export class SchedulerComponent implements OnInit {
     });
   }
 
-  // filter(items, element, index) {
-  //   if (!items || !element) {
-  //     return;
-  //   }
+  //#endregion
 
-  //   const field = element.name;
-  //   const value = element.value;
+  verifyConflict(schedule: Schedule) {
+    this.georoutes.forEach(route => {
+      route.schedules.forEach(item => {
+        if (
+          (this.datePipe.transform(schedule.startDate, 'dd/mm/yyyy') >=
+            this.datePipe.transform(item.startDate, 'dd/mm/yyyy') &&
+            this.datePipe.transform(schedule.startDate, 'dd/mm/yyyy') <=
+              this.datePipe.transform(item.endDate, 'dd/mm/yyyy')) ||
+          (this.datePipe.transform(schedule.endDate, 'dd/mm/yyyy') <=
+            this.datePipe.transform(item.endDate, 'dd/mm/yyyy') &&
+            this.datePipe.transform(schedule.endDate, 'dd/mm/yyyy') >=
+              this.datePipe.transform(item.startDate, 'dd/mm/yyyy'))
+        ) {
+          if (schedule !== item) {
+            if (
+              this.hourCheck(
+                schedule.startTime,
+                schedule.endTime,
+                item.startTime
+              ) ||
+              this.hourCheck(
+                schedule.startTime,
+                schedule.endTime,
+                item.endTime
+              ) ||
+              schedule.endTime < schedule.startTime
+            ) {
+              if (schedule.vehicle._id === item.vehicle._id) {
+                schedule.situation = Schedule.Situation.Conflict;
+                item.situation = Schedule.Situation.Conflict;
+              } else {
+                schedule.situation = Schedule.Situation.OverlappingRoute;
+              }
+            } else {
+              item.situation = Schedule.Situation.NoConflict;
+              schedule.situation = Schedule.Situation.NoConflict;
+            }
+          }
+        } else {
+          item.situation = Schedule.Situation.NoConflict;
+          schedule.situation = Schedule.Situation.NoConflict;
+        }
+      });
+    });
+  }
 
-  //   if (!value && items.length <= 0) {
-  //     items =  items;
-  //     return;
-  //   }
-  //   if (value && items.length <= 0) {
-  //     items =  items;
-  //   }
-
-  //   if (!field || !value) {
-  //     return items;
-  //   }
-
-  //   if (field === 'carPlate') {
-  //     this.georoutes[index].schedules = items.filter(singleItem =>
-  //       singleItem.vehicle[field].toLowerCase().includes(value.toLowerCase())
-  //     );
-
-  //     return this.georoutes[index].schedules;
-  //   }
-
-  //   if (field === 'startDate' || field === 'endDate') {
-  //     this.georoutes[index].schedules = items.filter(singleItem =>
-  //       this.datePipe
-  //         .transform(singleItem[field], 'dd/mm/yyyy')
-  //         .toLowerCase()
-  //         .includes(this.datePipe.transform(value, 'dd/mm/yyyy').toLowerCase())
-  //     );
-  //     return this.georoutes[index].schedules;
-  //   }
-
-  //   this.georoutes[index].schedules = items.filter(singleItem =>
-  //     singleItem[field].toLowerCase().includes(value.toLowerCase())
-  //   );
-
-  //   return this.georoutes[index].schedules;
-  // }
+  hourCheck(from, to, check) {
+    if (
+      this.datePipe.transform(check, 'HH:mm') <=
+        this.datePipe.transform(to, 'HH:mm') &&
+      this.datePipe.transform(check, 'HH:mm') >=
+        this.datePipe.transform(from, 'HH:mm')
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   newScheduler(): Schedule {
     const scheduler = new Schedule();
+    scheduler.situation = 'Sem conflitos';
+    scheduler.startDate = new Date();
+    scheduler.endDate = new Date();
+    scheduler.startTime = new Date();
+    scheduler.endTime = new Date();
+    scheduler.vehicle = new Vehicle();
     return scheduler;
   }
 
@@ -412,7 +475,8 @@ export class SchedulerComponent implements OnInit {
         schedule.endDate === undefined ||
         schedule.startTime === undefined ||
         schedule.endTime === undefined ||
-        schedule.vehicle._id === undefined ||
+        schedule.situation === undefined ||
+        schedule.vehicle.carPlate === undefined ||
         this.organizationId === undefined ||
         this.organizationId === ''
       ) {
@@ -437,25 +501,35 @@ export class SchedulerComponent implements OnInit {
   }
 
   removeSchedule(schedule) {
-    this.georoutes.forEach((items, index) => {
-      items.schedules.forEach((item, i) => {
-        if (item === schedule) {
-          items.schedules.splice(i, 1);
-        }
-      });
-    });
+    schedule.archived = true;
+    schedule.status = GeoRoute.Status.Inactive;
+    //this.orderBy();
   }
 
-  remove(route) {}
+  removeRoute(route) {
+    route.archived = true;
+    //this.orderBy();
+  }
 
   expand(route) {
     route.expand = !route.expand;
   }
 
-  save(route) {
+  play(route) {
+    route.status = GeoRoute.Status.InOperation;
+  }
+
+  pause(route) {
+    route.status = GeoRoute.Status.Inactive;
+  }
+
+  save() {
     try {
-      this.veryfyBeforeSave(route);
-      this.schedulerServive.createOrUpdate(this.organizationId, route);
+      this.georoutes.forEach(route => {
+        route.status = GeoRoute.Status.Draft;
+        this.veryfyBeforeSave(route);
+      });
+      this.schedulerServive.createOrUpdate(this.organizationId, this.georoutes);
       this.message = 'Dados salvos com sucesso';
     } catch (error) {
       this.message = error;

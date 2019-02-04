@@ -17,34 +17,56 @@
     </button>
   </div>
 
-  <div class="tableScheduler">
-    <table class="table table-sm">
+  <div  id="flip-scroll"  class="tableScheduler">
+    <button
+      id="newRoute"
+      (click)="newRoute()"
+      type="button"
+      class="btn btn-sm btn-primary"
+      data-toggle="button"
+      aria-pressed="false"
+      autocomplete="off"
+    >
+      <i class="fa fa-plus"></i>
+    </button>
+
+    <button
+      type="button"
+      id="save"
+      (click)="save()"
+      class="btn btn-success col-md-2 pull-right"
+    >
+    <i class="fa fa-save"></i>
+    </button>
+
+    <input
+      #nameFilter
+      name="name"
+      type="text"
+      class="form-control"
+      (input)="searchRoute = nameFilter"
+    />
+    <table class="">
       <ng-template
         ngFor
         let-route
-        [ngForOf]="georoutes | paginate: { itemsPerPage: 5, currentPage: page }"
+        [ngForOf]="
+          georoutes
+            | termFilter
+              : searchRoute.name
+              : searchRoute.value
+              : paginate
+              : { itemsPerPage: 5, currentPage: page }
+        "
         let-i="index"
       >
-        <thead>
-          <tr>
-            <button
-              id="newRoute"
-              (click)="newRoute()"
-              type="button"
-              class="btn btn-sm btn-primary"
-              data-toggle="button"
-              aria-pressed="false"
-              autocomplete="off"
-            >
-              <i class="fa fa-plus"></i>
-            </button>
-          </tr>
+        <thead *ngIf="!route.archived">
           <tr id="Titles">
             <th>Nome</th>
           </tr>
           <tr>
             <td hidden>{{ route._id }}</td>
-            <td>
+            <td class="" colspan="2">
               <input
                 class="form-control"
                 type="text"
@@ -53,11 +75,11 @@
               />
             </td>
 
-            <td class="tdStyle">
+            <td colspan="3" >
               <button
                 (click)="expand(route)"
                 type="button"
-                class="btn btn-sm btn-primary ml-1"
+                class="btn btn-sm btn-primary ml-1 pull-left "
                 data-toggle="button"
                 aria-pressed="false"
                 autocomplete="off"
@@ -67,195 +89,183 @@
               <button
                 (click)="addScheduler(route)"
                 type="button"
-                class="btn btn-sm btn-primary ml-1"
+                class="btn btn-sm btn-primary ml-1 pull-left "
                 data-toggle="button"
                 aria-pressed="false"
                 autocomplete="off"
               >
                 <i class="fa fa-plus"></i>
               </button>
+
+              <button
+                type="button"
+                id="save"
+                (click)="removeRoute(route)"
+                class="btn btn-sm btn-danger  pull-left ml-1 "
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+
+              <button
+                (click)="play(route)"
+                type="button"
+                class="btn btn-sm btn-primary ml-1 pull-right"
+                data-toggle="button"
+                aria-pressed="false"
+                autocomplete="off"
+              >
+                <i class="fa fa-play"></i>
+              </button>
+
+              <button
+                (click)="pause(route)"
+                type="button"
+                class="btn btn-sm btn-primary ml-1  pull-right"
+                data-toggle="button"
+                aria-pressed="false"
+                autocomplete="off"
+              >
+                <i class="fa fa-pause"></i>
+              </button>
             </td>
           </tr>
-          <tr>
-            <th colspan="1"></th>
+          <tr *ngIf="route.expand">
             <th>
               <input
-                #filterSearch
-                (input)="(filterSearch)"
+                #carPlateFilter
                 name="carPlate"
                 type="text"
                 class="inputFilter"
+                (input)="search = carPlateFilter"
+              />
+            </th>
+            <th>
+              <input
+                #situationFilter
+                name="situation"
+                type="text"
+                class="inputFilter"
+                (input)="search = situationFilter"
               />
             </th>
             <th>
               <p-calendar
+                #startDateFilter
                 name="startDate"
                 dateFormat="dd/mm/yy"
-                #filterSearch
-                (input)="(filterSearch)"
-                [readonlyInput]="true"
+                (onSelect)="search = startDateFilter"
               ></p-calendar>
             </th>
             <th>
               <p-calendar
+                #endDateFilter
                 name="endDate"
                 dateFormat="dd/mm/yy"
-                #filterSearch
-                (input)="(filterSearch)"
-                [readonlyInput]="true"
+                (onSelect)="search = endDateFilter"
               ></p-calendar>
             </th>
             <th>
               <p-calendar
+                #startTime
                 name="startTime"
                 pattern="HH:mm"
                 timeOnly="true"
                 hourFormat="24"
-                #filterSearch
-                (input)="(filterSearch)"
-                [readonlyInput]="true"
+                (onSelect)="search = startTime"
               ></p-calendar>
             </th>
             <th>
               <p-calendar
+                #endTime
                 name="endTime"
                 pattern="HH:mm"
                 timeOnly="true"
                 hourFormat="24"
-                #filterSearch
-                (input)="(filterSearch)"
-                [readonlyInput]="true"
+                (onSelect)="search = endTime"
               ></p-calendar>
             </th>
           </tr>
           <tr *ngIf="route.expand" id="Titles">
-            <th colspan="1"></th>
             <th>Veículo</th>
+            <th>Situação</th>
             <th>Data inicial</th>
             <th>Data final</th>
             <th>Hora inicial</th>
             <th>Hora final</th>
+            <th>Arquivar</th>
           </tr>
         </thead>
-        <tbody *ngIf="route.expand">
+        <tbody *ngIf="route.expand && !route.archived">
           <ng-template
             ngFor
             let-schedule
-            [ngForOf]="
-              route.schedules | termFilter: filterSearch.value:filterSearch
-            "
+            [ngForOf]="route.schedules | termFilter: search.name:search.value"
             let-igroup="index"
           >
-            <tr *ngIf="route.expand">
-              <td colspan="1"></td>
-              <td
-                class="titleGroup"
-                [attr.rowspan]="schedule.rowsVehicle"
-                *ngIf="schedule.showVehicle"
-              >
-                {{ schedule.vehicle.carPlate }}
-              </td>
-              <td
-                class="titleGroup"
-                [attr.rowspan]="schedule.rowsStartDate"
-                *ngIf="schedule.showStartDate"
-              >
-                {{ schedule.startDate | date: 'dd/MM/yyyy' }}
-              </td>
+            <tr *ngIf="route.expand && !schedule.archived">
+              <td class="titleGroup" *ngIf="!schedule.readonly">
+                <!-- [attr.rowspan]="schedule.rowsVehicle"
+                *ngIf="schedule.showVehicle" -->
+                <!-- {{ schedule.vehicle.carPlate }} -->
 
-              <td
-                class="titleGroup"
-                [attr.rowspan]="schedule.rowsEndDate"
-                *ngIf="schedule.showEndDate"
-              >
-                {{ schedule.endDate | date: 'dd/MM/yyyy' }}
-              </td>
-              <td>
-                <p-calendar
-                  name="startTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  hourFormat="24"
-                  (ngModelChange)="schedule.startTime = $event"
-                  [ngModel]="schedule.startTime | dateconvert"
-                  [readonlyInput]="true"
+                <select
                   required
-                ></p-calendar>
-              </td>
-              <td>
-                <p-calendar
-                  name="endTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  (ngModelChange)="schedule.endTime = $event"
-                  [ngModel]="schedule.endTime | dateconvert"
-                  showTime="true"
-                  hourFormat="24"
-                  [readonlyInput]="true"
-                  required
-                ></p-calendar>
-              </td>
-            </tr>
-          </ng-template>
-          <!-- <td
-                class="titleGroup"
-                [attr.rowspan]="route.schedules | groupby: 'startDate'"
-                *ngIf="igroup == 0"
-              >
-                {{ schedule.startDate | date: 'dd/MM/yyyy' }}
-              </td>
-              <td
-                class="titleGroup"
-                [attr.rowspan]="route.schedules | groupby: 'endDate'"
-                *ngIf="igroup == 0"
-              >
-                {{ schedule.endDate | date: 'dd/MM/yyyy' }}
-              </td> -->
-          <!-- <td  class="titleGroup" rowspan="4" *ngIf="igroup == 0">
-                  <p-calendar
-                    name="startDate"
-                    dateFormat="dd/mm/yy"
-                    (ngModelChange)="schedule.startDate = $event"
-                    [ngModel]="schedule.startDate | dateconvert"
-                    [minDate]="minDateValue"
-                    [maxDate]="maxDateValue"
-                    [readonlyInput]="true"
-                    required
-                  ></p-calendar>
-                </td> -->
-          <!-- <td  class="titleGroup" [attr.rowspan]="group.value.length" *ngIf="igroup == 0">
-                    {{group.key | date:'dd/MM/yyyy'}}
-                </td> -->
-          <!-- <td>
-                <p-calendar
-                  name="endDate"
-                  dateFormat="dd/mm/yy"
-                  (ngModelChange)="schedule.endDate = $event"
-                  [ngModel]="schedule.endDate | dateconvert"
-                  [minDate]="minDateValue"
-                  [maxDate]="maxDateValue"
-                  [readonlyInput]="true"
-                  required
-                ></p-calendar>
-              </td>
-            <td>
-                <select required [(ngModel)]="schedule.vehicle" name="vehicle">
-                  <option id="vehicle" *ngFor="let item of vehicles">{{
+                  [(ngModel)]="schedule.vehicle"
+                  name="carPlate"
+                  class="form-control"
+                >
+                  <option id="vehicles"  [ngValue]="item" *ngFor="let item of vehicles">{{
                     item.carPlate
                   }}</option>
                 </select>
               </td>
+              <td *ngIf="schedule.readonly" >
+                {{ schedule.vehicle.carPlate }}
+              </td>
+              <td>{{ schedule.situation }}</td>
+              <td class="titleGroup">
+                <!-- [attr.rowspan]="schedule.rowsStartDate"
+                *ngIf="schedule.showStartDate" -->
+                <!-- {{ schedule.startDate | date: 'dd/MM/yyyy' }} -->
+                <p-calendar
+                  name="startDate"
+                  dateFormat="dd/mm/yy"
+                  (ngModelChange)="schedule.startDate = $event"
+                  [ngModel]="schedule.startDate | dateconvert"
+                  [minDate]="minDateValue"
+                  [maxDate]="maxDateValue"
+                  [readonlyInput]="true"
+                  [disabled]="schedule.readonly"
+                  required
+                ></p-calendar>
+              </td>
 
-            -->
-          <!-- <td>
+              <td class="titleGroup">
+                <!-- [attr.rowspan]="schedule.rowsEndDate"
+                *ngIf="schedule.showEndDate" -->
+                <!-- {{ schedule.endDate | date: 'dd/MM/yyyy' }} -->
+                <p-calendar
+                name="endDate"
+                dateFormat="dd/mm/yy"
+                (ngModelChange)="schedule.endDate = $event"
+                [ngModel]="schedule.endDate | dateconvert"
+                [minDate]="minDateValue"
+                [maxDate]="maxDateValue"
+                [readonlyInput]="true"
+                [disabled]="schedule.readonly"
+                required
+              ></p-calendar>
+              </td>
+              <td>
                 <p-calendar
                   name="startTime"
                   pattern="HH:mm"
                   timeOnly="true"
+                  hourFormat="24"
                   (ngModelChange)="schedule.startTime = $event"
                   [ngModel]="schedule.startTime | dateconvert"
-                  hourFormat="24"
                   [readonlyInput]="true"
+                  (onSelect)="verifyConflict(schedule)"
                   required
                 ></p-calendar>
               </td>
@@ -268,23 +278,25 @@
                   [ngModel]="schedule.endTime | dateconvert"
                   showTime="true"
                   hourFormat="24"
+                  (onSelect)="verifyConflict(schedule)"
                   [readonlyInput]="true"
                   required
                 ></p-calendar>
               </td>
-
               <td>
                 <button
                   (click)="removeSchedule(schedule)"
                   type="button"
-                  class="btn btn-sm btn-danger"
+                  class="btn btn-sm btn-danger ml-5"
                   data-toggle="button"
                   aria-pressed="false"
                   autocomplete="off"
                 >
                   <i class="fa fa-trash"></i>
                 </button>
-              </td> -->
+              </td>
+            </tr>
+          </ng-template>
 
           <!-- <tr *ngIf="route.expand">
             <td colspan="9">
