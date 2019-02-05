@@ -111,7 +111,7 @@ const options = {
   bufferMaxEntries: 0
 };
 
-mongoose.connect(URL, options).catch(err => {
+mongoose.connect(TestURL, options).catch(err => {
   console.error('Erro ao conectar no banco: ' + err.stack);
 });
 

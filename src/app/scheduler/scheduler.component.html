@@ -17,7 +17,7 @@
     </button>
   </div>
 
-  <div  id="flip-scroll"  class="tableScheduler">
+  <div id="flip-scroll" class="tableScheduler">
     <button
       id="newRoute"
       (click)="newRoute()"
@@ -36,7 +36,7 @@
       (click)="save()"
       class="btn btn-success col-md-2 pull-right"
     >
-    <i class="fa fa-save"></i>
+      <i class="fa fa-save"></i>
     </button>
 
     <input
@@ -75,7 +75,7 @@
               />
             </td>
 
-            <td colspan="3" >
+            <td colspan="5">
               <button
                 (click)="expand(route)"
                 type="button"
@@ -101,7 +101,7 @@
                 type="button"
                 id="save"
                 (click)="removeRoute(route)"
-                class="btn btn-sm btn-danger  pull-left ml-1 "
+                class="btn btn-sm btn-danger  pull-right ml-1 "
               >
                 <i class="fa fa-trash"></i>
               </button>
@@ -213,13 +213,17 @@
                   [(ngModel)]="schedule.vehicle"
                   name="carPlate"
                   class="form-control"
-                >
-                  <option id="vehicles"  [ngValue]="item" *ngFor="let item of vehicles">{{
-                    item.carPlate
-                  }}</option>
+                  (change)="verifyConflict(schedule)"
+                  >
+                  <option
+                    id="vehicles"
+                    [ngValue]="item"
+                    *ngFor="let item of vehicles"
+                    >{{ item.carPlate }}</option
+                  >
                 </select>
               </td>
-              <td *ngIf="schedule.readonly" >
+              <td *ngIf="schedule.readonly">
                 {{ schedule.vehicle.carPlate }}
               </td>
               <td>{{ schedule.situation }}</td>
@@ -234,6 +238,7 @@
                   [ngModel]="schedule.startDate | dateconvert"
                   [minDate]="minDateValue"
                   [maxDate]="maxDateValue"
+                  (onSelect)="verifyConflict(schedule)"
                   [readonlyInput]="true"
                   [disabled]="schedule.readonly"
                   required
@@ -245,16 +250,17 @@
                 *ngIf="schedule.showEndDate" -->
                 <!-- {{ schedule.endDate | date: 'dd/MM/yyyy' }} -->
                 <p-calendar
-                name="endDate"
-                dateFormat="dd/mm/yy"
-                (ngModelChange)="schedule.endDate = $event"
-                [ngModel]="schedule.endDate | dateconvert"
-                [minDate]="minDateValue"
-                [maxDate]="maxDateValue"
-                [readonlyInput]="true"
-                [disabled]="schedule.readonly"
-                required
-              ></p-calendar>
+                  name="endDate"
+                  dateFormat="dd/mm/yy"
+                  (ngModelChange)="schedule.endDate = $event"
+                  [ngModel]="schedule.endDate | dateconvert"
+                  [minDate]="minDateValue"
+                  [maxDate]="maxDateValue"
+                  [readonlyInput]="true"
+                  (onSelect)="verifyConflict(schedule)"
+                  [disabled]="schedule.readonly"
+                  required
+                ></p-calendar>
               </td>
               <td>
                 <p-calendar
