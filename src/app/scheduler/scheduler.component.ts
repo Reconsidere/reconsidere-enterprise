@@ -82,7 +82,7 @@ export class SchedulerComponent implements OnInit {
         .getAll(this.organizationId)
         .pipe()
         .subscribe(georoutes => {
-          this.loadGeoroutes(georoutes.filter(x => !x.archived));
+          this.loadGeoroutes(georoutes);
         });
     } else {
       this.newRoute();
@@ -93,6 +93,7 @@ export class SchedulerComponent implements OnInit {
     if (values === undefined) {
       this.newRoute();
     } else {
+      //const x = values.map(a => a.schedules.filter(e => !e.archived));
       this.georoutes = values;
       this.georoutes.forEach(route => {
         route.schedules.forEach(schedule => {
@@ -100,6 +101,7 @@ export class SchedulerComponent implements OnInit {
         });
       });
       this.blockEdition();
+      this.orderBy();
     }
   }
 
@@ -125,7 +127,6 @@ export class SchedulerComponent implements OnInit {
     } else {
       this.georoutes.push(georout);
     }
-    //this.orderBy();
   }
 
   //#region orderall
@@ -135,14 +136,16 @@ export class SchedulerComponent implements OnInit {
       const first = false;
       this.orderbyFieldVehicle('_id', route.schedules);
       route.schedules.forEach(schedule => {
-        this.rowspanVehicle(
-          schedule.vehicle._id,
-          route.schedules,
-          '_id',
-          index,
-          first
-        );
-        index++;
+        if (!schedule.archived) {
+          this.rowspanVehicle(
+            schedule.vehicle._id,
+            route.schedules,
+            '_id',
+            index,
+            first
+          );
+          index++;
+        }
       });
     });
 
@@ -151,14 +154,16 @@ export class SchedulerComponent implements OnInit {
       const first = false;
       this.orderbyFieldDate('startDate', route.schedules);
       route.schedules.forEach(schedule => {
-        this.rowspanDateStart(
-          schedule.startDate,
-          route.schedules,
-          'startDate',
-          index,
-          first
-        );
-        index++;
+        if (!schedule.archived) {
+          this.rowspanDateStart(
+            schedule.startDate,
+            route.schedules,
+            'startDate',
+            index,
+            first
+          );
+          index++;
+        }
       });
     });
 
@@ -167,14 +172,16 @@ export class SchedulerComponent implements OnInit {
       const first = false;
       this.orderbyFieldDate('endDate', route.schedules);
       route.schedules.forEach(schedule => {
-        this.rowspanDateEnd(
-          schedule.endDate,
-          route.schedules,
-          'endDate',
-          index,
-          first
-        );
-        index++;
+        if (!schedule.archived) {
+          this.rowspanDateEnd(
+            schedule.endDate,
+            route.schedules,
+            'endDate',
+            index,
+            first
+          );
+          index++;
+        }
       });
     });
   }
@@ -217,15 +224,15 @@ export class SchedulerComponent implements OnInit {
   ): any {
     const count = list.filter(
       item =>
-        this.datePipe.transform(item[nameField], 'dd/mm/yyyy') ===
-        this.datePipe.transform(value, 'dd/mm/yyyy')
+        this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
+        this.datePipe.transform(value, 'dd/MM/yyyy')
     ).length;
 
     const alreadyExist = list
       .filter(
         item =>
-          this.datePipe.transform(item[nameField], 'dd/mm/yyyy') ===
-          this.datePipe.transform(value, 'dd/mm/yyyy')
+          this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
+          this.datePipe.transform(value, 'dd/MM/yyyy')
       )
       .find(x => x.showStartDate === true);
     if (alreadyExist !== undefined) {
@@ -234,8 +241,8 @@ export class SchedulerComponent implements OnInit {
 
     list.forEach(element => {
       if (
-        this.datePipe.transform(element[nameField], 'dd/mm/yyyy') ===
-        this.datePipe.transform(value, 'dd/mm/yyyy')
+        this.datePipe.transform(element[nameField], 'dd/MM/yyyy') ===
+        this.datePipe.transform(value, 'dd/MM/yyyy')
       ) {
         if (!first) {
           list[index].rowsStartDate = count;
@@ -255,15 +262,15 @@ export class SchedulerComponent implements OnInit {
   ): any {
     const count = list.filter(
       item =>
-        this.datePipe.transform(item[nameField], 'dd/mm/yyyy') ===
-        this.datePipe.transform(value, 'dd/mm/yyyy')
+        this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
+        this.datePipe.transform(value, 'dd/MM/yyyy')
     ).length;
 
     const alreadyExist = list
       .filter(
         item =>
-          this.datePipe.transform(item[nameField], 'dd/mm/yyyy') ===
-          this.datePipe.transform(value, 'dd/mm/yyyy')
+          this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
+          this.datePipe.transform(value, 'dd/MM/yyyy')
       )
       .find(x => x.showEndDate === true);
     if (alreadyExist !== undefined) {
@@ -272,8 +279,8 @@ export class SchedulerComponent implements OnInit {
 
     list.forEach(element => {
       if (
-        this.datePipe.transform(element[nameField], 'dd/mm/yyyy') ===
-        this.datePipe.transform(value, 'dd/mm/yyyy')
+        this.datePipe.transform(element[nameField], 'dd/MM/yyyy') ===
+        this.datePipe.transform(value, 'dd/MM/yyyy')
       ) {
         if (!first) {
           list[index].rowsEndDate = count;
@@ -289,13 +296,13 @@ export class SchedulerComponent implements OnInit {
   orderbyFieldDate(field: string, schedule: Schedule[]) {
     schedule.sort((a: any, b: any) => {
       if (
-        this.datePipe.transform(a[field], 'dd/mm/yyyy') <
-        this.datePipe.transform(b[field], 'dd/mm/yyyy')
+        this.datePipe.transform(a[field], 'dd/MM/yyyy') <
+        this.datePipe.transform(b[field], 'dd/MM/yyyy')
       ) {
         return -1;
       } else if (
-        this.datePipe.transform(a[field], 'dd/mm/yyyy') >
-        this.datePipe.transform(b[field], 'dd/mm/yyyy')
+        this.datePipe.transform(a[field], 'dd/MM/yyyy') >
+        this.datePipe.transform(b[field], 'dd/MM/yyyy')
       ) {
         return 1;
       } else {
@@ -321,7 +328,6 @@ export class SchedulerComponent implements OnInit {
   verifyConflict(schedule: Schedule) {
     this.georoutes.forEach(route => {
       route.schedules.forEach(item => {
-        const cc = this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy');
         if (
           (this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy') >=
             this.datePipe.transform(item.startDate, 'dd/MM/yyyy') &&
@@ -385,6 +391,8 @@ export class SchedulerComponent implements OnInit {
     scheduler.startTime = new Date();
     scheduler.endTime = new Date();
     scheduler.vehicle = new Vehicle();
+    scheduler.vehicle._id = '';
+    scheduler.vehicle.carPlate = '';
     return scheduler;
   }
 
@@ -431,6 +439,7 @@ export class SchedulerComponent implements OnInit {
         }
       }
     });
+    this.orderBy();
   }
 
   removeSchedule(schedule) {

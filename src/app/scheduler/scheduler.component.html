@@ -129,7 +129,7 @@
               </button>
             </td>
           </tr>
-          <tr *ngIf="route.expand">
+          <tr *ngIf="route.expand && !route.archived">
             <th>
               <input
                 #carPlateFilter
@@ -202,19 +202,19 @@
             [ngForOf]="route.schedules | termFilter: search.name:search.value"
             let-igroup="index"
           >
-            <tr *ngIf="route.expand && !schedule.archived">
-              <td class="titleGroup" *ngIf="!schedule.readonly">
-                <!-- [attr.rowspan]="schedule.rowsVehicle"
-                *ngIf="schedule.showVehicle" -->
-                <!-- {{ schedule.vehicle.carPlate }} -->
-
+            <tr *ngIf="route.expand">
+              <td
+                [attr.rowspan]="schedule.rowsVehicle"
+                class="titleGroup"
+                *ngIf="!schedule.readonly && schedule.showVehicle"
+              >
                 <select
                   required
                   [(ngModel)]="schedule.vehicle"
                   name="carPlate"
                   class="form-control"
                   (change)="verifyConflict(schedule)"
-                  >
+                >
                   <option
                     id="vehicles"
                     [ngValue]="item"
@@ -223,14 +223,17 @@
                   >
                 </select>
               </td>
-              <td *ngIf="schedule.readonly">
+              <td *ngIf="schedule.readonly && schedule.showVehicle"
+              [attr.rowspan]="schedule.rowsVehicle"
+              >
                 {{ schedule.vehicle.carPlate }}
               </td>
               <td>{{ schedule.situation }}</td>
-              <td class="titleGroup">
-                <!-- [attr.rowspan]="schedule.rowsStartDate"
-                *ngIf="schedule.showStartDate" -->
-                <!-- {{ schedule.startDate | date: 'dd/MM/yyyy' }} -->
+              <td
+                class="titleGroup"
+                [attr.rowspan]="schedule.rowsStartDate"
+                *ngIf="schedule.showStartDate"
+              >
                 <p-calendar
                   name="startDate"
                   dateFormat="dd/mm/yy"
@@ -245,10 +248,11 @@
                 ></p-calendar>
               </td>
 
-              <td class="titleGroup">
-                <!-- [attr.rowspan]="schedule.rowsEndDate"
-                *ngIf="schedule.showEndDate" -->
-                <!-- {{ schedule.endDate | date: 'dd/MM/yyyy' }} -->
+              <td
+                class="titleGroup"
+                [attr.rowspan]="schedule.rowsEndDate"
+                *ngIf="schedule.showEndDate"
+              >
                 <p-calendar
                   name="endDate"
                   dateFormat="dd/mm/yy"
@@ -303,31 +307,6 @@
               </td>
             </tr>
           </ng-template>
-
-          <!-- <tr *ngIf="route.expand">
-            <td colspan="9">
-              <button
-                type="submit"
-                id="save"
-                (click)="save(route)"
-                class="btn btn-success col-md-12"
-              >
-                Salvar
-              </button>
-            </td>
-          </tr>
-          <tr *ngIf="route.expand">
-            <td colspan="9">
-              <button
-                type="submit"
-                id="remove"
-                (click)="remove(route)"
-                class="btn btn-danger col-md-12"
-              >
-                Remover rota
-              </button>
-            </td>
-          </tr> -->
         </tbody>
         <pagination-controls
           (pageChange)="page = $event"
