@@ -1,3 +1,4 @@
+import { first } from 'rxjs/operators';
 import { VehicleManagementService } from 'src/services/vehicle-management.service';
 import {
   Component,
@@ -90,20 +91,187 @@ export class SchedulerComponent implements OnInit {
   }
 
   loadGeoroutes(values) {
+    this.newRoute();
     if (values === undefined) {
-      this.newRoute();
     } else {
-      //const x = values.map(a => a.schedules.filter(e => !e.archived));
       this.georoutes = values;
       this.georoutes.forEach(route => {
         route.schedules.forEach(schedule => {
           this.verifyConflict(schedule);
         });
       });
+
+      //this.orderby();
       this.blockEdition();
-      this.orderBy();
     }
   }
+
+  // orderby() {
+  //   this.georoutes.map(x => this.orderbyFieldVehicle('carPlate', x.schedules));
+  //   this.grouByFieldVehicle(this.georoutes.map(x => x.schedules));
+  //   this.georoutes.map(x => this.orderbyFieldDate('startDate', x.schedules));
+  //   this.grouByFieldStartDate(this.georoutes.map(x => x.schedules));
+  //   this.georoutes.map(x => this.orderbyFieldDate('endDate', x.schedules));
+  //   this.grouByFieldEndDate(this.georoutes.map(x => x.schedules));
+  // }
+
+  // grouByFieldVehicle(list: any) {
+  //   if (list === undefined || list.length <= 0) {
+  //     return;
+  //   }
+  //   let alreadyExist = false;
+  //   let prim = true;
+  //   let compareValue: any;
+  //   list.forEach(schedules => {
+  //     schedules.forEach(schedule => {
+  //       if (prim) {
+  //         compareValue = schedule.vehicle.carPlate;
+  //         prim = false;
+  //       }
+  //       if (compareValue === schedule.vehicle.carPlate) {
+  //         if (!alreadyExist) {
+  //           const count = schedules.filter(
+  //             item => item.vehicle.carPlate === schedule.vehicle.carPlate
+  //           ).length;
+  //           schedule.rows = count;
+  //           schedule.show = true;
+  //           alreadyExist = true;
+  //         } else {
+  //           schedule.rows = 0;
+  //           schedule.show = false;
+  //         }
+  //       } else {
+  //         alreadyExist = false;
+  //         if (!alreadyExist) {
+  //           const count = schedules.filter(
+  //             item => item.vehicle.carPlate === schedule.vehicle.carPlate
+  //           ).length;
+  //           schedule.rows = count;
+  //           schedule.show = true;
+  //           compareValue = schedule.vehicle.carPlate;
+  //           alreadyExist = true;
+  //         } else {
+  //           schedule.rows = 0;
+  //           schedule.show = false;
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
+
+  // grouByFieldEndDate(list: any) {
+  //   if (list === undefined || list.length <= 0) {
+  //     return;
+  //   }
+  //   let alreadyExist = false;
+  //   let prim = true;
+  //   let compareValue: any;
+  //   list.forEach(schedules => {
+  //     schedules.forEach(schedule => {
+  //       if (prim) {
+  //         compareValue = this.datePipe.transform(
+  //           schedule.endDate,
+  //           'dd/MM/yyyy'
+  //         );
+  //         prim = false;
+  //       }
+  //       if (
+  //         compareValue ===
+  //         this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
+  //       ) {
+  //         if (!alreadyExist) {
+  //           const count = schedules.filter(
+  //             item =>
+  //               this.datePipe.transform(item.endDate, 'dd/MM/yyyy') ===
+  //               this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
+  //           ).length;
+  //           schedule.rows = count;
+  //           schedule.show = true;
+  //           alreadyExist = true;
+  //         } else {
+  //           schedule.rows = 0;
+  //           schedule.show = false;
+  //         }
+  //       } else {
+  //         alreadyExist = false;
+  //         if (!alreadyExist) {
+  //           const count = schedules.filter(
+  //             item =>
+  //               this.datePipe.transform(item.endDate, 'dd/MM/yyyy') ===
+  //               this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
+  //           ).length;
+  //           schedule.rows = count;
+  //           schedule.show = true;
+  //           compareValue = this.datePipe.transform(
+  //             schedule.endDate,
+  //             'dd/MM/yyyy'
+  //           );
+  //           alreadyExist = true;
+  //         } else {
+  //           schedule.rows = 0;
+  //           schedule.show = false;
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
+
+  // grouByFieldStartDate(list: any) {
+  //   if (list === undefined || list.length <= 0) {
+  //     return;
+  //   }
+  //   let alreadyExist = false;
+  //   let prim = true;
+  //   let compareValue: any;
+  //   list.forEach(schedules => {
+  //     schedules.forEach(schedule => {
+  //       if (prim) {
+  //         compareValue = this.datePipe.transform(
+  //           schedule.startDate,
+  //           'dd/MM/yyyy'
+  //         );
+  //         prim = false;
+  //       }
+  //       if (
+  //         compareValue ===
+  //         this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+  //       ) {
+  //         if (!alreadyExist) {
+  //           const count = schedules.filter(
+  //             item =>
+  //               this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
+  //               this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+  //           ).length;
+  //           schedule.rows = count;
+  //           schedule.show = true;
+  //           alreadyExist = true;
+  //         } else {
+  //           schedule.rows = 0;
+  //           schedule.show = false;
+  //         }
+  //       } else {
+  //         alreadyExist = false;
+  //         if (!alreadyExist) {
+  //           const count = schedules.filter(
+  //             item =>
+  //               this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
+  //               this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+  //           ).length;
+  //           schedule.rows = count;
+  //           schedule.show = true;
+  //           compareValue = this.datePipe.transform(
+  //             schedule.startDate,
+  //             'dd/MM/yyyy'
+  //           );
+  //           alreadyExist = true;
+  //         } else {
+  //           schedule.rows = 0;
+  //           schedule.show = false;
+  //         }
+  //       }
+  //     });
+  //   });
+  // }
 
   private blockEdition() {
     this.georoutes.forEach(route => {
@@ -129,199 +297,40 @@ export class SchedulerComponent implements OnInit {
     }
   }
 
-  //#region orderall
-  orderBy() {
-    this.georoutes.forEach(route => {
-      let index = 0;
-      const first = false;
-      this.orderbyFieldVehicle('_id', route.schedules);
-      route.schedules.forEach(schedule => {
-        if (!schedule.archived) {
-          this.rowspanVehicle(
-            schedule.vehicle._id,
-            route.schedules,
-            '_id',
-            index,
-            first
-          );
-          index++;
-        }
-      });
-    });
-
-    this.georoutes.forEach(route => {
-      let index = 0;
-      const first = false;
-      this.orderbyFieldDate('startDate', route.schedules);
-      route.schedules.forEach(schedule => {
-        if (!schedule.archived) {
-          this.rowspanDateStart(
-            schedule.startDate,
-            route.schedules,
-            'startDate',
-            index,
-            first
-          );
-          index++;
-        }
-      });
-    });
-
-    this.georoutes.forEach(route => {
-      let index = 0;
-      const first = false;
-      this.orderbyFieldDate('endDate', route.schedules);
-      route.schedules.forEach(schedule => {
-        if (!schedule.archived) {
-          this.rowspanDateEnd(
-            schedule.endDate,
-            route.schedules,
-            'endDate',
-            index,
-            first
-          );
-          index++;
-        }
-      });
-    });
-  }
-  //#endregion
-
-  //#region rowspan
-  rowspanVehicle(
-    value: any,
-    list: any[],
-    nameField: any,
-    index: any,
-    first: any
-  ): any {
-    const count = list.filter(item => item.vehicle._id === value).length;
-
-    const alreadyExist = list
-      .filter(item => item.vehicle._id === value)
-      .find(x => x.showVehicle === true);
-    if (alreadyExist !== undefined) {
-      return;
-    }
-
-    list.forEach(element => {
-      if (element.vehicle[nameField] === value) {
-        if (!first) {
-          list[index].rowsVehicle = count;
-          list[index].showVehicle = true;
-          first = true;
-        }
-      }
-    });
+  orderNew(schedule: any) {
+    schedule.rows = 1;
+    schedule.show = true;
   }
 
-  rowspanDateStart(
-    value: any,
-    list: any[],
-    nameField: any,
-    index: any,
-    first: any
-  ): any {
-    const count = list.filter(
-      item =>
-        this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
-        this.datePipe.transform(value, 'dd/MM/yyyy')
-    ).length;
+  // orderbyFieldVehicle(field: string, schedule: Schedule[]) {
+  //   schedule.sort((a: any, b: any) => {
+  //     if (a.vehicle[field] < b.vehicle[field]) {
+  //       return -1;
+  //     } else if (a.vehicle[field] > b.vehicle[field]) {
+  //       return 1;
+  //     } else {
+  //       return 0;
+  //     }
+  //   });
+  // }
 
-    const alreadyExist = list
-      .filter(
-        item =>
-          this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
-          this.datePipe.transform(value, 'dd/MM/yyyy')
-      )
-      .find(x => x.showStartDate === true);
-    if (alreadyExist !== undefined) {
-      return;
-    }
-
-    list.forEach(element => {
-      if (
-        this.datePipe.transform(element[nameField], 'dd/MM/yyyy') ===
-        this.datePipe.transform(value, 'dd/MM/yyyy')
-      ) {
-        if (!first) {
-          list[index].rowsStartDate = count;
-          list[index].showStartDate = true;
-          first = true;
-        }
-      }
-    });
-  }
-
-  rowspanDateEnd(
-    value: any,
-    list: any[],
-    nameField: any,
-    index: any,
-    first: any
-  ): any {
-    const count = list.filter(
-      item =>
-        this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
-        this.datePipe.transform(value, 'dd/MM/yyyy')
-    ).length;
-
-    const alreadyExist = list
-      .filter(
-        item =>
-          this.datePipe.transform(item[nameField], 'dd/MM/yyyy') ===
-          this.datePipe.transform(value, 'dd/MM/yyyy')
-      )
-      .find(x => x.showEndDate === true);
-    if (alreadyExist !== undefined) {
-      return;
-    }
-
-    list.forEach(element => {
-      if (
-        this.datePipe.transform(element[nameField], 'dd/MM/yyyy') ===
-        this.datePipe.transform(value, 'dd/MM/yyyy')
-      ) {
-        if (!first) {
-          list[index].rowsEndDate = count;
-          list[index].showEndDate = true;
-          first = true;
-        }
-      }
-    });
-  }
-  //#endregion
-
-  //#region orderby
-  orderbyFieldDate(field: string, schedule: Schedule[]) {
-    schedule.sort((a: any, b: any) => {
-      if (
-        this.datePipe.transform(a[field], 'dd/MM/yyyy') <
-        this.datePipe.transform(b[field], 'dd/MM/yyyy')
-      ) {
-        return -1;
-      } else if (
-        this.datePipe.transform(a[field], 'dd/MM/yyyy') >
-        this.datePipe.transform(b[field], 'dd/MM/yyyy')
-      ) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-  }
-
-  orderbyFieldVehicle(field: string, schedule: Schedule[]) {
-    schedule.sort((a: any, b: any) => {
-      if (a.vehicle[field] < b.vehicle[field]) {
-        return -1;
-      } else if (a.vehicle[field] > b.vehicle[field]) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-  }
+  // orderbyFieldDate(field: string, schedule: Schedule[]) {
+  //   schedule.sort((a: any, b: any) => {
+  //     if (
+  //       this.datePipe.transform(a[field], 'dd/MM/yyyy') <
+  //       this.datePipe.transform(b[field], 'dd/MM/yyyy')
+  //     ) {
+  //       return -1;
+  //     } else if (
+  //       this.datePipe.transform(a[field], 'dd/MM/yyyy') >
+  //       this.datePipe.transform(b[field], 'dd/MM/yyyy')
+  //     ) {
+  //       return 1;
+  //     } else {
+  //       return 0;
+  //     }
+  //   });
+  // }
 
   //#endregion
 
@@ -386,6 +395,8 @@ export class SchedulerComponent implements OnInit {
     const scheduler = new Schedule();
     scheduler.situation = 'Sem conflitos';
     scheduler.archived = false;
+    scheduler.readonly = false;
+    scheduler._id = '';
     scheduler.startDate = new Date();
     scheduler.endDate = new Date();
     scheduler.startTime = new Date();
@@ -393,6 +404,7 @@ export class SchedulerComponent implements OnInit {
     scheduler.vehicle = new Vehicle();
     scheduler.vehicle._id = '';
     scheduler.vehicle.carPlate = '';
+    this.orderNew(scheduler);
     return scheduler;
   }
 
@@ -426,6 +438,11 @@ export class SchedulerComponent implements OnInit {
           'Por favor, preencha os campos antes de salvar os dados!'
         );
       }
+      if (schedule.situation === Schedule.Situation.Conflict) {
+        throw new Error(
+          'Por favor, verifique rotas em conflitos antes de salvar os dados!'
+        );
+      }
     });
   }
 
@@ -439,12 +456,12 @@ export class SchedulerComponent implements OnInit {
         }
       }
     });
-    this.orderBy();
   }
 
   removeSchedule(schedule) {
     schedule.archived = true;
     schedule.status = GeoRoute.Status.Inactive;
+    this.orderby();
   }
 
   removeRoute(route) {

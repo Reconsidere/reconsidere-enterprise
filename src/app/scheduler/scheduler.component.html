@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<div class="container">
+<div class="container-fluid">
   <div
     *ngIf="message"
     class="alert alert-warning alert-dismissible fade show"
@@ -131,58 +131,88 @@
           </tr>
           <tr *ngIf="route.expand && !route.archived">
             <th>
-              <input
-                #carPlateFilter
-                name="carPlate"
-                type="text"
-                class="inputFilter"
-                (input)="search = carPlateFilter"
-              />
+              <div class="input-icon-wrap">
+                <span class="input-icon"
+                  ><span class="fa fa-pencil"></span
+                ></span>
+                <input
+                  #carPlateFilter
+                  name="carPlate"
+                  type="text"
+                  class="input-with-icon"
+                  (input)="search = carPlateFilter"
+                />
+              </div>
             </th>
             <th>
-              <input
-                #situationFilter
-                name="situation"
-                type="text"
-                class="inputFilter"
-                (input)="search = situationFilter"
-              />
+              <div class="input-icon-wrap">
+                <span class="input-icon"
+                  ><span class="fa fa-pencil"></span
+                ></span>
+                <input
+                  #situationFilter
+                  name="situation"
+                  type="text"
+                  class="input-with-icon"
+                  (input)="search = situationFilter"
+                />
+              </div>
             </th>
             <th>
-              <p-calendar
-                #startDateFilter
-                name="startDate"
-                dateFormat="dd/mm/yy"
-                (onSelect)="search = startDateFilter"
-              ></p-calendar>
+              <div class="input-icon-wrap">
+                <span class="input-icon"
+                  ><span class="fa fa-calendar"></span
+                ></span>
+                <p-calendar
+                  #startDateFilter
+                  name="startDate"
+                  dateFormat="dd/mm/yy"
+                  (onSelect)="search = startDateFilter"
+                ></p-calendar>
+              </div>
             </th>
             <th>
-              <p-calendar
-                #endDateFilter
-                name="endDate"
-                dateFormat="dd/mm/yy"
-                (onSelect)="search = endDateFilter"
-              ></p-calendar>
+              <div class="input-icon-wrap">
+                <span class="input-icon"
+                  ><span class="fa fa-calendar"></span
+                ></span>
+                <p-calendar
+                  #endDateFilter
+                  name="endDate"
+                  dateFormat="dd/mm/yy"
+                  (onSelect)="search = endDateFilter"
+                ></p-calendar>
+              </div>
             </th>
             <th>
-              <p-calendar
-                #startTime
-                name="startTime"
-                pattern="HH:mm"
-                timeOnly="true"
-                hourFormat="24"
-                (onSelect)="search = startTime"
-              ></p-calendar>
+              <div class="input-icon-wrap">
+                <span class="input-icon"
+                  ><span class="fa fa-clock-o"></span
+                ></span>
+                <p-calendar
+                  #startTime
+                  name="startTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  hourFormat="24"
+                  (onSelect)="search = startTime"
+                ></p-calendar>
+              </div>
             </th>
             <th>
-              <p-calendar
-                #endTime
-                name="endTime"
-                pattern="HH:mm"
-                timeOnly="true"
-                hourFormat="24"
-                (onSelect)="search = endTime"
-              ></p-calendar>
+              <div class="input-icon-wrap">
+                <span class="input-icon"
+                  ><span class="fa fa-clock-o"></span
+                ></span>
+                <p-calendar
+                  #endTime
+                  name="endTime"
+                  pattern="HH:mm"
+                  timeOnly="true"
+                  hourFormat="24"
+                  (onSelect)="search = endTime"
+                ></p-calendar>
+              </div>
             </th>
           </tr>
           <tr *ngIf="route.expand" id="Titles">
@@ -204,9 +234,9 @@
           >
             <tr *ngIf="route.expand">
               <td
-                [attr.rowspan]="schedule.rowsVehicle"
+                [attr.rowspan]="schedule.rows"
                 class="titleGroup"
-                *ngIf="!schedule.readonly && schedule.showVehicle"
+                *ngIf="!schedule.readonly && schedule.show"
               >
                 <select
                   required
@@ -223,16 +253,18 @@
                   >
                 </select>
               </td>
-              <td *ngIf="schedule.readonly && schedule.showVehicle"
-              [attr.rowspan]="schedule.rowsVehicle"
+              <td
+                class="titleGroup"
+                *ngIf="schedule.readonly && schedule.show"
+                [attr.rowspan]="schedule.rows"
               >
                 {{ schedule.vehicle.carPlate }}
               </td>
               <td>{{ schedule.situation }}</td>
               <td
                 class="titleGroup"
-                [attr.rowspan]="schedule.rowsStartDate"
-                *ngIf="schedule.showStartDate"
+                [attr.rowspan]="schedule.rows"
+                *ngIf="schedule.show"
               >
                 <p-calendar
                   name="startDate"
@@ -250,8 +282,8 @@
 
               <td
                 class="titleGroup"
-                [attr.rowspan]="schedule.rowsEndDate"
-                *ngIf="schedule.showEndDate"
+                [attr.rowspan]="schedule.rows"
+                *ngIf="schedule.show"
               >
                 <p-calendar
                   name="endDate"

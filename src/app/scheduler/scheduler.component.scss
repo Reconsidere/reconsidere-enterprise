@@ -165,19 +165,22 @@
 
 @media only screen and (max-width: 800px) {
 
-
+  .titleGroup {
+    vertical-align: middle;
+    text-align: center;
+  }
 
   #flip-scroll .cf:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }
 	#flip-scroll * html .cf { zoom: 1; }
 	#flip-scroll *:first-child+html .cf { zoom: 1; }
 
-	#flip-scroll table { width: 30%; border-collapse: collapse; border-spacing: 0; }
+	#flip-scroll table { width: 100%; border-collapse: collapse; border-spacing: 0; }
 
 	#flip-scroll th,
 	#flip-scroll td { margin: 0; vertical-align: top; }
 	#flip-scroll th { text-align: left; }
 
-	#flip-scroll table { display: block; position: relative; width: 30%; }
+	#flip-scroll table { display: block; position: relative; width: 100%; }
 	#flip-scroll thead { display: block; float: left; }
 	#flip-scroll tbody { display: block; width: auto; position: relative; overflow-x: auto; white-space: nowrap; }
 	#flip-scroll thead tr { display: block; }
@@ -209,6 +212,30 @@
 //   overflow: auto !important;
 // }
 
+
+
+.input-icon-wrap {
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: row;
+}
+
+.input-icon {
+  background: #007bff;
+  color: white;
+}
+
+.input-with-icon {
+  border: none;
+  flex: 1;
+}
+
+.input-icon, .input-with-icon {
+  padding: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+
+}
 
 
 

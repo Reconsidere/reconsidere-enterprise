@@ -398,7 +398,7 @@ organizations.route('/update/scheduler/:id').put(function(req, res, next) {
     else {
       var route = org.georoutes.id(req.body._id);
       if (!route) {
-        org.georoutes.push(req.body);
+        org.georoutes = req.body;
         org
           .update(org)
           .then(org => {

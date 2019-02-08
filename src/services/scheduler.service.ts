@@ -13,7 +13,7 @@ export class SchedulerService {
   constructor(private http: HttpClient) {}
 
   createOrUpdate(organizatioId: string, georoute: GeoRoute[]) {
-    this.add(organizatioId, georoute);
+    this.update(organizatioId, georoute);
   }
 
   private add(organizationId, georoute: GeoRoute[]) {
@@ -26,7 +26,7 @@ export class SchedulerService {
       .subscribe(res => console.log('Done'));
   }
 
-  private update(organizationId, georoute: GeoRoute) {
+  private update(organizationId, georoute: GeoRoute[]) {
     this.http
       .put(
         environment.database.uri +
