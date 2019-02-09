@@ -116,12 +116,12 @@ export class TermFilterPipe implements PipeTransform {
           const count = schedules.filter(
             item => item.vehicle.carPlate === schedule.vehicle.carPlate
           ).length;
-          schedule.rows = count;
-          schedule.show = true;
+          schedule.rowsVehicle = count;
+          schedule.showVehicle = true;
           alreadyExist = true;
         } else {
-          schedule.rows = 0;
-          schedule.show = false;
+          schedule.rowsVehicle = 0;
+          schedule.showVehicle = false;
         }
       } else {
         alreadyExist = false;
@@ -129,13 +129,67 @@ export class TermFilterPipe implements PipeTransform {
           const count = schedules.filter(
             item => item.vehicle.carPlate === schedule.vehicle.carPlate
           ).length;
-          schedule.rows = count;
-          schedule.show = true;
+          schedule.rowsVehicle = count;
+          schedule.showVehicle = true;
           compareValue = schedule.vehicle.carPlate;
           alreadyExist = true;
         } else {
-          schedule.rows = 0;
-          schedule.show = false;
+          schedule.rowsVehicle = 0;
+          schedule.showVehicle = false;
+        }
+      }
+    });
+  }
+  grouByFieldStartDate(schedules: any) {
+    if (schedules === undefined || schedules.length <= 0) {
+      return;
+    }
+    let alreadyExist = false;
+    let prim = true;
+    let compareValue: any;
+    schedules.forEach(schedule => {
+      if (prim) {
+        compareValue = this.datePipe.transform(
+          schedule.startDate,
+          'dd/MM/yyyy'
+        );
+        prim = false;
+      }
+      if (
+        compareValue ===
+        this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+      ) {
+        if (!alreadyExist) {
+          const count = schedules.filter(
+            item =>
+              this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
+              this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+          ).length;
+          schedule.rowsStartDate = count;
+          schedule.showStartDate = true;
+          alreadyExist = true;
+        } else {
+          schedule.rowsStartDate = 0;
+          schedule.showStartDate = false;
+        }
+      } else {
+        alreadyExist = false;
+        if (!alreadyExist) {
+          const count = schedules.filter(
+            item =>
+              this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
+              this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+          ).length;
+          schedule.rowsStartDate = count;
+          schedule.showStartDate = true;
+          compareValue = this.datePipe.transform(
+            schedule.startDate,
+            'dd/MM/yyyy'
+          );
+          alreadyExist = true;
+        } else {
+          schedule.rowsStartDate = 0;
+          schedule.showStartDate = false;
         }
       }
     });
@@ -162,12 +216,12 @@ export class TermFilterPipe implements PipeTransform {
               this.datePipe.transform(item.endDate, 'dd/MM/yyyy') ===
               this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
           ).length;
-          schedule.rows = count;
-          schedule.show = true;
+          schedule.rowsEndDate = count;
+          schedule.showEndDate = true;
           alreadyExist = true;
         } else {
-          schedule.rows = 0;
-          schedule.show = false;
+          schedule.rowsEndDate = 0;
+          schedule.showEndDate = false;
         }
       } else {
         alreadyExist = false;
@@ -177,73 +231,20 @@ export class TermFilterPipe implements PipeTransform {
               this.datePipe.transform(item.endDate, 'dd/MM/yyyy') ===
               this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
           ).length;
-          schedule.rows = count;
-          schedule.show = true;
+          schedule.rowsEndDate = count;
+          schedule.showEndDate = true;
           compareValue = this.datePipe.transform(
             schedule.endDate,
             'dd/MM/yyyy'
           );
           alreadyExist = true;
         } else {
-          schedule.rows = 0;
-          schedule.show = false;
+          schedule.rowsEndDate = 0;
+          schedule.showEndDate = false;
         }
       }
     });
   }
 
-  grouByFieldStartDate(schedules: any) {
-    if (schedules === undefined || schedules.length <= 0) {
-      return;
-    }
-    let alreadyExist = false;
-    let prim = true;
-    let compareValue: any;
-    schedules.forEach(schedule => {
-      if (prim) {
-        compareValue = this.datePipe.transform(
-          schedule.startDate,
-          'dd/MM/yyyy'
-        );
-        prim = false;
-      }
-      if (
-        compareValue ===
-        this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
-      ) {
-        if (!alreadyExist) {
-          const count = schedules.filter(
-            item =>
-              this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
-              this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
-          ).length;
-          schedule.rows = count;
-          schedule.show = true;
-          alreadyExist = true;
-        } else {
-          schedule.rows = 0;
-          schedule.show = false;
-        }
-      } else {
-        alreadyExist = false;
-        if (!alreadyExist) {
-          const count = schedules.filter(
-            item =>
-              this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
-              this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
-          ).length;
-          schedule.rows = count;
-          schedule.show = true;
-          compareValue = this.datePipe.transform(
-            schedule.startDate,
-            'dd/MM/yyyy'
-          );
-          alreadyExist = true;
-        } else {
-          schedule.rows = 0;
-          schedule.show = false;
-        }
-      }
-    });
-  }
+
 }

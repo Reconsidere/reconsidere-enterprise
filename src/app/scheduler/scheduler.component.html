@@ -46,7 +46,7 @@
       class="form-control"
       (input)="searchRoute = nameFilter"
     />
-    <table class="">
+    <table class="table-sm">
       <ng-template
         ngFor
         let-route
@@ -233,70 +233,76 @@
             let-igroup="index"
           >
             <tr *ngIf="route.expand">
-              <td
-                [attr.rowspan]="schedule.rows"
-                class="titleGroup"
-                *ngIf="!schedule.readonly && schedule.show"
-              >
-                <select
-                  required
-                  [(ngModel)]="schedule.vehicle"
-                  name="carPlate"
-                  class="form-control"
-                  (change)="verifyConflict(schedule)"
+              <td *ngIf="!schedule.readonly" >
+                <div
+                  [attr.rowspan]="schedule.rowsVehicle"
+                  class="titleGroup"
+                  *ngIf="schedule.showVehicle"
                 >
-                  <option
-                    id="vehicles"
-                    [ngValue]="item"
-                    *ngFor="let item of vehicles"
-                    >{{ item.carPlate }}</option
+                  <select
+                    required
+                    [(ngModel)]="schedule.vehicle"
+                    name="carPlate"
+                    class="form-control"
+                    (change)="verifyConflict(schedule)"
                   >
-                </select>
-              </td>
-              <td
-                class="titleGroup"
-                *ngIf="schedule.readonly && schedule.show"
-                [attr.rowspan]="schedule.rows"
-              >
-                {{ schedule.vehicle.carPlate }}
-              </td>
-              <td>{{ schedule.situation }}</td>
-              <td
-                class="titleGroup"
-                [attr.rowspan]="schedule.rows"
-                *ngIf="schedule.show"
-              >
-                <p-calendar
-                  name="startDate"
-                  dateFormat="dd/mm/yy"
-                  (ngModelChange)="schedule.startDate = $event"
-                  [ngModel]="schedule.startDate | dateconvert"
-                  [minDate]="minDateValue"
-                  [maxDate]="maxDateValue"
-                  (onSelect)="verifyConflict(schedule)"
-                  [readonlyInput]="true"
-                  [disabled]="schedule.readonly"
-                  required
-                ></p-calendar>
+                    <option
+                      id="vehicles"
+                      [ngValue]="item"
+                      *ngFor="let item of vehicles"
+                      >{{ item.carPlate }}</option
+                    >
+                  </select>
+                </div>
               </td>
 
-              <td
-                class="titleGroup"
-                [attr.rowspan]="schedule.rows"
-                *ngIf="schedule.show"
-              >
-                <p-calendar
-                  name="endDate"
-                  dateFormat="dd/mm/yy"
-                  (ngModelChange)="schedule.endDate = $event"
-                  [ngModel]="schedule.endDate | dateconvert"
-                  [minDate]="minDateValue"
-                  [maxDate]="maxDateValue"
-                  [readonlyInput]="true"
-                  (onSelect)="verifyConflict(schedule)"
-                  [disabled]="schedule.readonly"
-                  required
-                ></p-calendar>
+              <td class="titleGroup" *ngIf="schedule.readonly" >
+                <div
+                  [attr.rowspan]="schedule.rowsVehicle"
+                  *ngIf="schedule.showVehicle"
+                >
+                  {{ schedule.vehicle.carPlate }}
+                </div>
+              </td>
+              <td>{{ schedule.situation }}</td>
+              <td class="titleGroup">
+                <div
+                  [attr.rowspan]="schedule.rowsStartDate"
+                  *ngIf="schedule.showStartDate"
+                >
+                  <p-calendar
+                    name="startDate"
+                    dateFormat="dd/mm/yy"
+                    (ngModelChange)="schedule.startDate = $event"
+                    [ngModel]="schedule.startDate | dateconvert"
+                    [minDate]="minDateValue"
+                    [maxDate]="maxDateValue"
+                    (onSelect)="verifyConflict(schedule)"
+                    [readonlyInput]="true"
+                    [disabled]="schedule.readonly"
+                    required
+                  ></p-calendar>
+                </div>
+              </td>
+
+              <td class="titleGroup">
+                <div
+                  [attr.rowspan]="schedule.rowsEndDate"
+                  *ngIf="schedule.showEndDate"
+                >
+                  <p-calendar
+                    name="endDate"
+                    dateFormat="dd/mm/yy"
+                    (ngModelChange)="schedule.endDate = $event"
+                    [ngModel]="schedule.endDate | dateconvert"
+                    [minDate]="minDateValue"
+                    [maxDate]="maxDateValue"
+                    [readonlyInput]="true"
+                    (onSelect)="verifyConflict(schedule)"
+                    [disabled]="schedule.readonly"
+                    required
+                  ></p-calendar>
+                </div>
               </td>
               <td>
                 <p-calendar

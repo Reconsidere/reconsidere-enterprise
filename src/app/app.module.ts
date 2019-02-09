@@ -35,7 +35,6 @@ import { RecaptchaModule } from 'angular-google-recaptcha';
 import { BooltransformPipe } from '../pipes/booltransform.pipe';
 import {CalendarModule} from 'primeng/calendar';
 import { DateconvertPipe } from '../pipes/dateconvert.pipe';
-import { GroupbyPipe } from '../pipes/groupby.pipe';
 import { TermFilterPipe } from '../pipes/term-filter.pipe';
 
 
@@ -58,7 +57,6 @@ registerLocaleData(localePt);
     VehicleManagementComponent,
     BooltransformPipe,
     DateconvertPipe,
-    GroupbyPipe,
     TermFilterPipe,
   ],
   imports: [
