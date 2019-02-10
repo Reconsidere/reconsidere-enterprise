@@ -15,8 +15,7 @@ export class TermFilterPipe implements PipeTransform {
     if (items && !value) {
       const values = items.map(x => x.schedules);
       if (values[0] === undefined) {
-        this.orderby(items);
-        return items;
+        return this.orderby(items);
       }
     }
 
@@ -25,24 +24,30 @@ export class TermFilterPipe implements PipeTransform {
     }
 
     if (field === 'carPlate') {
-      return items.filter(singleItem =>
-        singleItem.vehicle[field].toLowerCase().includes(value.toLowerCase())
+      return this.orderby(
+        items.filter(singleItem =>
+          singleItem.vehicle[field].toLowerCase().includes(value.toLowerCase())
+        )
       );
     }
 
     if (field === 'startDate' || field === 'endDate') {
-      return items.filter(singleItem =>
-        this.datePipe
-          .transform(singleItem[field], 'dd/MM/yyyy')
-          .includes(this.datePipe.transform(value, 'dd/MM/yyyy'))
+      return this.orderby(
+        items.filter(singleItem =>
+          this.datePipe
+            .transform(singleItem[field], 'dd/MM/yyyy')
+            .includes(this.datePipe.transform(value, 'dd/MM/yyyy'))
+        )
       );
     }
 
     if (field === 'startTime' || field === 'endTime') {
-      return items.filter(singleItem =>
-        this.datePipe
-          .transform(singleItem[field], 'HH:mm')
-          .includes(this.datePipe.transform(value, 'HH:mm'))
+      return this.orderby(
+        items.filter(singleItem =>
+          this.datePipe
+            .transform(singleItem[field], 'HH:mm')
+            .includes(this.datePipe.transform(value, 'HH:mm'))
+        )
       );
     }
 
@@ -51,12 +56,14 @@ export class TermFilterPipe implements PipeTransform {
         singleItem[field].toLowerCase().includes(value.toLowerCase())
       );
       if (val === undefined || val.length <= 0) {
-        return items;
+        return this.orderby(val);
       }
     }
 
-    return items.filter(singleItem =>
-      singleItem[field].toLowerCase().includes(value.toLowerCase())
+    return this.orderby(
+      items.filter(singleItem =>
+        singleItem[field].toLowerCase().includes(value.toLowerCase())
+      )
     );
   }
 
@@ -67,6 +74,7 @@ export class TermFilterPipe implements PipeTransform {
     this.grouByFieldStartDate(items);
     this.orderbyFieldDate('endDate', items);
     this.grouByFieldEndDate(items);
+    return items;
   }
 
   orderbyFieldVehicle(field: string, schedule: Schedule[]) {
@@ -245,6 +253,4 @@ export class TermFilterPipe implements PipeTransform {
       }
     });
   }
-
-
 }
