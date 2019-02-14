@@ -263,7 +263,6 @@ export class SchedulerComponent implements OnInit {
   removeSchedule(schedule) {
     schedule.archived = true;
     schedule.status = GeoRoute.Status.Inactive;
-    //this.orderby();
   }
 
   removeRoute(route) {

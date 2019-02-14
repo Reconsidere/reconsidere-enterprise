@@ -1,21 +1,21 @@
 <div *ngIf="menu"><app-toolbar></app-toolbar></div>
 <div class="container-fluid">
   <div
-  *ngIf="message"
-  class="alert alert-warning alert-dismissible fade show"
-  role="alert"
->
-  <strong>Atenção: </strong> {{ message }}
-  <button
-    type="button"
-    (click)="closeMessage()"
-    class="close"
-    data-dismiss="alert"
-    aria-label="Close"
+    *ngIf="message"
+    class="alert alert-warning alert-dismissible fade show"
+    role="alert"
   >
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
+    <strong>Atenção: </strong> {{ msgStatus }}
+    <button
+      type="button"
+      (click)="closeMessage()"
+      class="close"
+      data-dismiss="alert"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
   <form ngNativeValidate>
     <div class="card">
@@ -30,7 +30,10 @@
                 [(ngModel)]="this.organization.classification"
                 name="classification"
                 class="form-control"
-                (change)="TypeOrganization(this.organization.classification)"
+                (blur)="requiredCheck($event)"
+                (change)="
+                  TypeOrganization(this.organization.classification, $event)
+                "
               >
                 <option
                   id="classification"
@@ -53,6 +56,7 @@
             id="email"
             aria-describedby="email"
             placeholder="empresa@email.com"
+            (blur)="requiredCheck($event)"
           />
         </div>
         <div class="row">
@@ -63,12 +67,13 @@
                 minlength="6"
                 maxlength="20"
                 required
-                [(ngModel)]="organization.password"
+                [(ngModel)]="passwordOrganization"
                 name="password"
                 type="password"
                 class="form-control"
                 id="password"
                 aria-describedby="password"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -80,12 +85,13 @@
                 maxlength="20"
                 required
                 [(ngModel)]="confirmPasswordOrganization"
+                (ngModelChange)="confirmPasswordOrganization = $event"
                 name="confirmPassword"
                 type="password"
                 class="form-control"
                 id="confirmPassword"
                 aria-describedby="confirmPassword"
-                (blur)="verifyPasswordOrganization()"
+                (blur)="verifyPasswordOrganization($event)"
               />
               <div
                 *ngIf="isValidPasswordOrganization == false"
@@ -96,7 +102,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group" *ngIf="dynamicCnpj" >
+        <div class="form-group" *ngIf="dynamicCnpj">
           <label for="cnpj">CNPJ</label>
           <input
             required
@@ -108,7 +114,7 @@
             aria-describedby="cnpj"
             placeholder="00.000.000/0000-00"
             mask="00.000.000/0000-00"
-            (blur)="verifyCNPJ()"
+            (blur)="verifyCNPJ($event)"
           />
           <div *ngIf="isValidCNPJ == false" class="input-group is-invalid">
             CNPJ inválido
@@ -127,6 +133,7 @@
                 class="form-control"
                 id="company"
                 aria-describedby="company"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -142,6 +149,7 @@
                 class="form-control"
                 id="tradingName"
                 aria-describedby="tradingName"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -160,6 +168,7 @@
                 aria-describedby="phone"
                 placeholder="(00) 0000-0000"
                 mask="(00) 0000-0000"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -176,6 +185,7 @@
                 aria-describedby="cellPhone"
                 placeholder="(00) 00000-0000"
                 mask="(00) 00000-0000"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -186,12 +196,14 @@
           <div class="anil_nepal">
             <label class="switch switch-left-right">
               <input
+                #organizationActive
                 name="activeOrganization"
                 class="switch-input"
                 type="checkbox"
                 checked="organization.active"
                 checklist-value="organization.active"
                 checklist-model="organization.active"
+                (change)="enableDisbale(organization, organizationActive)"
               />
 
               <span class="switch-label" data-on="On" data-off="Off"></span>
@@ -206,7 +218,7 @@
       <div class="card-header">Unidade</div>
       <div class="card-body">
         <div class="tableUnits">
-          <table  class="table table-hover table-sm">
+          <table class="table table-hover table-sm">
             <thead>
               <tr id="Titles">
                 <th>Nome</th>
@@ -276,6 +288,7 @@
                 class="form-control"
                 id="nameUnit"
                 aria-describedby="nameUnit"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -300,11 +313,20 @@
                     placeholder="00.000-000"
                     mask="00.000-000"
                     #cepVal
-                    (blur)="CEPSearch(cepVal.value)"
+                    (blur)="CEPSearch(cepVal.value, $event)"
                   />
                 </div>
               </div>
             </div>
+
+            <div class="centered">
+              <img
+                *ngIf="loading"
+                class="pl-2"
+                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+              />
+            </div>
+
             <div class="row">
               <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="form-group">
@@ -317,6 +339,7 @@
                     class="form-control"
                     id="publicPlace"
                     aria-describedby="publicPlace"
+                    (blur)="requiredCheck($event)"
                   />
                 </div>
               </div>
@@ -331,6 +354,7 @@
                     class="form-control"
                     id="neighborhood"
                     aria-describedby="neighborhood"
+                    (blur)="requiredCheck($event)"
                   />
                 </div>
               </div>
@@ -341,11 +365,14 @@
                     required
                     [(ngModel)]="unit.location.number"
                     name="number"
+                    min="0"
                     type="number"
                     class="form-control"
                     id="number"
                     numbers-only
                     aria-describedby="number"
+                    (blur)="requiredCheck($event)"
+                    oninput="this.value = Math.abs(this.value)"
                   />
                 </div>
               </div>
@@ -362,6 +389,7 @@
                     class="form-control"
                     id="county"
                     aria-describedby="county"
+                    (blur)="requiredCheck($event)"
                   />
                 </div>
               </div>
@@ -377,6 +405,7 @@
                     id="state"
                     numbers-only
                     aria-describedby="state"
+                    (blur)="requiredCheck($event)"
                   />
                 </div>
               </div>
@@ -393,6 +422,7 @@
                     class="form-control"
                     id="complement"
                     aria-describedby="complement"
+                    (blur)="requiredCheck($event)"
                   />
                 </div>
               </div>
@@ -414,7 +444,7 @@
       <div class="card-header">Usuários</div>
       <div class="card-body">
         <div class="tableUsers">
-          <table  class="table table-hover table-sm">
+          <table class="table table-hover table-sm">
             <thead>
               <tr id="Titles">
                 <th>Nome</th>
@@ -483,6 +513,7 @@
                 class="form-control"
                 id="name"
                 aria-describedby="name"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -497,6 +528,7 @@
                 id="emailuser"
                 aria-describedby="emailuser"
                 placeholder="usuario@email.com"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -508,12 +540,13 @@
               <input
                 minlength="6"
                 maxlength="20"
-                [(ngModel)]="user.password"
+                [(ngModel)]="passwordUser"
                 name="userpassword"
                 type="password"
                 class="form-control"
                 id="userpassword"
                 aria-describedby="userpassword"
+                (blur)="requiredCheck($event)"
               />
             </div>
           </div>
@@ -529,7 +562,7 @@
                 class="form-control"
                 id="confirmPasswordUser"
                 aria-describedby="confirmPasswordUser"
-                (blur)="verifyPasswordUser()"
+                (blur)="verifyPasswordUser($event)"
               />
               <div
                 *ngIf="isValidPasswordUser == false"
@@ -547,41 +580,31 @@
             <div class="row">
               <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                 <div class="form-group">
-                  <label for="password">Nome</label>
+                  <label for="nameProfile">Nome</label>
                   <input
-                    [(ngModel)]="profile.name"
+                    [(ngModel)]="user.profile.name"
                     name="nameProfile"
                     type="text"
                     class="form-control"
                     id="nameProfile"
                     aria-describedby="nameProfile"
+                    (blur)="requiredCheck($event)"
                   />
                 </div>
               </div>
-              <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="anil_nepal">
-                  <label
-                    class="switch switch-left-right"
-                    *ngFor="let profile of profiles"
-                  >
-                    <input
-                      [checked]="isChecked"
-                      name="profiles"
-                      class="switch-input"
-                      type="checkbox"
-                      checklist-value="profile"
-                      (change)="profileChange(profile, $event.target.checked)"
-                    />
-
-                    <span
-                      class="switch-label"
-                      data-on="On"
-                      data-off="Off"
-                    ></span>
-                    <span class="switch-handle"></span>
-                    <span class="spacingText">{{ profile }}</span>
-                  </label>
-                </div>
+              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                <label for="classification">Perfil</label>
+                <select
+                  required
+                  [(ngModel)]="user.profile.access"
+                  name="profile"
+                  class="form-control"
+                  (blur)="requiredCheck($event)"
+                >
+                  <option id="profile" *ngFor="let profile of profiles">{{
+                    profile
+                  }}</option>
+                </select>
               </div>
             </div>
           </div>
@@ -591,12 +614,14 @@
             <div class="anil_nepal">
               <label class="switch switch-left-right">
                 <input
+                  #userActive
                   name="userActive"
                   class="switch-input"
                   type="checkbox"
                   checked="user.active"
                   checklist-value="user.active"
                   checklist-model="user.active"
+                  (change)="enableDisbale(user, userActive)"
                 />
 
                 <span class="switch-label" data-on="On" data-off="Off"></span>

@@ -131,64 +131,53 @@
           </tr>
           <tr *ngIf="route.expand && !route.archived">
             <th>
-              <div class="input-icon-wrap">
-                <span class="input-icon"
-                  ><span class="fa fa-pencil"></span
-                ></span>
+              <div class="input-wrapper">
                 <input
                   #carPlateFilter
                   name="carPlate"
                   type="text"
-                  class="input-with-icon"
+                  class="inputFilter"
                   (input)="search = carPlateFilter"
                 />
+                <label class="fa fa-pencil input-icon"></label>
               </div>
             </th>
             <th>
-              <div class="input-icon-wrap">
-                <span class="input-icon"
-                  ><span class="fa fa-pencil"></span
-                ></span>
+              <div class="input-wrapper">
                 <input
                   #situationFilter
                   name="situation"
                   type="text"
-                  class="input-with-icon"
+                  class="inputFilter"
                   (input)="search = situationFilter"
                 />
+                <label class="fa fa-pencil input-icon"></label>
               </div>
             </th>
             <th>
-              <div class="input-icon-wrap">
-                <span class="input-icon"
-                  ><span class="fa fa-calendar"></span
-                ></span>
+              <div class="input-wrapper">
                 <p-calendar
                   #startDateFilter
                   name="startDate"
                   dateFormat="dd/mm/yy"
                   (onSelect)="search = startDateFilter"
                 ></p-calendar>
+                <label class="fa fa-calendar input-icon"></label>
               </div>
             </th>
             <th>
-              <div class="input-icon-wrap">
-                <span class="input-icon"
-                  ><span class="fa fa-calendar"></span
-                ></span>
+              <div class="input-wrapper">
                 <p-calendar
                   #endDateFilter
                   name="endDate"
                   dateFormat="dd/mm/yy"
                   (onSelect)="search = endDateFilter"
                 ></p-calendar>
+                <label class="fa fa-calendar input-icon"></label>
               </div>
             </th>
             <th>
-              <div class="input-icon-wrap">
-                <span class="input-icon"
-                  ><span class="fa fa-clock-o"></span
-                ></span>
+              <div class="input-wrapper">
                 <p-calendar
                   #startTime
                   name="startTime"
@@ -197,13 +186,11 @@
                   hourFormat="24"
                   (onSelect)="search = startTime"
                 ></p-calendar>
+                <label class="fa fa-clock-o input-icon"></label>
               </div>
             </th>
             <th>
-              <div class="input-icon-wrap">
-                <span class="input-icon"
-                  ><span class="fa fa-clock-o"></span
-                ></span>
+              <div class="input-wrapper">
                 <p-calendar
                   #endTime
                   name="endTime"
@@ -212,6 +199,7 @@
                   hourFormat="24"
                   (onSelect)="search = endTime"
                 ></p-calendar>
+                <label class="fa fa-clock-o input-icon"></label>
               </div>
             </th>
           </tr>
@@ -232,8 +220,8 @@
             [ngForOf]="route.schedules | termFilter: search.name:search.value"
             let-igroup="index"
           >
-            <tr *ngIf="route.expand">
-              <td *ngIf="!schedule.readonly" >
+            <tr *ngIf="route.expand && !schedule.archived">
+              <td *ngIf="!schedule.readonly">
                 <div
                   [attr.rowspan]="schedule.rowsVehicle"
                   class="titleGroup"
@@ -256,7 +244,7 @@
                 </div>
               </td>
 
-              <td class="titleGroup" *ngIf="schedule.readonly" >
+              <td class="titleGroup" *ngIf="schedule.readonly">
                 <div
                   [attr.rowspan]="schedule.rowsVehicle"
                   *ngIf="schedule.showVehicle"

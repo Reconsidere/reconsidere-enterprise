@@ -1,8 +1,9 @@
+import { environment } from 'src/environments/environment';
 import { AppService } from 'src/services/app.service';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { MatListModule } from '@angular/material/list';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, LOCALE_ID } from '@angular/core';
+import { NgModule, LOCALE_ID, enableProdMode } from '@angular/core';
 import { APP_BASE_HREF, CommonModule, DatePipe } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,10 +34,9 @@ import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { DecriptEncript } from './_helpers/decriptencript';
 import { RecaptchaModule } from 'angular-google-recaptcha';
 import { BooltransformPipe } from '../pipes/booltransform.pipe';
-import {CalendarModule} from 'primeng/calendar';
+import { CalendarModule } from 'primeng/calendar';
 import { DateconvertPipe } from '../pipes/dateconvert.pipe';
 import { TermFilterPipe } from '../pipes/term-filter.pipe';
-
 
 
 
@@ -57,7 +57,7 @@ registerLocaleData(localePt);
     VehicleManagementComponent,
     BooltransformPipe,
     DateconvertPipe,
-    TermFilterPipe,
+    TermFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -78,7 +78,7 @@ registerLocaleData(localePt);
     RecaptchaModule.forRoot({
       siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF'
     }),
-    CalendarModule,
+    CalendarModule
   ],
 
   providers: [

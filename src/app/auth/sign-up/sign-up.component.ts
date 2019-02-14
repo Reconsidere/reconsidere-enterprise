@@ -36,10 +36,11 @@ export class SignUpComponent implements OnInit {
   profiles: string[];
   organization: Organization;
   user: User;
-  profile: Profile;
   msgStatus: string;
   message: boolean;
   confirmPasswordOrganization: string;
+  passwordOrganization: string;
+  passwordUser: string;
   confirmPasswordUser: string;
   myRecaptcha: boolean;
   unit: Units;
@@ -53,6 +54,7 @@ export class SignUpComponent implements OnInit {
   isChecked: boolean;
   menu: boolean;
   dynamicCnpj: boolean;
+  loading: boolean;
 
   constructor(
     private authService: AuthService,
@@ -67,8 +69,8 @@ export class SignUpComponent implements OnInit {
     this.unit = new Units();
     this.unit.location = new Location();
     this.user = new User();
+    this.user.profile = new Profile();
     this.user.active = true;
-    this.profile = new Profile();
   }
 
   ngOnInit() {
@@ -78,6 +80,7 @@ export class SignUpComponent implements OnInit {
     this.pageUnit = 1;
     this.pageUser = 1;
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
+    this.loading = false;
   }
 
   setId(id) {
@@ -97,11 +100,19 @@ export class SignUpComponent implements OnInit {
     if (this.organization.users !== undefined) {
       this.show = true;
     }
-    this.confirmPasswordOrganization = this.organization.password;
+    this.confirmPasswordOrganization = this.authService.decript(
+      this.organization.password
+    );
+    this.passwordOrganization = this.confirmPasswordOrganization;
   }
 
-  CEPSearch(value) {
-    this.cepService.search(value, this.unit.location);
+  CEPSearch(value, e) {
+    if (e.target.value === undefined || e.target.value === '') {
+      this.requiredCheck(e);
+      return;
+    }
+    this.loading = true;
+    this.cepService.search(value, this.unit.location, this);
   }
 
   clean() {
@@ -110,15 +121,17 @@ export class SignUpComponent implements OnInit {
     this.unit = new Units();
     this.unit.location = new Location();
     this.user = new User();
+    this.user.profile = new Profile();
     this.user.active = true;
-    this.profile = new Profile();
+    this.passwordOrganization = undefined;
+    this.passwordUser = undefined;
   }
 
   closeMessage() {
     this.message = undefined;
   }
 
-  TypeOrganization(value) {
+  TypeOrganization(value, e) {
     if (value === Organization.Classification.Cooperativa) {
       this.dynamicCnpj = true;
     } else if (value === Organization.Classification.Privada) {
@@ -129,64 +142,97 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  profileChange(value, checked) {
-    if (this.profile === undefined && checked) {
-      this.profile.access = [value];
-    } else if (this.profile !== undefined && checked) {
-      if (this.profile.access === undefined) {
-        this.profile.access = [value];
-      } else {
-        this.profile.access.push(value);
-      }
-    } else if (!checked) {
-      this.profile.access.forEach((item, index) => {
-        if (item === value) {
-          this.profile.access.splice(index, 1);
-        }
-      });
+  verifyPasswordOrganization(e) {
+    this.requiredCheck(e);
+    if (
+      this.passwordOrganization === undefined ||
+      this.passwordOrganization === '' ||
+      (this.confirmPasswordOrganization === undefined &&
+        this.confirmPasswordOrganization === '')
+    ) {
+      return;
+    }
+    if (
+      this.passwordOrganization === undefined ||
+      this.passwordOrganization === '' ||
+      this.confirmPasswordOrganization === undefined ||
+      this.confirmPasswordOrganization === ''
+    ) {
+      this.isValidPasswordOrganization = false;
+      return;
+    }
+    this.organization.password = this.passwordOrganization;
+    this.organization.password = this.authService.encript(
+      this.organization.password
+    );
+    this.confirmPasswordOrganization = this.authService.encript(
+      this.confirmPasswordOrganization
+    );
+
+    this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
+      this.organization.password,
+      this.confirmPasswordOrganization
+    );
+    setTimeout(function() {}.bind(this), 1000);
+    if (this.isValidPasswordOrganization) {
+      this.confirmPasswordOrganization = this.passwordOrganization;
+    } else {
+      this.confirmPasswordOrganization = this.authService.decript(
+        this.confirmPasswordOrganization
+      );
+    }
+  }
+  verifyPasswordUser(e) {
+    this.requiredCheck(e);
+    if (
+      this.passwordUser === undefined ||
+      this.passwordUser === '' ||
+      (this.confirmPasswordUser === undefined &&
+        this.confirmPasswordUser === '')
+    ) {
+      return;
+    }
+    if (
+      this.passwordUser === undefined ||
+      this.passwordUser === '' ||
+      this.confirmPasswordUser === undefined ||
+      this.confirmPasswordUser === ''
+    ) {
+      this.isValidPasswordUser = false;
+      return;
+    }
+    this.user.password = this.passwordUser;
+    this.user.password = this.authService.encript(this.user.password);
+    this.confirmPasswordUser = this.authService.encript(
+      this.confirmPasswordUser
+    );
+
+    this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
+      this.user.password,
+      this.confirmPasswordUser
+    );
+    setTimeout(function() {}.bind(this), 1000);
+    if (this.isValidPasswordUser) {
+      this.confirmPasswordUser = this.passwordUser;
+    } else {
+      this.confirmPasswordUser = this.authService.decript(
+        this.confirmPasswordUser
+      );
+    }
+  }
+  requiredCheck(e) {
+    if (e.target.value === undefined || e.target.value === '') {
+      e.target.classList.add('is-invalid');
+    } else {
+      e.target.classList.remove('is-invalid');
     }
   }
 
-  verifyPasswordOrganization() {
-    if (this.organization._id !== undefined) {
-      this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
-        this.authService.decript(this.organization.password),
-        this.confirmPasswordOrganization
-      );
-      setTimeout(function() {}.bind(this), 1000);
-    } else {
-      this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
-        this.organization.password,
-        this.confirmPasswordOrganization
-      );
-      if (this.isValidPasswordOrganization) {
-        this.organization.password = this.authService.encript(
-          this.organization.password
-        );
-      }
+  verifyCNPJ(e) {
+    if (e.target.value === undefined || e.target.value === '') {
+      this.requiredCheck(e);
+      return;
     }
-    setTimeout(function() {}.bind(this), 1000);
-  }
-  verifyPasswordUser() {
-    if (this.user._id !== undefined) {
-      this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
-        this.authService.decript(this.user.password),
-        this.confirmPasswordUser
-      );
-      setTimeout(function() {}.bind(this), 1000);
-    } else {
-      this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
-        this.user.password,
-        this.confirmPasswordUser
-      );
-      if (this.isValidPasswordUser) {
-        this.user.password = this.authService.encript(this.user.password);
-      }
-    }
-    setTimeout(function() {}.bind(this), 1000);
-  }
-
-  verifyCNPJ() {
     this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
     setTimeout(function() {}.bind(this), 1000);
   }
@@ -247,11 +293,12 @@ export class SignUpComponent implements OnInit {
       return;
     }
 
-    if (this.organization.units === undefined) {
+    if (this.organization.units === undefined && this.unit._id === undefined) {
       const unit = new Units();
       unit.name = this.unit.name;
       unit.location = this.unit.location;
       this.organization.units = [unit];
+      add = true;
     } else if (this.organization.units !== undefined) {
       this.organization.units.forEach((unit, index) => {
         if (this.unit === unit) {
@@ -266,7 +313,7 @@ export class SignUpComponent implements OnInit {
     }
     this.cleanLocation();
     this.showUnit = true;
-    this.msgStatus = 'Usuário adicionado com sucesso';
+    this.msgStatus = 'Unidade adicionada com sucesso';
   }
 
   cleanLocation() {
@@ -287,6 +334,7 @@ export class SignUpComponent implements OnInit {
       this.unit.location.publicPlace === undefined ||
       this.unit.location.neighborhood === undefined ||
       this.unit.location.number === undefined ||
+      this.unit.location.number < 0 ||
       this.unit.location.county === undefined
     ) {
       this.message = true;
@@ -297,13 +345,16 @@ export class SignUpComponent implements OnInit {
     return true;
   }
 
+  enableDisbale(item, e) {
+    item.active = e.checked;
+  }
+
   addOrUpdateUser() {
     let add = false;
     this.message = true;
     if (!this.veryfyBeforeAddUser()) {
       return;
     }
-    this.user.profiles = [this.profile];
     if (this.organization.users === undefined && this.user._id === undefined) {
       this.organization.users = [this.user];
       this.cleanUser();
@@ -324,7 +375,7 @@ export class SignUpComponent implements OnInit {
   }
   cleanUser() {
     this.user = new User();
-    this.profile = new Profile();
+    this.user.profile = new Profile();
     this.user.active = true;
     if (this.isChecked !== undefined) {
       this.isChecked = undefined;
@@ -332,6 +383,7 @@ export class SignUpComponent implements OnInit {
       this.isChecked = false;
     }
     this.confirmPasswordUser = undefined;
+    this.passwordUser = undefined;
   }
 
   veryfyBeforeAddUser() {
@@ -357,8 +409,14 @@ export class SignUpComponent implements OnInit {
 
   editUser(user: any) {
     this.user = user;
-    this.user.password = this.authService.encript(user.password);
-    this.confirmPasswordUser = user.password;
+    if (this.user._id) {
+      this.passwordUser = this.authService.decript(user.password);
+      this.confirmPasswordUser = this.passwordUser;
+    }
+    if (this.user._id === undefined || this.user._id === '') {
+      this.passwordUser = this.authService.decript(this.user.password);
+      this.confirmPasswordUser = this.passwordUser;
+    }
   }
   editLocation(unit: any) {
     this.unit = unit;

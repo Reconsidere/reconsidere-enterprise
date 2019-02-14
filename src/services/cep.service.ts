@@ -10,14 +10,18 @@ export class CepService {
   private adrress: string[];
   constructor(private http: HttpClient) {}
 
-  search(value: string, location: Location) {
+  search(value: string, location: Location, page) {
     value = value.replace(/[^a-zA-Z0-9 ]/g, '');
-    return this.http
-      .get(`https://viacep.com.br/ws/${value}/json/`)
-      .subscribe(
-        data => this.convertToCEP(data, location),
-        error => console.log(error)
-      );
+    return this.http.get(`https://viacep.com.br/ws/${value}/json/`).subscribe(
+      data => {
+        this.convertToCEP(data, location);
+        page.loading = false;
+      },
+      error => {
+        console.log(error);
+        page.loading = false;
+      }
+    );
   }
   private convertToCEP(cepNaResposta, location) {
     location.cep = cepNaResposta.cep;
