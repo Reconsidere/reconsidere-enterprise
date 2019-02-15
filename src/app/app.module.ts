@@ -37,6 +37,7 @@ import { BooltransformPipe } from '../pipes/booltransform.pipe';
 import { CalendarModule } from 'primeng/calendar';
 import { DateconvertPipe } from '../pipes/dateconvert.pipe';
 import { TermFilterPipe } from '../pipes/term-filter.pipe';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 
 
@@ -57,7 +58,7 @@ registerLocaleData(localePt);
     VehicleManagementComponent,
     BooltransformPipe,
     DateconvertPipe,
-    TermFilterPipe
+    TermFilterPipe,
   ],
   imports: [
     BrowserModule,
@@ -78,7 +79,8 @@ registerLocaleData(localePt);
     RecaptchaModule.forRoot({
       siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF'
     }),
-    CalendarModule
+    CalendarModule,
+    MatFormFieldModule
   ],
 
   providers: [

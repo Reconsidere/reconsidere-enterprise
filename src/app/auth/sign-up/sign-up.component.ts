@@ -38,8 +38,6 @@ export class SignUpComponent implements OnInit {
   user: User;
   msgStatus: string;
   message: boolean;
-  confirmPasswordOrganization: string;
-  passwordOrganization: string;
   passwordUser: string;
   confirmPasswordUser: string;
   myRecaptcha: boolean;
@@ -52,7 +50,7 @@ export class SignUpComponent implements OnInit {
   organizationId: string;
   returnUrl: string;
   isChecked: boolean;
-  menu: boolean;
+  isLogged: boolean;
   dynamicCnpj: boolean;
   loading: boolean;
 
@@ -86,12 +84,12 @@ export class SignUpComponent implements OnInit {
   setId(id) {
     this.organizationId = id;
     if (id !== undefined) {
-      this.menu = true;
+      this.isLogged = true;
       this.authService
         .getOrganization(this.organizationId, this.organization)
         .subscribe(item => this.loadOrganization(item), error => error);
     } else {
-      this.menu = false;
+      this.isLogged = false;
     }
   }
 
@@ -100,10 +98,6 @@ export class SignUpComponent implements OnInit {
     if (this.organization.users !== undefined) {
       this.show = true;
     }
-    this.confirmPasswordOrganization = this.authService.decript(
-      this.organization.password
-    );
-    this.passwordOrganization = this.confirmPasswordOrganization;
   }
 
   CEPSearch(value, e) {
@@ -123,7 +117,6 @@ export class SignUpComponent implements OnInit {
     this.user = new User();
     this.user.profile = new Profile();
     this.user.active = true;
-    this.passwordOrganization = undefined;
     this.passwordUser = undefined;
   }
 
@@ -142,46 +135,6 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-  verifyPasswordOrganization(e) {
-    this.requiredCheck(e);
-    if (
-      this.passwordOrganization === undefined ||
-      this.passwordOrganization === '' ||
-      (this.confirmPasswordOrganization === undefined &&
-        this.confirmPasswordOrganization === '')
-    ) {
-      return;
-    }
-    if (
-      this.passwordOrganization === undefined ||
-      this.passwordOrganization === '' ||
-      this.confirmPasswordOrganization === undefined ||
-      this.confirmPasswordOrganization === ''
-    ) {
-      this.isValidPasswordOrganization = false;
-      return;
-    }
-    this.organization.password = this.passwordOrganization;
-    this.organization.password = this.authService.encript(
-      this.organization.password
-    );
-    this.confirmPasswordOrganization = this.authService.encript(
-      this.confirmPasswordOrganization
-    );
-
-    this.isValidPasswordOrganization = ConfirmPasswordValidator.MatchPassword(
-      this.organization.password,
-      this.confirmPasswordOrganization
-    );
-    setTimeout(function() {}.bind(this), 1000);
-    if (this.isValidPasswordOrganization) {
-      this.confirmPasswordOrganization = this.passwordOrganization;
-    } else {
-      this.confirmPasswordOrganization = this.authService.decript(
-        this.confirmPasswordOrganization
-      );
-    }
-  }
   verifyPasswordUser(e) {
     this.requiredCheck(e);
     if (
@@ -241,11 +194,23 @@ export class SignUpComponent implements OnInit {
     this.message = false;
   }
   veryfyBeforeSave() {
-    if (
+    if (!this.isLogged) {
+      if (
+        this.organization.email === undefined ||
+        this.organization.company === undefined ||
+        this.organization.tradingName === undefined ||
+        this.organization.phone === undefined ||
+        this.organization.cellPhone === undefined ||
+        this.organization.classification === undefined
+      ) {
+        this.msgStatus =
+          'Por favor, preencha os campos antes de salvar os dados!';
+        return false;
+      }
+    } else if (
       this.organization.email === undefined ||
       this.organization.company === undefined ||
       this.organization.tradingName === undefined ||
-      this.organization.password === undefined ||
       this.organization.phone === undefined ||
       this.organization.cellPhone === undefined ||
       this.organization.classification === undefined ||
@@ -449,7 +414,22 @@ export class SignUpComponent implements OnInit {
     }
   }
 
+  getAdmProfile() {
+    const prof = new Profile();
+    prof.name = User.Profiles.Administrator;
+    prof.access = [User.Profiles.Administrator];
+    return prof;
+  }
+
   save() {
+    if (!this.isLogged) {
+      this.user.profile = this.getAdmProfile();
+      this.user.active = true;
+      this.veryfyBeforeAddUser();
+      this.organization.active = true;
+      this.organization.users = [this.user];
+    }
+
     if (!this.myRecaptcha) {
       this.message = true;
       this.msgStatus = 'Por favor, confirme: Não sou um robo';

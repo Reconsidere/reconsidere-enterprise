@@ -21,7 +21,6 @@ export class Organization {
   units: [Units];
   users: [User];
   email: string;
-  password: string;
   classification: string;
   vehicles: [Vehicle];
   georoutes: [GeoRoute];

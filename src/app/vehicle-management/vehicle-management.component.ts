@@ -88,6 +88,14 @@ export class VehicleManagementComponent implements OnInit {
     }
   }
 
+  requiredCheck(e) {
+    if (e.target.value === undefined || e.target.value === '') {
+      e.target.classList.add('is-invalid');
+    } else {
+      e.target.classList.remove('is-invalid');
+    }
+  }
+
   veryfyBeforeSave(vehicle) {
     if (
       !vehicle.carPlate ||

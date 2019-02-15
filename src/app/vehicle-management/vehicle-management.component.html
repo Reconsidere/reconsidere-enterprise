@@ -63,6 +63,7 @@
               aria-describedby="carPlate"
               placeholder="AAA-0000"
               mask="SSS-0000"
+              (blur)="requiredCheck($event)"
             />
           </td>
           <td>
@@ -71,10 +72,13 @@
               [(ngModel)]="vehicle.weightCapacity"
               name="weightCapacity"
               type="number"
+              min="0"
+              format="#0.##"
               class="form-control"
               id="weightCapacity"
               aria-describedby="weightCapacity"
               placeholder="0.0"
+              (blur)="requiredCheck($event)"
             />
           </td>
           <td>
@@ -83,10 +87,12 @@
               [(ngModel)]="vehicle.emptyVehicleWeight"
               name="emptyVehicleWeight"
               type="number"
+              min="0"
               class="form-control"
               id="emptyVehicleWeight"
               aria-describedby="emptyVehicleWeight"
               placeholder="0.0"
+              (blur)="requiredCheck($event)"
             />
           </td>
           <td>
@@ -94,11 +100,13 @@
               required
               [(ngModel)]="vehicle.fuel"
               name="fuel"
+              min="0"
               type="number"
               class="form-control"
               id="fuel"
               aria-describedby="fuel"
               placeholder="0.0"
+              (blur)="requiredCheck($event)"
             />
           </td>
           <td colspan="2">
@@ -107,6 +115,7 @@
               [(ngModel)]="vehicle.typeFuel"
               name="typeFuel"
               class="form-control"
+              (blur)="requiredCheck($event)"
             >
               <option id="typeFuel" *ngFor="let item of typesFuel">{{
                 item

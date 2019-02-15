@@ -7,7 +7,6 @@ var OrganizationSchema = new mongoose.Schema({
   class: String,
   phone: Number,
   email: String,
-  password: String,
   classification: String,
   cellPhone: Number,
   creationDate: { type: Date, default: Date.now },
@@ -41,12 +40,10 @@ var OrganizationSchema = new mongoose.Schema({
     {
       name: String,
       email: String,
-      profiles: [
-        {
-          name: String,
-          access: [String]
-        }
-      ],
+      profile: {
+        name: String,
+        access: [String]
+      },
       password: String,
       active: Boolean
     }
@@ -100,7 +97,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const URL = 'mongodb://eowynreconsideredb:271Eq088@docdb-2019-01-15-22-36-15.cqnawh2jjso4.us-east-2.docdb.amazonaws.com:27017/?ssl_ca_certs=rds-combined-ca-bundle.pem';
+const URL =
+  'mongodb://eowynreconsideredb:271Eq088@docdb-2019-01-15-22-36-15.cqnawh2jjso4.us-east-2.docdb.amazonaws.com:27017/?ssl_ca_certs=rds-combined-ca-bundle.pem';
 const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
 const options = {
   autoIndex: false, // Don't build indexes
@@ -111,9 +109,14 @@ const options = {
   bufferMaxEntries: 0
 };
 
-mongoose.connect(TestURL, options).catch(err => {
-  console.error('Erro ao conectar no banco: ' + err.stack);
-});
+mongoose
+  .connect(
+    TestURL,
+    options
+  )
+  .catch(err => {
+    console.error('Erro ao conectar no banco: ' + err.stack);
+  });
 
 organizations.route('/add').post(function(req, res) {
   var organization = new organizationModel(req.body);

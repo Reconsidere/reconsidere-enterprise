@@ -16,6 +16,7 @@ export class SignInComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   error = '';
+  hidepassword =  true;
 
   constructor(
     private formBuilder: FormBuilder,

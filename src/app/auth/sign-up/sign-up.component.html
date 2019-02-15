@@ -1,4 +1,4 @@
-<div *ngIf="menu"><app-toolbar></app-toolbar></div>
+<div *ngIf="isLogged"><app-toolbar></app-toolbar></div>
 <div class="container-fluid">
   <div
     *ngIf="message"
@@ -45,79 +45,42 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            required
-            [(ngModel)]="organization.email"
-            name="email"
-            type="email"
-            class="form-control"
-            id="email"
-            aria-describedby="email"
-            placeholder="empresa@email.com"
-            (blur)="requiredCheck($event)"
-          />
-        </div>
         <div class="row">
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
             <div class="form-group">
-              <label for="password">Senha</label>
+              <label for="email">Contato empresarial</label>
               <input
-                minlength="6"
-                maxlength="20"
                 required
-                [(ngModel)]="passwordOrganization"
-                name="password"
-                type="password"
+                [(ngModel)]="organization.email"
+                name="email"
+                type="email"
                 class="form-control"
-                id="password"
-                aria-describedby="password"
+                id="email"
+                aria-describedby="email"
+                placeholder="empresa@email.com"
                 (blur)="requiredCheck($event)"
               />
             </div>
           </div>
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="confirmPassword">Confirmação de senha</label>
+            <div class="form-group" *ngIf="dynamicCnpj">
+              <label for="cnpj">CNPJ</label>
               <input
-                minlength="6"
-                maxlength="20"
                 required
-                [(ngModel)]="confirmPasswordOrganization"
-                (ngModelChange)="confirmPasswordOrganization = $event"
-                name="confirmPassword"
-                type="password"
+                [(ngModel)]="organization.cnpj"
+                name="cnpj"
+                type="text"
                 class="form-control"
-                id="confirmPassword"
-                aria-describedby="confirmPassword"
-                (blur)="verifyPasswordOrganization($event)"
+                id="cnpj"
+                aria-describedby="cnpj"
+                placeholder="00.000.000/0000-00"
+                mask="00.000.000/0000-00"
+                (blur)="verifyCNPJ($event)"
               />
-              <div
-                *ngIf="isValidPasswordOrganization == false"
-                class="input-group is-invalid"
-              >
-                Senha não coincide
+              <div *ngIf="isValidCNPJ == false" class="input-group is-invalid">
+                CNPJ inválido
               </div>
             </div>
-          </div>
-        </div>
-        <div class="form-group" *ngIf="dynamicCnpj">
-          <label for="cnpj">CNPJ</label>
-          <input
-            required
-            [(ngModel)]="organization.cnpj"
-            name="cnpj"
-            type="text"
-            class="form-control"
-            id="cnpj"
-            aria-describedby="cnpj"
-            placeholder="00.000.000/0000-00"
-            mask="00.000.000/0000-00"
-            (blur)="verifyCNPJ($event)"
-          />
-          <div *ngIf="isValidCNPJ == false" class="input-group is-invalid">
-            CNPJ inválido
           </div>
         </div>
 
@@ -190,8 +153,98 @@
             </div>
           </div>
         </div>
+
+      <div  *ngIf="!isLogged" class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label for="password">Nome</label>
+            <input
+              [(ngModel)]="user.name"
+              name="name"
+              type="text"
+              class="form-control"
+              id="name"
+              aria-describedby="name"
+              (blur)="requiredCheck($event)"
+            />
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label for="password">Usuário</label>
+            <input
+              [(ngModel)]="user.email"
+              name="emailuser"
+              type="email"
+              class="form-control"
+              id="emailuser"
+              aria-describedby="emailuser"
+              placeholder="usuario@email.com"
+              (blur)="requiredCheck($event)"
+            />
+          </div>
+        </div>
       </div>
-      <div class="row">
+
+      <div  *ngIf="!isLogged" class="row">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label for="userpassword">Senha</label>
+            <div class="input-group">
+              <input
+                minlength="6"
+                maxlength="20"
+                [(ngModel)]="passwordUser"
+                name="userpassword"
+                type="password"
+                class="form-control"
+                id="userpassword"
+                aria-describedby="userpassword"
+                (blur)="requiredCheck($event)"
+                placeholder="mínimo 6 caracteres"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <mat-hint>{{ passwordUser?.length || 0 }}/20</mat-hint>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+          <div class="form-group">
+            <label for="confirmPasswordUser">Confirmação de senha</label>
+            <div class="input-group">
+              <input
+                minlength="6"
+                maxlength="20"
+                [(ngModel)]="confirmPasswordUser"
+                name="confirmPasswordUser"
+                type="password"
+                class="form-control"
+                id="confirmPasswordUser"
+                aria-describedby="confirmPasswordUser"
+                (blur)="verifyPasswordUser($event)"
+                placeholder="mínimo 6 caracteres"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <mat-hint>{{ confirmPasswordUser?.length || 0 }}/20</mat-hint>
+                </span>
+              </div>
+            </div>
+            <div
+              *ngIf="isValidPasswordUser == false"
+              class="input-group is-invalid"
+            >
+              Senha não coincide
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <div *ngIf="isLogged" class="row">
         <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
           <div class="anil_nepal">
             <label class="switch switch-left-right">
@@ -214,441 +267,465 @@
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">Unidade</div>
-      <div class="card-body">
-        <div class="tableUnits">
-          <table class="table table-hover table-sm">
-            <thead>
-              <tr id="Titles">
-                <th>Nome</th>
-                <th>Endereço</th>
-                <th>Estado</th>
-                <th>Editar</th>
-                <th>Remover</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let unit of (organization.units
-                    | paginate: { itemsPerPage: 5, currentPage: pageUnit })
-                "
-              >
-                <td hidden>{{ unit._id }}</td>
-                <td>{{ unit.name }}</td>
-                <td>{{ unit.location.neighborhood }}</td>
-                <td>{{ unit.location.state }}</td>
-                <td>
-                  <button
-                    (click)="editLocation(unit)"
-                    type="button"
-                    class="btn btn-sm btn-primary"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </td>
-                <td>
-                  <button
-                    (click)="removeUnit(unit)"
-                    type="button"
-                    class="btn btn-sm btn-danger"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-            <pagination-controls
-              (pageChange)="pageUnit = $event"
-              previousLabel="Anterior"
-              nextLabel="Próxima"
-              autoHide="true"
-              responsive="true"
-              screenReaderPaginationLabel="Pagination"
-            ></pagination-controls>
-          </table>
-        </div>
-
-        <div class="row">
-          <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="nameUnit">Nome</label>
-              <input
-                required
-                [(ngModel)]="unit.name"
-                name="nameUnit"
-                type="text"
-                class="form-control"
-                id="nameUnit"
-                aria-describedby="nameUnit"
-                (blur)="requiredCheck($event)"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">Localização</div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="cep">CEP</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.cep"
-                    cep="ngModel"
-                    name="cep"
-                    type="text"
-                    class="form-control"
-                    id="cep"
-                    aria-describedby="cep"
-                    placeholder="00.000-000"
-                    mask="00.000-000"
-                    #cepVal
-                    (blur)="CEPSearch(cepVal.value, $event)"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="centered">
-              <img
-                *ngIf="loading"
-                class="pl-2"
-                src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-              />
-            </div>
-
-            <div class="row">
-              <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="publicPlace">Logradouro</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.publicPlace"
-                    name="publicPlace"
-                    type="text"
-                    class="form-control"
-                    id="publicPlace"
-                    aria-describedby="publicPlace"
-                    (blur)="requiredCheck($event)"
-                  />
-                </div>
-              </div>
-              <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="neighborhood">Bairro</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.neighborhood"
-                    name="neighborhood"
-                    type="text"
-                    class="form-control"
-                    id="neighborhood"
-                    aria-describedby="neighborhood"
-                    (blur)="requiredCheck($event)"
-                  />
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="number">Número</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.number"
-                    name="number"
-                    min="0"
-                    type="number"
-                    class="form-control"
-                    id="number"
-                    numbers-only
-                    aria-describedby="number"
-                    (blur)="requiredCheck($event)"
-                    oninput="this.value = Math.abs(this.value)"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="county">Município</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.county"
-                    name="county"
-                    type="text"
-                    class="form-control"
-                    id="county"
-                    aria-describedby="county"
-                    (blur)="requiredCheck($event)"
-                  />
-                </div>
-              </div>
-              <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="state">UF</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.state"
-                    name="state"
-                    type="text"
-                    class="form-control"
-                    id="state"
-                    numbers-only
-                    aria-describedby="state"
-                    (blur)="requiredCheck($event)"
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="complement">Complemento</label>
-                  <input
-                    required
-                    [(ngModel)]="unit.location.complement"
-                    name="complement"
-                    type="text"
-                    class="form-control"
-                    id="complement"
-                    aria-describedby="complement"
-                    (blur)="requiredCheck($event)"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <button
-          type="button"
-          id="addLocation"
-          (click)="addOrUpdateLocation()"
-          class="btn btn-success col-md-2"
-        >
-          Adicionar
-        </button>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">Usuários</div>
-      <div class="card-body">
-        <div class="tableUsers">
-          <table class="table table-hover table-sm">
-            <thead>
-              <tr id="Titles">
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Ativo</th>
-                <th>Editar</th>
-                <th>Remover</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                *ngFor="
-                  let user of (organization.users
-                    | paginate: { itemsPerPage: 5, currentPage: pageUser })
-                "
-              >
-                <td hidden>{{ user._id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.active | booltransform }}</td>
-                <td>
-                  <button
-                    (click)="editUser(user)"
-                    type="button"
-                    class="btn btn-sm btn-primary"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                  >
-                    <i class="fa fa-edit"></i>
-                  </button>
-                </td>
-                <td>
-                  <button
-                    (click)="removeUser(user)"
-                    type="button"
-                    class="btn btn-sm btn-danger"
-                    data-toggle="button"
-                    aria-pressed="false"
-                    autocomplete="off"
-                  >
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-            <pagination-controls
-              (pageChange)="pageUser = $event"
-              previousLabel="Anterior"
-              nextLabel="Próxima"
-              autoHide="true"
-              responsive="true"
-              screenReaderPaginationLabel="Pagination"
-            ></pagination-controls>
-          </table>
-        </div>
-
-        <div class="row">
-          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="password">Nome</label>
-              <input
-                [(ngModel)]="user.name"
-                name="name"
-                type="text"
-                class="form-control"
-                id="name"
-                aria-describedby="name"
-                (blur)="requiredCheck($event)"
-              />
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="password">Email</label>
-              <input
-                [(ngModel)]="user.email"
-                name="emailuser"
-                type="email"
-                class="form-control"
-                id="emailuser"
-                aria-describedby="emailuser"
-                placeholder="usuario@email.com"
-                (blur)="requiredCheck($event)"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="userpassword">Senha</label>
-              <input
-                minlength="6"
-                maxlength="20"
-                [(ngModel)]="passwordUser"
-                name="userpassword"
-                type="password"
-                class="form-control"
-                id="userpassword"
-                aria-describedby="userpassword"
-                (blur)="requiredCheck($event)"
-              />
-            </div>
-          </div>
-          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="form-group">
-              <label for="confirmPasswordUser">Confirmação de senha</label>
-              <input
-                minlength="6"
-                maxlength="20"
-                [(ngModel)]="confirmPasswordUser"
-                name="confirmPasswordUser"
-                type="password"
-                class="form-control"
-                id="confirmPasswordUser"
-                aria-describedby="confirmPasswordUser"
-                (blur)="verifyPasswordUser($event)"
-              />
-              <div
-                *ngIf="isValidPasswordUser == false"
-                class="input-group is-invalid"
-              >
-                Senha não coincide
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="card-header">Permissões</div>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                <div class="form-group">
-                  <label for="nameProfile">Nome</label>
-                  <input
-                    [(ngModel)]="user.profile.name"
-                    name="nameProfile"
-                    type="text"
-                    class="form-control"
-                    id="nameProfile"
-                    aria-describedby="nameProfile"
-                    (blur)="requiredCheck($event)"
-                  />
-                </div>
-              </div>
-              <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-                <label for="classification">Perfil</label>
-                <select
-                  required
-                  [(ngModel)]="user.profile.access"
-                  name="profile"
-                  class="form-control"
-                  (blur)="requiredCheck($event)"
+    <div *ngIf="isLogged">
+      <div class="card">
+        <div class="card-header">Unidade</div>
+        <div class="card-body">
+          <div class="tableUnits">
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr id="Titles">
+                  <th>Nome</th>
+                  <th>Endereço</th>
+                  <th>Estado</th>
+                  <th>Editar</th>
+                  <th>Remover</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let unit of (organization.units
+                      | paginate: { itemsPerPage: 5, currentPage: pageUnit })
+                  "
                 >
-                  <option id="profile" *ngFor="let profile of profiles">{{
-                    profile
-                  }}</option>
-                </select>
+                  <td hidden>{{ unit._id }}</td>
+                  <td>{{ unit.name }}</td>
+                  <td>{{ unit.location.neighborhood }}</td>
+                  <td>{{ unit.location.state }}</td>
+                  <td>
+                    <button
+                      (click)="editLocation(unit)"
+                      type="button"
+                      class="btn btn-sm btn-primary"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      autocomplete="off"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="removeUnit(unit)"
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      autocomplete="off"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <pagination-controls
+                (pageChange)="pageUnit = $event"
+                previousLabel="Anterior"
+                nextLabel="Próxima"
+                autoHide="true"
+                responsive="true"
+                screenReaderPaginationLabel="Pagination"
+              ></pagination-controls>
+            </table>
+          </div>
+
+          <div class="row">
+            <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="nameUnit">Nome</label>
+                <input
+                  required
+                  [(ngModel)]="unit.name"
+                  name="nameUnit"
+                  type="text"
+                  class="form-control"
+                  id="nameUnit"
+                  aria-describedby="nameUnit"
+                  (blur)="requiredCheck($event)"
+                />
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="anil_nepal">
-              <label class="switch switch-left-right">
-                <input
-                  #userActive
-                  name="userActive"
-                  class="switch-input"
-                  type="checkbox"
-                  checked="user.active"
-                  checklist-value="user.active"
-                  checklist-model="user.active"
-                  (change)="enableDisbale(user, userActive)"
-                />
 
-                <span class="switch-label" data-on="On" data-off="Off"></span>
-                <span class="switch-handle"></span>Ativo
-              </label>
+          <div class="card">
+            <div class="card-header">Localização</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-xl-2 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.cep"
+                      cep="ngModel"
+                      name="cep"
+                      type="text"
+                      class="form-control"
+                      id="cep"
+                      aria-describedby="cep"
+                      placeholder="00.000-000"
+                      mask="00.000-000"
+                      #cepVal
+                      (blur)="CEPSearch(cepVal.value, $event)"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div class="centered">
+                <img
+                  *ngIf="loading"
+                  class="pl-2"
+                  src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
+                />
+              </div>
+
+              <div class="row">
+                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="publicPlace">Logradouro</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.publicPlace"
+                      name="publicPlace"
+                      type="text"
+                      class="form-control"
+                      id="publicPlace"
+                      aria-describedby="publicPlace"
+                      (blur)="requiredCheck($event)"
+                    />
+                  </div>
+                </div>
+                <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="neighborhood">Bairro</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.neighborhood"
+                      name="neighborhood"
+                      type="text"
+                      class="form-control"
+                      id="neighborhood"
+                      aria-describedby="neighborhood"
+                      (blur)="requiredCheck($event)"
+                    />
+                  </div>
+                </div>
+                <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="number">Número</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.number"
+                      name="number"
+                      min="0"
+                      type="number"
+                      class="form-control"
+                      id="number"
+                      numbers-only
+                      aria-describedby="number"
+                      (blur)="requiredCheck($event)"
+                      oninput="this.value = Math.abs(this.value)"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="county">Município</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.county"
+                      name="county"
+                      type="text"
+                      class="form-control"
+                      id="county"
+                      aria-describedby="county"
+                      (blur)="requiredCheck($event)"
+                    />
+                  </div>
+                </div>
+                <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="state">UF</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.state"
+                      name="state"
+                      type="text"
+                      class="form-control"
+                      id="state"
+                      numbers-only
+                      aria-describedby="state"
+                      (blur)="requiredCheck($event)"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="complement">Complemento</label>
+                    <input
+                      required
+                      [(ngModel)]="unit.location.complement"
+                      name="complement"
+                      type="text"
+                      class="form-control"
+                      id="complement"
+                      aria-describedby="complement"
+                      (blur)="requiredCheck($event)"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+          <button
+            type="button"
+            id="addLocation"
+            (click)="addOrUpdateLocation()"
+            class="btn btn-success col-md-2"
+          >
+            Adicionar
+          </button>
         </div>
-        <button
-          type="button"
-          id="add"
-          (click)="addOrUpdateUser()"
-          class="btn btn-success col-md-2"
-        >
-          Adicionar
-        </button>
       </div>
-    </div>
 
-    <div class="card">
-      <div class="card-header">Assinatura</div>
-      <div class="card-body"></div>
-    </div>
+      <div class="card">
+        <div class="card-header">Usuários</div>
+        <div class="card-body">
+          <div class="tableUsers">
+            <table class="table table-hover table-sm">
+              <thead>
+                <tr id="Titles">
+                  <th>Nome</th>
+                  <th>Email</th>
+                  <th>Ativo</th>
+                  <th>Editar</th>
+                  <th>Remover</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  *ngFor="
+                    let user of (organization.users
+                      | paginate: { itemsPerPage: 5, currentPage: pageUser })
+                  "
+                >
+                  <td hidden>{{ user._id }}</td>
+                  <td>{{ user.name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.active | booltransform }}</td>
+                  <td>
+                    <button
+                      (click)="editUser(user)"
+                      type="button"
+                      class="btn btn-sm btn-primary"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      autocomplete="off"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      (click)="removeUser(user)"
+                      type="button"
+                      class="btn btn-sm btn-danger"
+                      data-toggle="button"
+                      aria-pressed="false"
+                      autocomplete="off"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              <pagination-controls
+                (pageChange)="pageUser = $event"
+                previousLabel="Anterior"
+                nextLabel="Próxima"
+                autoHide="true"
+                responsive="true"
+                screenReaderPaginationLabel="Pagination"
+              ></pagination-controls>
+            </table>
+          </div>
 
-    <div class="card">
-      <div class="card-header">Materiais</div>
-      <div class="card-body"></div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="password">Nome</label>
+                <input
+                  [(ngModel)]="user.name"
+                  name="name"
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  aria-describedby="name"
+                  (blur)="requiredCheck($event)"
+                />
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="password">Email</label>
+                <input
+                  [(ngModel)]="user.email"
+                  name="emailuser"
+                  type="email"
+                  class="form-control"
+                  id="emailuser"
+                  aria-describedby="emailuser"
+                  placeholder="usuario@email.com"
+                  (blur)="requiredCheck($event)"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="userpassword">Senha</label>
+                <div class="input-group">
+                  <input
+                    minlength="6"
+                    maxlength="20"
+                    [(ngModel)]="passwordUser"
+                    name="userpassword"
+                    type="password"
+                    class="form-control"
+                    id="userpassword"
+                    aria-describedby="userpassword"
+                    (blur)="requiredCheck($event)"
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <mat-hint
+                        >{{
+                          confirmPasswordOrganization?.length || 0
+                        }}/20</mat-hint
+                      >
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="confirmPasswordUser">Confirmação de senha</label>
+                <div class="input-group">
+                  <input
+                    minlength="6"
+                    maxlength="20"
+                    [(ngModel)]="confirmPasswordUser"
+                    name="confirmPasswordUser"
+                    type="password"
+                    class="form-control"
+                    id="confirmPasswordUser"
+                    aria-describedby="confirmPasswordUser"
+                    (blur)="verifyPasswordUser($event)"
+                  />
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <mat-hint
+                        >{{
+                          confirmPasswordOrganization?.length || 0
+                        }}/20</mat-hint
+                      >
+                    </span>
+                  </div>
+                </div>
+                <div
+                  *ngIf="isValidPasswordUser == false"
+                  class="input-group is-invalid"
+                >
+                  Senha não coincide
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">Permissões</div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <div class="form-group">
+                    <label for="nameProfile">Nome</label>
+                    <input
+                      [(ngModel)]="user.profile.name"
+                      name="nameProfile"
+                      type="text"
+                      class="form-control"
+                      id="nameProfile"
+                      aria-describedby="nameProfile"
+                      (blur)="requiredCheck($event)"
+                    />
+                  </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                  <label for="classification">Perfil</label>
+                  <select
+                    required
+                    [(ngModel)]="user.profile.access"
+                    name="profile"
+                    class="form-control"
+                    (blur)="requiredCheck($event)"
+                  >
+                    <option id="profile" *ngFor="let profile of profiles">{{
+                      profile
+                    }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
+              <div class="anil_nepal">
+                <label class="switch switch-left-right">
+                  <input
+                    #userActive
+                    name="userActive"
+                    class="switch-input"
+                    type="checkbox"
+                    checked="user.active"
+                    checklist-value="user.active"
+                    checklist-model="user.active"
+                    (change)="enableDisbale(user, userActive)"
+                  />
+
+                  <span class="switch-label" data-on="On" data-off="Off"></span>
+                  <span class="switch-handle"></span>Ativo
+                </label>
+              </div>
+            </div>
+          </div>
+          <button
+            type="button"
+            id="add"
+            (click)="addOrUpdateUser()"
+            class="btn btn-success col-md-2"
+          >
+            Adicionar
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Assinatura</div>
+        <div class="card-body"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">Materiais</div>
+        <div class="card-body"></div>
+      </div>
     </div>
 
     <div class="g-recaptcha">
