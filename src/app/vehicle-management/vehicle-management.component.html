@@ -67,47 +67,68 @@
             />
           </td>
           <td>
-            <input
-              required
-              [(ngModel)]="vehicle.weightCapacity"
-              name="weightCapacity"
-              type="number"
-              min="0"
-              mask="#0.##"
-              class="form-control"
-              id="weightCapacity"
-              aria-describedby="weightCapacity"
-              placeholder="0.0"
-              (blur)="requiredCheck($event)"
-            />
+            <div class="input-group">
+              <input
+                required
+                [(ngModel)]="vehicle.weightCapacity"
+                name="weightCapacity"
+                type="text"
+                mask="000.0000"
+                class="form-control"
+                id="weightCapacity"
+                aria-describedby="weightCapacity"
+                placeholder="000.0000"
+                (blur)="requiredCheck($event)"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <span>t</span>
+                </span>
+              </div>
+            </div>
           </td>
           <td>
-            <input
-              required
-              [(ngModel)]="vehicle.emptyVehicleWeight"
-              name="emptyVehicleWeight"
-              type="number"
-              min="0"
-              class="form-control"
-              id="emptyVehicleWeight"
-              aria-describedby="emptyVehicleWeight"
-              placeholder="0.0"
-              (blur)="requiredCheck($event)"
-            />
+            <div class="input-group">
+              <input
+                required
+                [(ngModel)]="vehicle.emptyVehicleWeight"
+                name="emptyVehicleWeight"
+                type="text"
+                mask="000.0000"
+                class="form-control"
+                id="emptyVehicleWeight"
+                aria-describedby="emptyVehicleWeight"
+                placeholder="000.0000"
+                (blur)="requiredCheck($event)"
+              />
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <span>t</span>
+                </span>
+              </div>
+            </div>
           </td>
           <td>
+              <div class="input-group">
             <input
               required
               [(ngModel)]="vehicle.fuel"
               name="fuel"
               min="0"
-              type="number"
               class="form-control"
               id="fuel"
               aria-describedby="fuel"
-              placeholder="0.0"
+              type="text"
+              mask="0000.00"
+              placeholder="0000.00"
               (blur)="requiredCheck($event)"
             />
+            <div class="input-group-append">
+                <span class="input-group-text">
+                  <span>l</span>
+                </span>
+              </div>
+            </div>
           </td>
           <td colspan="2">
             <select

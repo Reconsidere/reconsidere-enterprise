@@ -1,4 +1,5 @@
 mongoose = require('mongoose');
+//enviroment = require('../environments/environment.prod');
 var OrganizationSchema = new mongoose.Schema({
   company: String,
   cnpj: String,
@@ -97,8 +98,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const URL =
-  'mongodb://eowynreconsideredb:271Eq088@docdb-2019-01-15-22-36-15.cqnawh2jjso4.us-east-2.docdb.amazonaws.com:27017/?ssl_ca_certs=rds-combined-ca-bundle.pem';
 const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
 const options = {
   autoIndex: false, // Don't build indexes
@@ -109,6 +108,7 @@ const options = {
   bufferMaxEntries: 0
 };
 
+//enviroment.uri,
 mongoose
   .connect(
     TestURL,
