@@ -77,6 +77,23 @@ export class VehicleManagementComponent implements OnInit {
     this.message = undefined;
   }
 
+  verifyPlate(vehicle, e) {
+    if (e.target.value === undefined || e.target.value === '') {
+      this.requiredCheck(e);
+      return;
+    }
+
+    this.message = undefined;
+    this.vehicles.forEach(item => {
+      if (vehicle !== item) {
+        if (item.carPlate === vehicle.carPlate) {
+          this.message = 'Está placa já está em uso!';
+          return;
+        }
+      }
+    });
+  }
+
   save(vehicle) {
     try {
       this.veryfyBeforeSave(vehicle);
