@@ -84,18 +84,31 @@ export class VehicleManagementComponent implements OnInit {
     }
 
     this.message = undefined;
+
+    try {
+      this.verify(vehicle);
+    } catch (error) {
+      this.message = error;
+    }
+  }
+
+  private verify(vehicle: any) {
     this.vehicles.forEach(item => {
       if (vehicle !== item) {
         if (item.carPlate === vehicle.carPlate) {
-          this.message = 'Está placa já está em uso!';
-          return;
+          throw new Error('Está placa já está em uso!');
         }
       }
     });
   }
 
+  enableDisbale(item, e) {
+    item.active = e.checked;
+  }
+
   save(vehicle) {
     try {
+      this.verify(vehicle);
       this.veryfyBeforeSave(vehicle);
       this.vehicleService.createOrUpdate(this.organizationId, vehicle);
       this.message = 'Dados salvos com sucesso';

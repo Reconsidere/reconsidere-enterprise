@@ -109,21 +109,21 @@
             </div>
           </td>
           <td>
-              <div class="input-group">
-            <input
-              required
-              [(ngModel)]="vehicle.fuel"
-              name="fuel"
-              min="0"
-              class="form-control"
-              id="fuel"
-              aria-describedby="fuel"
-              type="text"
-              mask="0000.00"
-              placeholder="0000.00"
-              (blur)="requiredCheck($event)"
-            />
-            <div class="input-group-append">
+            <div class="input-group">
+              <input
+                required
+                [(ngModel)]="vehicle.fuel"
+                name="fuel"
+                min="0"
+                class="form-control"
+                id="fuel"
+                aria-describedby="fuel"
+                type="text"
+                mask="0000.00"
+                placeholder="0000.00"
+                (blur)="requiredCheck($event)"
+              />
+              <div class="input-group-append">
                 <span class="input-group-text">
                   <span>l</span>
                 </span>
@@ -143,15 +143,20 @@
               }}</option>
             </select>
           </td>
-          <td class="custom-control custom-checkbox">
-            <input
-              [(ngModel)]="vehicle.active"
-              name="active"
-              type="checkbox"
-              class="custom-control-input"
-              id="active"
-            />
-            <label class="custom-control-label" for="active">Ativo</label>
+          <td>
+            <label class="btn btn-default">
+              <input
+                #vehicleActive
+                [(ngModel)]="vehicle.active"
+                name="active"
+                type="checkbox"
+                autocomplete="off"
+                (change)="enableDisbale(vehicle, vehicleActive)"
+              />
+              <span class="glyphicon glyphicon-ok"></span>
+            </label>
+
+            <label class="" for="active">Ativo</label>
           </td>
           <td>
             <button
