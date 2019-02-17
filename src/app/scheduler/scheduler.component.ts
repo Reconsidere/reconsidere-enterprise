@@ -119,6 +119,7 @@ export class SchedulerComponent implements OnInit {
     } else {
       georout.schedules.push(this.newScheduler());
     }
+    georout.expand = true;
 
     if (this.georoutes === undefined || this.georoutes.length <= 0) {
       this.georoutes = [georout];
@@ -130,24 +131,16 @@ export class SchedulerComponent implements OnInit {
   orderNew(schedule: any) {
     schedule.rowsVehicle = 1;
     schedule.showVehicle = true;
-    schedule.rowsStartDate = 1;
-    schedule.showStartDate = true;
-    schedule.rowsEndDate = 1;
-    schedule.showEndDate = true;
+    schedule.rowsDate = 1;
+    schedule.showDate = true;
   }
 
   verifyConflict(schedule: Schedule) {
     this.georoutes.forEach(route => {
       route.schedules.forEach(item => {
         if (
-          (this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy') >=
-            this.datePipe.transform(item.startDate, 'dd/MM/yyyy') &&
-            this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy') <=
-              this.datePipe.transform(item.endDate, 'dd/MM/yyyy')) ||
-          (this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy') <=
-            this.datePipe.transform(item.endDate, 'dd/MM/yyyy') &&
-            this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy') >=
-              this.datePipe.transform(item.startDate, 'dd/MM/yyyy'))
+          this.datePipe.transform(schedule.date, 'dd/MM/yyyy') ===
+          this.datePipe.transform(item.date, 'dd/MM/yyyy')
         ) {
           if (schedule !== item) {
             if (
@@ -199,8 +192,7 @@ export class SchedulerComponent implements OnInit {
     scheduler.archived = false;
     scheduler.readonly = false;
     scheduler._id = '';
-    scheduler.startDate = new Date();
-    scheduler.endDate = new Date();
+    scheduler.date = new Date();
     scheduler.startTime = new Date();
     scheduler.endTime = new Date();
     scheduler.vehicle = new Vehicle();
@@ -227,8 +219,7 @@ export class SchedulerComponent implements OnInit {
     }
     route.schedules.forEach(schedule => {
       if (
-        schedule.startDate === undefined ||
-        schedule.endDate === undefined ||
+        schedule.date === undefined ||
         schedule.startTime === undefined ||
         schedule.endTime === undefined ||
         schedule.situation === undefined ||
@@ -258,6 +249,7 @@ export class SchedulerComponent implements OnInit {
         }
       }
     });
+    route.expand = true;
   }
 
   removeSchedule(schedule) {

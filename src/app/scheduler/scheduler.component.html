@@ -27,7 +27,7 @@
       aria-pressed="false"
       autocomplete="off"
     >
-      <i class="fa fa-plus"></i>
+      Nova rota
     </button>
 
     <button
@@ -36,7 +36,7 @@
       (click)="save()"
       class="btn btn-success col-md-2 pull-right"
     >
-      <i class="fa fa-save"></i>
+      Salvar tudo
     </button>
 
     <input
@@ -84,6 +84,7 @@
                 aria-pressed="false"
                 autocomplete="off"
               >
+                Expandir/Retrair
                 <i class="fa fa-caret-down"></i>
               </button>
               <button
@@ -94,6 +95,7 @@
                 aria-pressed="false"
                 autocomplete="off"
               >
+                Novo agendamento
                 <i class="fa fa-plus"></i>
               </button>
 
@@ -105,18 +107,6 @@
               >
                 <i class="fa fa-trash"></i>
               </button>
-
-              <button
-                (click)="play(route)"
-                type="button"
-                class="btn btn-sm btn-primary ml-1 pull-right"
-                data-toggle="button"
-                aria-pressed="false"
-                autocomplete="off"
-              >
-                <i class="fa fa-play"></i>
-              </button>
-
               <button
                 (click)="pause(route)"
                 type="button"
@@ -125,7 +115,19 @@
                 aria-pressed="false"
                 autocomplete="off"
               >
+                Pausar rota
                 <i class="fa fa-pause"></i>
+              </button>
+              <button
+                (click)="play(route)"
+                type="button"
+                class="btn btn-sm btn-primary ml-1 pull-right"
+                data-toggle="button"
+                aria-pressed="false"
+                autocomplete="off"
+              >
+                Iniciar rota
+                <i class="fa fa-play"></i>
               </button>
             </td>
           </tr>
@@ -157,21 +159,10 @@
             <th>
               <div class="input-wrapper">
                 <p-calendar
-                  #startDateFilter
-                  name="startDate"
+                  #dateFilter
+                  name="date"
                   dateFormat="dd/mm/yy"
-                  (onSelect)="search = startDateFilter"
-                ></p-calendar>
-                <label class="fa fa-calendar input-icon"></label>
-              </div>
-            </th>
-            <th>
-              <div class="input-wrapper">
-                <p-calendar
-                  #endDateFilter
-                  name="endDate"
-                  dateFormat="dd/mm/yy"
-                  (onSelect)="search = endDateFilter"
+                  (onSelect)="search = dateFilter"
                 ></p-calendar>
                 <label class="fa fa-calendar input-icon"></label>
               </div>
@@ -206,8 +197,7 @@
           <tr *ngIf="route.expand" id="Titles">
             <th>Veículo</th>
             <th>Situação</th>
-            <th>Data inicial</th>
-            <th>Data final</th>
+            <th>Data</th>
             <th>Hora inicial</th>
             <th>Hora final</th>
             <th>Arquivar</th>
@@ -255,38 +245,18 @@
               <td>{{ schedule.situation }}</td>
               <td class="titleGroup">
                 <div
-                  [attr.rowspan]="schedule.rowsStartDate"
-                  *ngIf="schedule.showStartDate"
+                  [attr.rowspan]="schedule.rowsDate"
+                  *ngIf="schedule.showDate"
                 >
                   <p-calendar
-                    name="startDate"
+                    name="date"
                     dateFormat="dd/mm/yy"
-                    (ngModelChange)="schedule.startDate = $event"
-                    [ngModel]="schedule.startDate | dateconvert"
+                    (ngModelChange)="schedule.date = $event"
+                    [ngModel]="schedule.date | dateconvert"
                     [minDate]="minDateValue"
                     [maxDate]="maxDateValue"
                     (onSelect)="verifyConflict(schedule)"
-                    [readonlyInput]="true"
-                    [disabled]="schedule.readonly"
-                    required
-                  ></p-calendar>
-                </div>
-              </td>
-
-              <td class="titleGroup">
-                <div
-                  [attr.rowspan]="schedule.rowsEndDate"
-                  *ngIf="schedule.showEndDate"
-                >
-                  <p-calendar
-                    name="endDate"
-                    dateFormat="dd/mm/yy"
-                    (ngModelChange)="schedule.endDate = $event"
-                    [ngModel]="schedule.endDate | dateconvert"
-                    [minDate]="minDateValue"
-                    [maxDate]="maxDateValue"
-                    [readonlyInput]="true"
-                    (onSelect)="verifyConflict(schedule)"
+                    [readonlyInput]="false"
                     [disabled]="schedule.readonly"
                     required
                   ></p-calendar>
@@ -300,7 +270,7 @@
                   hourFormat="24"
                   (ngModelChange)="schedule.startTime = $event"
                   [ngModel]="schedule.startTime | dateconvert"
-                  [readonlyInput]="true"
+                  [readonlyInput]="false"
                   (onSelect)="verifyConflict(schedule)"
                   required
                 ></p-calendar>
@@ -315,7 +285,7 @@
                   showTime="true"
                   hourFormat="24"
                   (onSelect)="verifyConflict(schedule)"
-                  [readonlyInput]="true"
+                  [readonlyInput]="false"
                   required
                 ></p-calendar>
               </td>

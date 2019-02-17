@@ -3,8 +3,7 @@ import { Vehicle } from './vehicle';
 
 export class Schedule {
   _id: string;
-  startDate: Date;
-  endDate: Date;
+  date: Date;
   startTime: Date;
   endTime: Date;
   archived: boolean;

@@ -31,7 +31,7 @@ export class TermFilterPipe implements PipeTransform {
       );
     }
 
-    if (field === 'startDate' || field === 'endDate') {
+    if (field === 'date') {
       return this.orderby(
         items.filter(singleItem =>
           this.datePipe
@@ -70,10 +70,8 @@ export class TermFilterPipe implements PipeTransform {
   orderby(items) {
     this.orderbyFieldVehicle('carPlate', items);
     this.grouByFieldVehicle(items);
-    this.orderbyFieldDate('startDate', items);
-    this.grouByFieldStartDate(items);
-    this.orderbyFieldDate('endDate', items);
-    this.grouByFieldEndDate(items);
+    this.orderbyFieldDate('date', items);
+    this.grouByFieldDate(items);
     return items;
   }
 
@@ -148,7 +146,7 @@ export class TermFilterPipe implements PipeTransform {
       }
     });
   }
-  grouByFieldStartDate(schedules: any) {
+  grouByFieldDate(schedules: any) {
     if (schedules === undefined || schedules.length <= 0) {
       return;
     }
@@ -157,98 +155,40 @@ export class TermFilterPipe implements PipeTransform {
     let compareValue: any;
     schedules.forEach(schedule => {
       if (prim) {
-        compareValue = this.datePipe.transform(
-          schedule.startDate,
-          'dd/MM/yyyy'
-        );
+        compareValue = this.datePipe.transform(schedule.date, 'dd/MM/yyyy');
         prim = false;
       }
       if (
-        compareValue ===
-        this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+        compareValue === this.datePipe.transform(schedule.date, 'dd/MM/yyyy')
       ) {
         if (!alreadyExist) {
           const count = schedules.filter(
             item =>
-              this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
-              this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+              this.datePipe.transform(item.date, 'dd/MM/yyyy') ===
+              this.datePipe.transform(schedule.date, 'dd/MM/yyyy')
           ).length;
-          schedule.rowsStartDate = count;
-          schedule.showStartDate = true;
+          schedule.rowsDate = count;
+          schedule.showDate = true;
           alreadyExist = true;
         } else {
-          schedule.rowsStartDate = 0;
-          schedule.showStartDate = false;
+          schedule.rowsDate = 0;
+          schedule.showDate = false;
         }
       } else {
         alreadyExist = false;
         if (!alreadyExist) {
           const count = schedules.filter(
             item =>
-              this.datePipe.transform(item.startDate, 'dd/MM/yyyy') ===
-              this.datePipe.transform(schedule.startDate, 'dd/MM/yyyy')
+              this.datePipe.transform(item.date, 'dd/MM/yyyy') ===
+              this.datePipe.transform(schedule.date, 'dd/MM/yyyy')
           ).length;
-          schedule.rowsStartDate = count;
-          schedule.showStartDate = true;
-          compareValue = this.datePipe.transform(
-            schedule.startDate,
-            'dd/MM/yyyy'
-          );
+          schedule.rowsDate = count;
+          schedule.showDate = true;
+          compareValue = this.datePipe.transform(schedule.date, 'dd/MM/yyyy');
           alreadyExist = true;
         } else {
-          schedule.rowsStartDate = 0;
-          schedule.showStartDate = false;
-        }
-      }
-    });
-  }
-
-  grouByFieldEndDate(schedules: any) {
-    if (schedules === undefined || schedules.length <= 0) {
-      return;
-    }
-    let alreadyExist = false;
-    let prim = true;
-    let compareValue: any;
-    schedules.forEach(schedule => {
-      if (prim) {
-        compareValue = this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy');
-        prim = false;
-      }
-      if (
-        compareValue === this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
-      ) {
-        if (!alreadyExist) {
-          const count = schedules.filter(
-            item =>
-              this.datePipe.transform(item.endDate, 'dd/MM/yyyy') ===
-              this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
-          ).length;
-          schedule.rowsEndDate = count;
-          schedule.showEndDate = true;
-          alreadyExist = true;
-        } else {
-          schedule.rowsEndDate = 0;
-          schedule.showEndDate = false;
-        }
-      } else {
-        alreadyExist = false;
-        if (!alreadyExist) {
-          const count = schedules.filter(
-            item =>
-              this.datePipe.transform(item.endDate, 'dd/MM/yyyy') ===
-              this.datePipe.transform(schedule.endDate, 'dd/MM/yyyy')
-          ).length;
-          schedule.rowsEndDate = count;
-          schedule.showEndDate = true;
-          compareValue = this.datePipe.transform(
-            schedule.endDate,
-            'dd/MM/yyyy'
-          );
-          alreadyExist = true;
-        } else {
-          schedule.rowsEndDate = 0;
-          schedule.showEndDate = false;
+          schedule.rowsDate = 0;
+          schedule.showDate = false;
         }
       }
     });

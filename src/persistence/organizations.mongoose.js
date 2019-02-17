@@ -66,8 +66,7 @@ var OrganizationSchema = new mongoose.Schema({
       status: String,
       schedules: [
         {
-          startDate: Date,
-          endDate: Date,
+          date: Date,
           startTime: Date,
           endTime: Date,
           situation: String,
