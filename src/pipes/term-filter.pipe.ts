@@ -68,11 +68,18 @@ export class TermFilterPipe implements PipeTransform {
   }
 
   orderby(items) {
-    this.orderbyFieldVehicle('carPlate', items);
-    this.grouByFieldVehicle(items);
-    this.orderbyFieldDate('date', items);
-    this.grouByFieldDate(items);
+    this.orderbyFieldVehicle('carPlate', items.filter(x => !x.archived));
+    this.grouByFieldVehicle(items.filter(x => !x.archived));
+    this.orderbyFieldDate('date', items.filter(x => !x.archived));
+    this.grouByFieldDate(items.filter(x => !x.archived));
+    this.orderbyNew('readonly', items.filter(x => !x.archived));
     return items;
+  }
+
+  orderbyNew(field: string, schedule: any) {
+    schedule.sort(function(a, b) {
+      return b[field] - a[field];
+    });
   }
 
   orderbyFieldVehicle(field: string, schedule: Schedule[]) {
@@ -113,6 +120,11 @@ export class TermFilterPipe implements PipeTransform {
     let prim = true;
     let compareValue: any;
     schedules.forEach(schedule => {
+      if (schedule.isNew) {
+        schedule.rowsDate = 1;
+        schedule.showDate = true;
+        return;
+      }
       if (prim) {
         compareValue = schedule.vehicle.carPlate;
         prim = false;
@@ -154,6 +166,11 @@ export class TermFilterPipe implements PipeTransform {
     let prim = true;
     let compareValue: any;
     schedules.forEach(schedule => {
+      if (schedule.isNew) {
+        schedule.rowsDate = 1;
+        schedule.showDate = true;
+        return;
+      }
       if (prim) {
         compareValue = this.datePipe.transform(schedule.date, 'dd/MM/yyyy');
         prim = false;

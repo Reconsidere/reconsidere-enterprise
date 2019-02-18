@@ -132,6 +132,7 @@
             </td>
           </tr>
           <tr *ngIf="route.expand && !route.archived">
+            <th colspan="2"></th>
             <th>
               <div class="input-wrapper">
                 <input
@@ -195,6 +196,7 @@
             </th>
           </tr>
           <tr *ngIf="route.expand" id="Titles">
+            <th colspan="2"></th>
             <th>Veículo</th>
             <th>Situação</th>
             <th>Data</th>
@@ -211,6 +213,7 @@
             let-igroup="index"
           >
             <tr *ngIf="route.expand && !schedule.archived">
+              <th colspan="2"></th>
               <td *ngIf="!schedule.readonly">
                 <div
                   [attr.rowspan]="schedule.rowsVehicle"
@@ -234,8 +237,9 @@
                 </div>
               </td>
 
-              <td class="titleGroup" *ngIf="schedule.readonly">
+              <td *ngIf="schedule.readonly">
                 <div
+                  class="titleGroup"
                   [attr.rowspan]="schedule.rowsVehicle"
                   *ngIf="schedule.showVehicle"
                 >
@@ -243,8 +247,9 @@
                 </div>
               </td>
               <td>{{ schedule.situation }}</td>
-              <td class="titleGroup">
+              <td>
                 <div
+                  class="titleGroup"
                   [attr.rowspan]="schedule.rowsDate"
                   *ngIf="schedule.showDate"
                 >
