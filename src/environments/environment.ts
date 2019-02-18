@@ -3,11 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: true,
-  auth: true,
+  production: false,
+  auth: false,
   database: {
-    name: 'Mongo',
-    uri: `http://localhost:3000/`
+    description: 'Eowyn Reconsidere Enterprise Development Mongo DataBase',
+    username: 'reconsidere-enterprise',
+    password: 'by4yY5A4',
+    host: 'ec2-18-216-31-156.us-east-2.compute.amazonaws.com',
+    port: '27017',
+    dbname: 'reconsideredb',
+    uri: `mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb`
   },
   secret: '154097$#@$^@1ETI',
 };
