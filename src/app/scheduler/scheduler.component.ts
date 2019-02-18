@@ -17,6 +17,7 @@ import { GeoRoute } from 'src/models/georoute';
 import { Schedule } from 'src/models/schedule';
 import { Vehicle } from 'src/models/vehicle';
 import { DatePipe } from '@angular/common';
+import { TermFilterPipe } from 'src/pipes/term-filter.pipe';
 
 @Component({
   selector: 'app-scheduler',
@@ -33,6 +34,7 @@ export class SchedulerComponent implements OnInit {
   vehicles: Vehicle[];
   search: ElementRef;
   searchRoute: ElementRef;
+  private termfilter: TermFilterPipe;
 
   constructor(
     private schedulerServive: SchedulerService,
@@ -133,43 +135,47 @@ export class SchedulerComponent implements OnInit {
     schedule.showVehicle = true;
     schedule.rowsDate = 1;
     schedule.showDate = true;
+    schedule.isNew = true;
   }
 
   verifyConflict(schedule: Schedule) {
     this.georoutes.forEach(route => {
       route.schedules.forEach(item => {
         if (
+          this.datePipe.transform(schedule.endTime, 'HH:mm') <
+          this.datePipe.transform(schedule.startTime, 'HH:mm')
+        ) {
+          schedule.situation = Schedule.Situation.Conflict;
+        } else {
+          schedule.situation = Schedule.Situation.NoConflict;
+        }
+        if (
           this.datePipe.transform(schedule.date, 'dd/MM/yyyy') ===
           this.datePipe.transform(item.date, 'dd/MM/yyyy')
         ) {
-          if (schedule !== item) {
-            if (
-              this.hourCheck(
-                schedule.startTime,
-                schedule.endTime,
-                item.startTime
-              ) ||
-              this.hourCheck(
-                schedule.startTime,
-                schedule.endTime,
-                item.endTime
-              ) ||
-              schedule.endTime < schedule.startTime
-            ) {
-              if (schedule.vehicle._id === item.vehicle._id) {
-                schedule.situation = Schedule.Situation.Conflict;
-                item.situation = Schedule.Situation.Conflict;
-              } else {
-                schedule.situation = Schedule.Situation.OverlappingRoute;
-              }
-            } else {
-              item.situation = Schedule.Situation.NoConflict;
-              schedule.situation = Schedule.Situation.NoConflict;
-            }
-          }
-        } else {
-          item.situation = Schedule.Situation.NoConflict;
-          schedule.situation = Schedule.Situation.NoConflict;
+          //   if (schedule !== item) {
+          //     if (
+          //       this.hourCheck(
+          //         schedule.startTime,
+          //         schedule.endTime,
+          //         item.startTime
+          //       ) ||
+          //       this.hourCheck(schedule.startTime, schedule.endTime, item.endTime)
+          //     ) {
+          //       if (schedule.vehicle._id === item.vehicle._id) {
+          //         schedule.situation = Schedule.Situation.Conflict;
+          //         item.situation = Schedule.Situation.Conflict;
+          //       } else {
+          //         schedule.situation = Schedule.Situation.OverlappingRoute;
+          //       }
+          //     } else {
+          //       item.situation = Schedule.Situation.NoConflict;
+          //       schedule.situation = Schedule.Situation.NoConflict;
+          //     }
+          //   }
+          // } else {
+          //   item.situation = Schedule.Situation.NoConflict;
+          //   schedule.situation = Schedule.Situation.NoConflict;
         }
       });
     });
@@ -276,15 +282,28 @@ export class SchedulerComponent implements OnInit {
   save() {
     try {
       this.georoutes.forEach(route => {
-        route.status = GeoRoute.Status.Draft;
+        if (route._id === undefined) {
+          route.status = GeoRoute.Status.Draft;
+        }
         this.veryfyBeforeSave(route);
       });
       this.schedulerServive.createOrUpdate(this.organizationId, this.georoutes);
       this.message = 'Dados salvos com sucesso';
       this.blockEdition();
+      this.termfilter = new TermFilterPipe(new DatePipe('pt-BR'));
+      this.georoutes.forEach(route => {
+        this.removeNew(route.schedules);
+        this.termfilter.transform(route.schedules, undefined, undefined);
+      });
     } catch (error) {
       this.message = error;
       console.log(error);
     }
+  }
+
+  removeNew(items) {
+    items.forEach(item => {
+      item.isNew = false;
+    });
   }
 }
