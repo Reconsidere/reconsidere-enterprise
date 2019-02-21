@@ -59,14 +59,14 @@ export class AuthService {
 
   add(organization: Organization) {
     this.http
-      .post(environment.database.uri + `organization/add`, organization)
+      .post(environment.database.uri + `/organization/add`, organization)
       .subscribe(res => console.log('Done'));
   }
 
   update(organizationId: string, organization: Organization) {
     this.http
       .put(
-        environment.database.uri + `organization/update/${organization._id}`,
+        environment.database.uri + `/organization/update/${organization._id}`,
         organization
       )
       .subscribe(res => console.log('Done'));
@@ -87,7 +87,7 @@ export class AuthService {
 
   public login(email: string, password: string) {
     return this.http
-      .post<any>(`${environment.database.uri}organization/user/authenticate`, {
+      .post<any>(`${environment.database.uri}/organization/user/authenticate`, {
         email: email
       })
       .pipe(
@@ -108,7 +108,7 @@ export class AuthService {
     const id = JSON.parse(localStorage.getItem('currentUserId'));
     if (id !== null) {
       return this.http.get<string>(
-        `${environment.database.uri}organization/organizationid/${id}`
+        `${environment.database.uri}/organization/organizationid/${id}`
       );
     } else {
       return new Observable<string>();
@@ -116,7 +116,7 @@ export class AuthService {
   }
 
   getOrganization(id, organization) {
-    return this.http.get<any>(`${environment.database.uri}organization/${id}`);
+    return this.http.get<any>(`${environment.database.uri}/organization/${id}`);
   }
 
   generateToken(user, password): boolean {

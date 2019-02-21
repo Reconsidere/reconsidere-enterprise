@@ -1,14 +1,9 @@
+import { Hierarchy } from '../../../models/material';
 import { first } from 'rxjs/operators';
 import { User } from './../../../models/user';
 import { Location } from './../../../models/location';
 import { Observable } from 'rxjs/internal/Observable';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ElementRef,
-  QueryList
-} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, QueryList } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/validations/confirm-password.validator';
 import { CNPJValidator } from 'src/validations/valid-cnpj.validator';
@@ -53,22 +48,20 @@ export class SignUpComponent implements OnInit {
   isLogged: boolean;
   dynamicCnpj: boolean;
   loading: boolean;
+  hierarchy: Hierarchy;
 
-  constructor(
-    private authService: AuthService,
-    private cepService: CepService,
-    private userService: UserService,
-    private router: Router
-  ) {
+  constructor(private authService: AuthService, private cepService: CepService, private userService: UserService, private router: Router) {
     this.classifications = Object.values(Organization.Classification);
     this.profiles = Object.values(User.Profiles);
     this.organization = new Organization();
+    this.organization.hierarchy = new Hierarchy();
     this.organization.active = true;
     this.unit = new Units();
     this.unit.location = new Location();
     this.user = new User();
     this.user.profile = new Profile();
     this.user.active = true;
+    this.hierarchy = new Hierarchy();
   }
 
   ngOnInit() {
@@ -79,15 +72,16 @@ export class SignUpComponent implements OnInit {
     this.pageUser = 1;
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
     this.loading = false;
+    this.isLogged = false;
   }
+
+
 
   setId(id) {
     this.organizationId = id;
     if (id !== undefined) {
       this.isLogged = true;
-      this.authService
-        .getOrganization(this.organizationId, this.organization)
-        .subscribe(item => this.loadOrganization(item), error => error);
+      this.authService.getOrganization(this.organizationId, this.organization).subscribe(item => this.loadOrganization(item), error => error);
     } else {
       this.isLogged = false;
     }
@@ -98,6 +92,7 @@ export class SignUpComponent implements OnInit {
     if (this.organization.users !== undefined) {
       this.show = true;
     }
+    this.hierarchy = this.organization.hierarchy;
   }
 
   CEPSearch(value, e) {
@@ -111,6 +106,7 @@ export class SignUpComponent implements OnInit {
 
   clean() {
     this.organization = new Organization();
+    this.organization.hierarchy = new Hierarchy();
     this.organization.active = true;
     this.unit = new Units();
     this.unit.location = new Location();
@@ -137,40 +133,23 @@ export class SignUpComponent implements OnInit {
 
   verifyPasswordUser(e) {
     this.requiredCheck(e);
-    if (
-      this.passwordUser === undefined ||
-      this.passwordUser === '' ||
-      (this.confirmPasswordUser === undefined &&
-        this.confirmPasswordUser === '')
-    ) {
+    if (this.passwordUser === undefined || this.passwordUser === '' || (this.confirmPasswordUser === undefined && this.confirmPasswordUser === '')) {
       return;
     }
-    if (
-      this.passwordUser === undefined ||
-      this.passwordUser === '' ||
-      this.confirmPasswordUser === undefined ||
-      this.confirmPasswordUser === ''
-    ) {
+    if (this.passwordUser === undefined || this.passwordUser === '' || this.confirmPasswordUser === undefined || this.confirmPasswordUser === '') {
       this.isValidPasswordUser = false;
       return;
     }
     this.user.password = this.passwordUser;
     this.user.password = this.authService.encript(this.user.password);
-    this.confirmPasswordUser = this.authService.encript(
-      this.confirmPasswordUser
-    );
+    this.confirmPasswordUser = this.authService.encript(this.confirmPasswordUser);
 
-    this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(
-      this.user.password,
-      this.confirmPasswordUser
-    );
-    setTimeout(function() {}.bind(this), 1000);
+    this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(this.user.password, this.confirmPasswordUser);
+    setTimeout(function () { }.bind(this), 1000);
     if (this.isValidPasswordUser) {
       this.confirmPasswordUser = this.passwordUser;
     } else {
-      this.confirmPasswordUser = this.authService.decript(
-        this.confirmPasswordUser
-      );
+      this.confirmPasswordUser = this.authService.decript(this.confirmPasswordUser);
     }
   }
   requiredCheck(e) {
@@ -187,7 +166,7 @@ export class SignUpComponent implements OnInit {
       return;
     }
     this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
-    setTimeout(function() {}.bind(this), 1000);
+    setTimeout(function () { }.bind(this), 1000);
   }
 
   closeAlertMessage() {
@@ -195,16 +174,8 @@ export class SignUpComponent implements OnInit {
   }
   veryfyBeforeSave() {
     if (!this.isLogged) {
-      if (
-        this.organization.email === undefined ||
-        this.organization.company === undefined ||
-        this.organization.tradingName === undefined ||
-        this.organization.phone === undefined ||
-        this.organization.cellPhone === undefined ||
-        this.organization.classification === undefined
-      ) {
-        this.msgStatus =
-          'Por favor, preencha os campos antes de salvar os dados!';
+      if (this.organization.email === undefined || this.organization.company === undefined || this.organization.tradingName === undefined || this.organization.phone === undefined || this.organization.cellPhone === undefined || this.organization.classification === undefined) {
+        this.msgStatus = 'Por favor, preencha os campos antes de salvar os dados!';
         return false;
       }
     } else if (
@@ -216,25 +187,21 @@ export class SignUpComponent implements OnInit {
       this.organization.classification === undefined ||
       this.organization.company === undefined ||
       this.organization.units === undefined ||
+      this.organization.hierarchy === undefined ||
       this.organization.units.length <= 0
+      || this.hierarchy.solid === undefined
     ) {
-      this.msgStatus =
-        'Por favor, preencha os campos antes de salvar os dados!';
+      this.msgStatus = 'Por favor, preencha os campos antes de salvar os dados!';
       return false;
     }
-    if (
-      this.organization.classification !== Organization.Classification.Municipio
-    ) {
+    if (this.organization.classification !== Organization.Classification.Municipio) {
       if (this.organization.cnpj === undefined) {
-        this.msgStatus =
-          'Por favor, preencha os campos antes de salvar os dados!';
+        this.msgStatus = 'Por favor, preencha os campos antes de salvar os dados!';
         return false;
       }
     }
 
-    this.message = this.isValidCNPJ = CNPJValidator.MatchCNPJ(
-      this.organization.cnpj
-    );
+    this.message = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
     if (!this.message) {
       this.msgStatus = 'CNPJ incorreto.';
       return false;
@@ -289,22 +256,12 @@ export class SignUpComponent implements OnInit {
   veryfyBeforeAddLocation() {
     if (this.unit.location === undefined) {
       this.message = true;
-      this.msgStatus =
-        'Verifique se todos os dados da localização foram inseridos.';
+      this.msgStatus = 'Verifique se todos os dados da localização foram inseridos.';
       return false;
     }
-    if (
-      this.unit.location.state === undefined ||
-      this.unit.location.cep === undefined ||
-      this.unit.location.publicPlace === undefined ||
-      this.unit.location.neighborhood === undefined ||
-      this.unit.location.number === undefined ||
-      this.unit.location.number < 0 ||
-      this.unit.location.county === undefined
-    ) {
+    if (this.unit.location.state === undefined || this.unit.location.cep === undefined || this.unit.location.publicPlace === undefined || this.unit.location.neighborhood === undefined || this.unit.location.number === undefined || this.unit.location.number < 0 || this.unit.location.county === undefined) {
       this.message = true;
-      this.msgStatus =
-        'Verifique se todos os dados do usuário foram inseridos.';
+      this.msgStatus = 'Verifique se todos os dados do usuário foram inseridos.';
       return false;
     }
     return true;
@@ -354,19 +311,12 @@ export class SignUpComponent implements OnInit {
   veryfyBeforeAddUser() {
     if (this.user === undefined) {
       this.message = true;
-      this.msgStatus =
-        'Verifique se todos os dados do usuário foram inseridos.';
+      this.msgStatus = 'Verifique se todos os dados do usuário foram inseridos.';
       return false;
     }
-    if (
-      this.user.email === undefined ||
-      this.user.name === undefined ||
-      this.user.password === undefined ||
-      this.user.active === undefined
-    ) {
+    if (this.user.email === undefined || this.user.name === undefined || this.user.password === undefined || this.user.active === undefined) {
       this.message = true;
-      this.msgStatus =
-        'Verifique se todos os dados do usuário foram inseridos.';
+      this.msgStatus = 'Verifique se todos os dados do usuário foram inseridos.';
       return false;
     }
     return true;
@@ -429,6 +379,7 @@ export class SignUpComponent implements OnInit {
       this.organization.active = true;
       this.organization.users = [this.user];
     }
+    this.organization.hierarchy.solid.materials = this.hierarchy.solid.materials;
 
     if (!this.myRecaptcha) {
       this.message = true;

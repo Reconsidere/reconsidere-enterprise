@@ -23,7 +23,7 @@ export class VehicleManagementService {
     this.http
       .post(
         environment.database.uri +
-          `organization/add/vehicle/${organizationId}/`,
+          `/organization/add/vehicle/${organizationId}/`,
         vehicle
       )
       .subscribe(res => console.log('Done'));
@@ -31,20 +31,20 @@ export class VehicleManagementService {
 
   update(organizationId: string, vehicle: Vehicle) {
     this.http
-      .put(environment.database.uri + `organization/update/vehicle/${organizationId}`, vehicle)
+      .put(environment.database.uri + `/organization/update/vehicle/${organizationId}`, vehicle)
       .subscribe(res => console.log('Done'));
   }
 
   get(organizationId: string, id: string): Observable<Vehicle[]> {
     return this.http.get<Vehicle[]>(
-      environment.database.uri + `organization/${organizationId}/vehicle/${id}`
+      environment.database.uri + `/organization/${organizationId}/vehicle/${id}`
     );
   }
 
   loadAll(organizationId: string): Observable<Vehicle[]> {
     return this.http
       .get<Vehicle[]>(
-        environment.database.uri + `organization/vehicle/${organizationId}`
+        environment.database.uri + `/organization/vehicle/${organizationId}`
       )
       .pipe();
   }
@@ -53,7 +53,7 @@ export class VehicleManagementService {
     this.http
       .delete(
         environment.database.uri +
-          `organization/remove/vehicle/${organizationId}/${id}`
+          `/organization/remove/vehicle/${organizationId}/${id}`
       )
       .subscribe(res => console.log('Done'));
   }

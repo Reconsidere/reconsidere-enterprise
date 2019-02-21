@@ -1,0 +1,46 @@
+<app-toolbar></app-toolbar>
+<div class="container-fluid">
+  <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Atenção: </strong> {{ message }}
+    <button type="button" (click)="closeMessage()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="tableItemMaterial">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <button id="newItem" (click)="newItem()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="fa fa-plus"></i>
+          </button>
+        </tr>
+        <tr id="Titles">
+          <th colspan="2">Classe</th>
+          <th>Nome</th>
+          <th>Ativo</th>
+          <th>Salvar</th>
+          <th>Remover</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="
+                    let item of (itemsMaterials
+                      | paginate: { itemsPerPage: 5, currentPage: page })
+                  ">
+          <td colspan="2">
+            <select required [(ngModel)]="typeMaterial" name="typeFuel" class="form-control" (blur)="requiredCheck($event)">
+              <option id="materialType" *ngFor="let type of materialsType">{{
+                          type
+                        }}</option>
+            </select>
+          </td>
+          <td>
+            <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

@@ -20,7 +20,7 @@ export class SchedulerService {
     this.http
       .post(
         environment.database.uri +
-          `organization/add/scheduler/${organizationId}`,
+          `/organization/add/scheduler/${organizationId}`,
         georoute
       )
       .subscribe(res => console.log('Done'));
@@ -30,7 +30,7 @@ export class SchedulerService {
     this.http
       .put(
         environment.database.uri +
-          `organization/update/scheduler/${organizationId}`,
+          `/organization/update/scheduler/${organizationId}`,
         georoute
       )
       .subscribe(res => console.log('Done'));
@@ -40,13 +40,13 @@ export class SchedulerService {
     this.http
       .delete(
         environment.database.uri +
-          `organization/remove/scheduler/${organizationId}/${id}`
+          `/organization/remove/scheduler/${organizationId}/${id}`
       )
       .subscribe(res => console.log('Done'));
   }
 
   getAll(id): Observable<GeoRoute[]> {
-    const uri = environment.database.uri + `organization/scheduler/${id}`;
+    const uri = environment.database.uri + `/organization/scheduler/${id}`;
     return this.http.get<GeoRoute[]>(uri).pipe();
   }
 }

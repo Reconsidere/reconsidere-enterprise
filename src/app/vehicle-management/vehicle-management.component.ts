@@ -26,6 +26,7 @@ export class VehicleManagementComponent implements OnInit {
 
   ngOnInit() {
     this.page = 1;
+    this.authService.isAuthenticated();
     this.getVehicles();
   }
 

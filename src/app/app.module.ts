@@ -38,6 +38,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { DateconvertPipe } from '../pipes/dateconvert.pipe';
 import { TermFilterPipe } from '../pipes/term-filter.pipe';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MaterialManagementComponent } from './material-management/material-management.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 
@@ -59,6 +61,7 @@ registerLocaleData(localePt);
     BooltransformPipe,
     DateconvertPipe,
     TermFilterPipe,
+    MaterialManagementComponent,
   ],
   imports: [
     BrowserModule,
@@ -80,7 +83,8 @@ registerLocaleData(localePt);
       siteKey: '6Le4YIgUAAAAAJFj9q0jVjfxVR0D_QNfGetw0JKF'
     }),
     CalendarModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatSlideToggleModule
   ],
 
   providers: [

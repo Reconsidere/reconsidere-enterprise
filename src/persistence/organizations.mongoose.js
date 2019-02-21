@@ -16,8 +16,36 @@ var OrganizationSchema = new mongoose.Schema({
   creditcard: {},
   supports: [
     {
-      material: String,
-      processing: String
+      solid: {
+        materials: {
+          paper: {
+            name: String,
+            used: Boolean,
+          },
+          plastic: {
+            name: String,
+            used: Boolean
+          },
+          glass: {
+            name: String,
+            used: Boolean
+          },
+          metal: {
+            name: String,
+            used: Boolean
+          },
+          isopor: {
+            name: String,
+            used: Boolean
+          },
+          tetrapack: {
+            name: String,
+            used: Boolean
+          }
+        },
+        semiSolid: {},
+        liquid: {}
+      },
     }
   ],
   units: [
@@ -49,6 +77,51 @@ var OrganizationSchema = new mongoose.Schema({
       active: Boolean
     }
   ],
+  processingChain: [
+    {
+      name: String,
+      description: String,
+      hierarchy: [{}]
+    }
+  ],
+  hierarchy: {
+    solid: {
+      materials: {
+        paper: {
+          name: String,
+          used: Boolean,
+          items: [{ name: String }]
+        },
+        plastic: {
+          name: String,
+          used: Boolean,
+          items: [{ name: String }]
+        },
+        glass: {
+          name: String,
+          used: Boolean,
+          items: [{ name: String }]
+        },
+        metal: {
+          name: String,
+          used: Boolean,
+          items: [{ name: String }]
+        },
+        isopor: {
+          name: String,
+          used: Boolean,
+          items: [{ name: String }]
+        },
+        tetrapack: {
+          name: String,
+          used: Boolean,
+          items: [{ name: String }]
+        }
+      },
+      semisolid: {},
+      liquid: {}
+    }
+  },
   vehicles: [
     {
       carPlate: String,
@@ -97,27 +170,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const TestURL = 'mongodb://localhost:27017/eowyn-reconsidere-enterprise';
+const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
 const options = {
-  autoIndex: false, // Don't build indexes
-  reconnectTries: 30, // Retry up to 30 times
-  reconnectInterval: 500, // Reconnect every 500ms
-  poolSize: 10, // Maintain up to 10 socket connections
-  // If not connected, return errors immediately rather than waiting for reconnect
+  autoIndex: false,
+  reconnectTries: 30,
+  reconnectInterval: 500,
+  poolSize: 10,
   bufferMaxEntries: 0
 };
 
-//enviroment.uri,
-mongoose
-  .connect(
-    TestURL,
-    options
-  )
-  .catch(err => {
-    console.error('Erro ao conectar no banco: ' + err.stack);
-  });
+mongoose.connect(TestURL, options).catch(err => {
+  console.error('Erro ao conectar no banco: ' + err.stack);
+});
 
-organizations.route('/add').post(function(req, res) {
+organizations.route('/add').post(function (req, res) {
   var organization = new organizationModel(req.body);
   organization
     .save()
@@ -141,8 +207,8 @@ organizations.route('/add').post(function(req, res) {
 // });
 
 /**Return organization id only.  This parameter id, are the id of user*/
-organizations.route('/organizationid/:id').get(function(req, res) {
-  organizationModel.findOne({ 'users._id': req.params.id }, function(err, org) {
+organizations.route('/organizationid/:id').get(function (req, res) {
+  organizationModel.findOne({ 'users._id': req.params.id }, function (err, org) {
     if (!org) return next(new Error('Not found organization'));
     else {
       res.json(org._id);
@@ -151,8 +217,8 @@ organizations.route('/organizationid/:id').get(function(req, res) {
 });
 
 /**Return organization object */
-organizations.route('/:id').get(function(req, res) {
-  organizationModel.find(function(err, org) {
+organizations.route('/:id').get(function (req, res) {
+  organizationModel.find(function (err, org) {
     if (err) {
       console.log(err);
     } else {
@@ -162,16 +228,16 @@ organizations.route('/:id').get(function(req, res) {
 });
 
 // // Defined edit route
-organizations.route('/edit/:id').get(function(req, res) {
+organizations.route('/edit/:id').get(function (req, res) {
   var id = req.params.id;
-  organizationModel.findById(id, function(err, organization) {
+  organizationModel.findById(id, function (err, organization) {
     res.json(organization);
   });
 });
 
 // //  Defined update route
-organizations.route('/update/:id').put(function(req, res, next) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/update/:id').put(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
       org.email = req.body.email;
@@ -186,6 +252,7 @@ organizations.route('/update/:id').put(function(req, res, next) {
       org.vehicles = req.body.vehicles;
       org.georoutes = req.body.georoutes;
       org.users = req.body.users;
+      org.hierarchy = req.body.hierarchy;
 
       org
         .save()
@@ -201,8 +268,8 @@ organizations.route('/update/:id').put(function(req, res, next) {
 
 //#region CRUD - User
 
-organizations.route(':id/user').get(function(req, res) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/:id/user').get(function (req, res) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (err) {
       console.log(err);
     } else {
@@ -211,11 +278,11 @@ organizations.route(':id/user').get(function(req, res) {
   });
 });
 
-organizations.route('/user/authenticate').post(function(req, res, next) {
+organizations.route('/user/authenticate').post(function (req, res, next) {
   organizationModel.findOne(
     { 'users.email': req.body.email },
     { 'users.$': 1 },
-    function(err, org) {
+    function (err, org) {
       if (!org) return next(new Error('Login error.'));
       else {
         res.json(org.users[0]);
@@ -224,14 +291,14 @@ organizations.route('/user/authenticate').post(function(req, res, next) {
   );
 });
 
-organizations.route('/add/user/:id').post(function(req, res, next) {
+organizations.route('/add/user/:id').post(function (req, res, next) {
   organizationModel.findOne(
     { _id: req.params.id, 'users.email': req.body.email },
-    function(err, obj) {
+    function (err, obj) {
       if (obj) {
         return res.status(400).send('Email already in use.');
       } else {
-        organizationModel.findById(req.params.id, function(err, org) {
+        organizationModel.findById(req.params.id, function (err, org) {
           if (!org) return next(new Error('Could not load Document'));
           else {
             (req.body.password = req.body.password), 10;
@@ -251,8 +318,8 @@ organizations.route('/add/user/:id').post(function(req, res, next) {
   );
 });
 
-organizations.route('/update/user/:id').post(function(req, res, next) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/update/user/:id').post(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
       var user = org.users.id(req.body._id);
@@ -284,8 +351,8 @@ organizations.route('/update/user/:id').post(function(req, res, next) {
 //#endregion
 
 //#region CRUD  - Vehicle
-organizations.route('/vehicle/:id').get(function(req, res) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/vehicle/:id').get(function (req, res) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (err) {
       console.log(err);
     } else {
@@ -294,8 +361,8 @@ organizations.route('/vehicle/:id').get(function(req, res) {
   });
 });
 
-organizations.route('/add/vehicle/:id').post(function(req, res, next) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/add/vehicle/:id').post(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
       org.vehicles.push(req.body);
@@ -311,8 +378,8 @@ organizations.route('/add/vehicle/:id').post(function(req, res, next) {
   });
 });
 
-organizations.route('/update/vehicle/:id').put(function(req, res, next) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/update/vehicle/:id').put(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
       var vehicle = org.vehicles.id(req.body._id);
@@ -343,8 +410,8 @@ organizations.route('/update/vehicle/:id').put(function(req, res, next) {
 
 organizations
   .route('/remove/vehicle/:organizationId/:id')
-  .delete(function(req, res) {
-    organizationModel.findById(req.params.organizationId, function(err, org) {
+  .delete(function (req, res) {
+    organizationModel.findById(req.params.organizationId, function (err, org) {
       if (!org) return next(new Error('Could not load Document'));
       else {
         var vehicle = org.vehicles.id(req.params.id);
@@ -367,8 +434,8 @@ organizations
 
 //#region CRUD  - Scheduler
 
-organizations.route('/scheduler/:id').get(function(req, res) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/scheduler/:id').get(function (req, res) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (err) {
       console.log(err);
     } else {
@@ -377,8 +444,8 @@ organizations.route('/scheduler/:id').get(function(req, res) {
   });
 });
 
-organizations.route('/add/scheduler/:id').post(function(req, res, next) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/add/scheduler/:id').post(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
       org.georoutes = req.body;
@@ -394,8 +461,8 @@ organizations.route('/add/scheduler/:id').post(function(req, res, next) {
   });
 });
 
-organizations.route('/update/scheduler/:id').put(function(req, res, next) {
-  organizationModel.findById(req.params.id, function(err, org) {
+organizations.route('/update/scheduler/:id').put(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
     if (!org) return next(new Error('Could not load Document'));
     else {
       var route = org.georoutes.id(req.body._id);
@@ -426,8 +493,8 @@ organizations.route('/update/scheduler/:id').put(function(req, res, next) {
 
 organizations
   .route('/remove/scheduler/:organizationId/:id')
-  .delete(function(req, res) {
-    organizationModel.findById(req.params.organizationId, function(err, org) {
+  .delete(function (req, res) {
+    organizationModel.findById(req.params.organizationId, function (err, org) {
       if (!org) return next(new Error('Could not load Document'));
       else {
         var route = org.georoutes.id(req.params.id);
@@ -455,6 +522,20 @@ organizations
 //        else res.json('Successfully removed');
 //    });
 // });
+
+
+//#region CRUD - Material
+organizations.route('/hierarchy/materials/:id').get(function (req, res) {
+  organizationModel.findById(req.params.id, function (err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org.hierarchy);
+    }
+  });
+});
+
+//#endregion
 
 app.use('/organization', organizations);
 module.exports = app;

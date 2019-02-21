@@ -7,6 +7,7 @@ import { VehicleManagementComponent } from './vehicle-management/vehicle-managem
 import { SignInComponent } from './auth/sign-in/sign-in.component';
 import { StartcenterComponent } from './startcenter/startcenter.component';
 import { AuthGuard } from './_guards/auth.guard';
+import { MaterialManagementComponent } from './material-management/material-management.component';
 
 export const routes: Routes = [
   {
@@ -32,6 +33,11 @@ export const routes: Routes = [
   {
     path: 'logout',
     component: LogoutComponent
+  },
+  {
+    path: 'material-management',
+    component: MaterialManagementComponent,
+    canActivate: [AuthGuard]
   },
   // otherwise redirect to home
   { path: '**', redirectTo: '' }

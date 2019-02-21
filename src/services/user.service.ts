@@ -44,14 +44,14 @@ export class UserService {
 
   add(organizationId: string, user: User) {
     this.http
-      .post(environment.database.uri + `${organizationId}/user/add/`, user)
+      .post(environment.database.uri + `/${organizationId}/user/add/`, user)
       .subscribe(res => console.log('Done'));
   }
 
   update(organizationId: string, user: User) {
     this.http
       .put(
-        environment.database.uri + `${organizationId}/user/update/${user._id}`,
+        environment.database.uri + `/${organizationId}/user/update/${user._id}`,
         user
       )
       .subscribe(res => console.log('Done'));
