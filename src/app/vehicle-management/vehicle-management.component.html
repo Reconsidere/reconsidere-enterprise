@@ -160,7 +160,7 @@
           </td>
           <td>
             <button
-              (click)="remove(vehicle._id)"
+              (click)="remove(vehicle)"
               type="button"
               class="btn btn-sm btn-danger"
               data-toggle="button"
@@ -184,6 +184,14 @@
           </td>
         </tr>
       </tbody>
+      <pagination-controls
+      (pageChange)="page = $event"
+      previousLabel="Anterior"
+      nextLabel="Próxima"
+      autoHide="true"
+      responsive="true"
+      screenReaderPaginationLabel="Pagination"
+    ></pagination-controls>
     </table>
   </div>
 </div>

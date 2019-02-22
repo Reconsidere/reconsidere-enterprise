@@ -90,32 +90,32 @@ var OrganizationSchema = new mongoose.Schema({
         paper: {
           name: String,
           used: Boolean,
-          items: [{ name: String }]
+          items: [{ name: String, active: Boolean }]
         },
         plastic: {
           name: String,
           used: Boolean,
-          items: [{ name: String }]
+          items: [{ name: String, active: Boolean }]
         },
         glass: {
           name: String,
           used: Boolean,
-          items: [{ name: String }]
+          items: [{ name: String, active: Boolean }]
         },
         metal: {
           name: String,
           used: Boolean,
-          items: [{ name: String }]
+          items: [{ name: String, active: Boolean }]
         },
         isopor: {
           name: String,
           used: Boolean,
-          items: [{ name: String }]
+          items: [{ name: String, active: Boolean }]
         },
         tetrapack: {
           name: String,
           used: Boolean,
-          items: [{ name: String }]
+          items: [{ name: String, active: Boolean }]
         }
       },
       semisolid: {},
@@ -170,7 +170,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
+//const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
+const TestURL = 'mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb'
 const options = {
   autoIndex: false,
   reconnectTries: 30,
@@ -525,7 +526,7 @@ organizations
 
 
 //#region CRUD - Material
-organizations.route('/hierarchy/materials/:id').get(function (req, res) {
+organizations.route('/hierarchy/:id').get(function (req, res) {
   organizationModel.findById(req.params.id, function (err, org) {
     if (err) {
       console.log(err);
@@ -535,6 +536,22 @@ organizations.route('/hierarchy/materials/:id').get(function (req, res) {
   });
 });
 
+organizations.route('/add/hierarchy/:id').post(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      org.hierarchy = req.body;
+      org
+        .update(org)
+        .then(org => {
+          res.json('Update complete');
+        })
+        .catch(err => {
+          res.status(400).send('unable to update the database');
+        });
+    }
+  });
+});
 //#endregion
 
 app.use('/organization', organizations);

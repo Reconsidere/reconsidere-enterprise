@@ -6,7 +6,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <div class="tableItemMaterial">
+  <div *ngIf="isBlocked" class="tableItemMaterial">
     <table class="table table-sm">
       <thead>
         <tr>
@@ -15,31 +15,40 @@
           </button>
         </tr>
         <tr id="Titles">
-          <th colspan="2">Classe</th>
+          <th>Classe do material</th>
           <th>Nome</th>
-          <th>Ativo</th>
-          <th>Salvar</th>
           <th>Remover</th>
+          <th>Salvar</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="
-                    let item of (itemsMaterials
-                      | paginate: { itemsPerPage: 5, currentPage: page })
-                  ">
-          <td colspan="2">
-            <select required [(ngModel)]="typeMaterial" name="typeFuel" class="form-control" (blur)="requiredCheck($event)">
-              <option id="materialType" *ngFor="let type of materialsType">{{
+        <ng-template ngFor let-item [ngForOf]="(itemsMaterials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+          <tr>
+            <td>
+              <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue)" required [(ngModel)]="item.typeMaterial" name="typeMaterial" class="form-control">
+                <option id="typeMaterial" *ngFor="let type of materialsType">{{
                           type
                         }}</option>
-            </select>
-          </td>
-          <td>
-            <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
-          </td>
-        </tr>
+              </select>
+            </td>
+            <td>
+              <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+            </td>
+            <td>
+              <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+            <td>
+              <button (click)="save(item)" type="button" class="btn btn-sm btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <i class="fa fa-save"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
       </tbody>
+      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
     </table>
 
   </div>

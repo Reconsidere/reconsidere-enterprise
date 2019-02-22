@@ -16,6 +16,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   { path: 'sign-up', component: SignUpComponent },
+  { path: 'account', component: SignUpComponent },
   {
     path: 'vehicle-management',
     component: VehicleManagementComponent,

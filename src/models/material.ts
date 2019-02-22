@@ -1,12 +1,12 @@
 export class Hierarchy {
   solid = {
     materials: {
-      paper: { name: 'paper', used: false, items: [] },
-      metal: { name: 'metal', used: false, items: [] },
-      isopor: { name: 'isopor', used: false, items: [] },
-      glass: { name: 'glass', used: false, items: [] },
-      plastic: { name: 'plastic', used: false, items: [] },
-      tetrapack: { name: 'tetrapack', used: false, items: [] },
+      paper: { name: 'paper', used: false, items: [{ _id: String, name: String, active: Boolean}] },
+      metal: { name: 'metal', used: false, items: [{ _id: String, name: String, active: Boolean}] },
+      isopor: { name: 'isopor', used: false, items: [{ _id: String, name: String, active: Boolean}] },
+      glass: { name: 'glass', used: false, items: [{ _id: String, name: String, active: Boolean}] },
+      plastic: { name: 'plastic', used: false, items: [{ _id: String, name: String, active: Boolean}] },
+      tetrapack: { name: 'tetrapack', used: false, items: [{ _id: String, name: String, active: Boolean}] },
     },
   };
   semisolid = {};

@@ -26,7 +26,7 @@ export class VehicleManagementComponent implements OnInit {
 
   ngOnInit() {
     this.page = 1;
-    this.authService.isAuthenticated();
+    //this.authService.isAuthenticated();
     this.getVehicles();
   }
 
@@ -63,11 +63,18 @@ export class VehicleManagementComponent implements OnInit {
     }
   }
 
-  remove(id) {
+  remove(vehicle) {
     try {
-      this.vehicleService.remove(this.organizationId, id);
+      if(vehicle._id !== undefined){
+        this.vehicleService.remove(this.organizationId,vehicle._id);
+      }
       this.message = 'Dados salvos com sucesso';
-      this.vehicles.splice(id, 1);
+
+      this.vehicles.forEach((item,index) => {
+        if(item === vehicle){
+          this.vehicles.splice(index, 1);
+        }
+      });
     } catch (error) {
       this.message = error;
       console.log(error);
