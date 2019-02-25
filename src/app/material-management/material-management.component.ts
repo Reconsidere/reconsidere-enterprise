@@ -244,7 +244,42 @@ export class MaterialManagementComponent implements OnInit {
     }
   }
 
-  changeClassMaterial(selected, oldValue){
+  changeClassMaterial(selected, oldValue, item) {
+    if (selected === oldValue) {
+      return;
+    }
+    if (oldValue === Hierarchy.Material.Glass) {
+      this.changeClass(item, selected, 'glass');
+    }
+    if (oldValue === Hierarchy.Material.Isopor) {
+      this.changeClass(item, selected, 'isopor');
+    }
+    if (oldValue === Hierarchy.Material.Metal) {
+      this.changeClass(item, selected, 'metal');
+    }
+    if (oldValue === Hierarchy.Material.Paper) {
+      this.changeClass(item, selected, 'paper');
+    }
+    if (oldValue === Hierarchy.Material.Plastic) {
+      this.changeClass(item, selected, 'plastic');
+    }
+    if (oldValue === Hierarchy.Material.Tetrapack) {
+      this.changeClass(item, selected, 'tetrapack');
+    }
+  }
+
+  private changeClass(item: any, selected: any, type: any) {
+    this.itemsMaterials.forEach((element, index) => {
+      if (element === item) {
+        this.hierarchy.solid.materials[type].items.forEach((obj, i) => {
+          if (item === obj || item._id === obj._id) {
+            this.hierarchy.solid.materials[type].items.splice(i, 1);
+          }
+        });
+        item.typeMaterial = selected;
+        this.itemsMaterials[index] = item;
+      }
+    });
   }
 
   save(itemMaterial) {

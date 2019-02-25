@@ -170,8 +170,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-//const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
-const TestURL = 'mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb'
+const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
+//const TestURL = 'mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb'
 const options = {
   autoIndex: false,
   reconnectTries: 30,
