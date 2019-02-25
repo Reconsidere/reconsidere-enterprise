@@ -1,0 +1,57 @@
+<app-toolbar></app-toolbar>
+
+<div class="container-fluid">
+  <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Atenção: </strong> {{ message }}
+    <button type="button" (click)="closeMessage()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+
+  <button type="button" id="save" (click)="save()" class="btn btn-success col-md-2 pull-right">
+    Salvar ações
+  </button>
+
+  <div class="tableVehicles">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <button id="newVehicle" (click)="newVehicle()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <i class="fa fa-plus"></i>
+          </button>
+        </tr>
+        <tr id="Titles">
+          <th>Material</th>
+          <th>Peso</th>
+          <th>Preço</th>
+          <th>Remover</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <ng-template ngFor let-item [ngForOf]="(materials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+          <tr>
+            <td>
+              <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" disabled="disabled" />
+            </td>
+            <td>
+              <input required [(ngModel)]="item.price" name="price" type="text" class="form-control" id="price" aria-describedby="price" />
+            </td>
+            <td>
+              <input required [(ngModel)]="item.weight" name="weight" type="text" class="form-control" id="weight" aria-describedby="weight" />
+            </td>
+            <td>
+              <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+
+        </ng-template>
+      </tbody>
+      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+    </table>
+  </div>
+
+</div>

@@ -41,6 +41,15 @@ export namespace Hierarchy {
     Isopor = 'Isopor',
     Tetrapack = 'Tetrapack'
   }
+
+  export enum types {
+    paper = 'paper',
+    plastic = 'plastic',
+    glass = 'glass',
+    metal = 'metal',
+    isopor = 'isopor',
+    tetrapack = 'tetrapack'
+  }
 }
 
 

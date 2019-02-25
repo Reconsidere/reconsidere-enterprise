@@ -90,7 +90,15 @@ var OrganizationSchema = new mongoose.Schema({
         paper: {
           name: String,
           used: Boolean,
-          items: [{ name: String, active: Boolean }]
+          items: [{
+            name: String, active: Boolean,
+            princing: {
+              price: [Number],
+              date: [Date],
+              weight: Number,
+            },
+
+          }]
         },
         plastic: {
           name: String,
@@ -552,6 +560,20 @@ organizations.route('/add/hierarchy/:id').post(function (req, res, next) {
     }
   });
 });
+//#endregion
+
+
+//#region CRUD - pricing
+organizations.route('/pricing/:id').get(function (req, res) {
+  organizationModel.findById(req.params.id, function (err, org) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(org.hierarchy);
+    }
+  });
+});
+
 //#endregion
 
 app.use('/organization', organizations);

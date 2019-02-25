@@ -102,12 +102,12 @@ export class MaterialManagementComponent implements OnInit {
     }
   }
   createSimpleList(list: Hierarchy) {
-    this.insertItems('glass', 'Vidro', list);
-    this.insertItems('isopor', 'Isopor', list);
-    this.insertItems('metal', 'Metal', list);
-    this.insertItems('paper', 'Papel', list);
-    this.insertItems('plastic', 'Plástico', list);
-    this.insertItems('tetrapack', 'Tetrapack', list);
+    this.insertItems(Hierarchy.types.glass, 'Vidro', list);
+    this.insertItems(Hierarchy.types.isopor, 'Isopor', list);
+    this.insertItems(Hierarchy.types.metal, 'Metal', list);
+    this.insertItems(Hierarchy.types.paper, 'Papel', list);
+    this.insertItems(Hierarchy.types.plastic, 'Plástico', list);
+    this.insertItems(Hierarchy.types.tetrapack, 'Tetrapack', list);
   }
 
   insertItems(type: any, typeMaterial: any, list: Hierarchy) {
@@ -148,43 +148,43 @@ export class MaterialManagementComponent implements OnInit {
 
   private addToItemsMaterial(itemMaterial) {
     if (itemMaterial.typeMaterial === Hierarchy.Material.Glass) {
-      this.insertValues(itemMaterial, 'glass');
+      this.insertValues(itemMaterial, Hierarchy.types.glass);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
-      this.insertValues(itemMaterial, 'isopor');
+      this.insertValues(itemMaterial, Hierarchy.types.isopor);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
-      this.insertValues(itemMaterial, 'metal');
+      this.insertValues(itemMaterial, Hierarchy.types.metal);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
-      this.insertValues(itemMaterial, 'paper');
+      this.insertValues(itemMaterial, Hierarchy.types.paper);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
-      this.insertValues(itemMaterial, 'plastic');
+      this.insertValues(itemMaterial, Hierarchy.types.plastic);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
-      this.insertValues(itemMaterial, 'tetrapack');
+      this.insertValues(itemMaterial, Hierarchy.types.tetrapack);
     }
   }
 
   remove(itemMaterial) {
     if (itemMaterial.typeMaterial === Hierarchy.Material.Glass) {
-      this.removeItem(itemMaterial, 'glass');
+      this.removeItem(itemMaterial, Hierarchy.types.glass);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
-      this.removeItem(itemMaterial, 'isopor');
+      this.removeItem(itemMaterial, Hierarchy.types.isopor);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
-      this.removeItem(itemMaterial, 'metal');
+      this.removeItem(itemMaterial, Hierarchy.types.metal);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
-      this.removeItem(itemMaterial, 'paper');
+      this.removeItem(itemMaterial, Hierarchy.types.paper);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
-      this.removeItem(itemMaterial, 'plastic');
+      this.removeItem(itemMaterial, Hierarchy.types.plastic);
     }
     else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
-      this.removeItem(itemMaterial, 'tetrapack');
+      this.removeItem(itemMaterial, Hierarchy.types.tetrapack);
     }
     else {
       this.itemsMaterials.forEach((item, index) => {
@@ -249,22 +249,22 @@ export class MaterialManagementComponent implements OnInit {
       return;
     }
     if (oldValue === Hierarchy.Material.Glass) {
-      this.changeClass(item, selected, 'glass');
+      this.changeClass(item, selected, Hierarchy.types.glass);
     }
     if (oldValue === Hierarchy.Material.Isopor) {
-      this.changeClass(item, selected, 'isopor');
+      this.changeClass(item, selected, Hierarchy.types.isopor);
     }
     if (oldValue === Hierarchy.Material.Metal) {
-      this.changeClass(item, selected, 'metal');
+      this.changeClass(item, selected, Hierarchy.types.metal);
     }
     if (oldValue === Hierarchy.Material.Paper) {
-      this.changeClass(item, selected, 'paper');
+      this.changeClass(item, selected, Hierarchy.types.paper);
     }
     if (oldValue === Hierarchy.Material.Plastic) {
-      this.changeClass(item, selected, 'plastic');
+      this.changeClass(item, selected, Hierarchy.types.plastic);
     }
     if (oldValue === Hierarchy.Material.Tetrapack) {
-      this.changeClass(item, selected, 'tetrapack');
+      this.changeClass(item, selected, Hierarchy.types.tetrapack);
     }
   }
 

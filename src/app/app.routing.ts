@@ -8,6 +8,7 @@ import { SignInComponent } from './auth/sign-in/sign-in.component';
 import { StartcenterComponent } from './startcenter/startcenter.component';
 import { AuthGuard } from './_guards/auth.guard';
 import { MaterialManagementComponent } from './material-management/material-management.component';
+import { PricingComponent } from './pricing/pricing.component';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,11 @@ export const routes: Routes = [
   {
     path: 'material-management',
     component: MaterialManagementComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'pricing',
+    component: PricingComponent,
     canActivate: [AuthGuard]
   },
   // otherwise redirect to home

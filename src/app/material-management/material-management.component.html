@@ -26,10 +26,9 @@
         <ng-template ngFor let-item [ngForOf]="(itemsMaterials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
           <tr>
             <td>
-              <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue, item)" required [(ngModel)]="item.typeMaterial" name="typeMaterial" class="form-control">
-                <option id="typeMaterial" *ngFor="let type of materialsType">{{
-                          type
-                        }}</option>
+              <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue, item)" required [(ngModel)]="item.typeMaterial" name="typeMaterial"
+                class="form-control">
+                <option id="typeMaterial" *ngFor="let type of materialsType">{{type}}</option>
               </select>
             </td>
             <td>

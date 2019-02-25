@@ -40,6 +40,7 @@ import { TermFilterPipe } from '../pipes/term-filter.pipe';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { PricingComponent } from './pricing/pricing.component';
 
 
 
@@ -62,6 +63,7 @@ registerLocaleData(localePt);
     DateconvertPipe,
     TermFilterPipe,
     MaterialManagementComponent,
+    PricingComponent,
   ],
   imports: [
     BrowserModule,
