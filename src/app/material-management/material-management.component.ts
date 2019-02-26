@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Hierarchy } from 'src/models/material';
 import { AuthService } from 'src/services';
 import { MaterialManagementService } from 'src/services/material-management.service';
+import { Pricing } from 'src/models/pricing';
 
 @Component({
   selector: 'app-material-management',
@@ -9,7 +10,6 @@ import { MaterialManagementService } from 'src/services/material-management.serv
   styleUrls: ['./material-management.component.scss']
 })
 export class MaterialManagementComponent implements OnInit {
-
   hierarchy: Hierarchy;
   organizationId: string;
   page: number;
@@ -19,7 +19,10 @@ export class MaterialManagementComponent implements OnInit {
   itemsMaterials: any;
   isBlocked = true;
 
-  constructor(private authService: AuthService, private materialService: MaterialManagementService) {
+  constructor(
+    private authService: AuthService,
+    private materialService: MaterialManagementService
+  ) {
     this.hierarchy = new Hierarchy();
   }
 
@@ -32,9 +35,12 @@ export class MaterialManagementComponent implements OnInit {
   setId(id) {
     this.organizationId = id;
     if (id !== undefined) {
-      this.materialService.getHierarchy(this.organizationId).subscribe(item => this.loadHierarchy(item), error => error);
+      this.materialService
+        .getHierarchy(this.organizationId)
+        .subscribe(item => this.loadHierarchy(item), error => error);
     } else {
-      this.message = 'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+      this.message =
+        'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
       this.isBlocked = false;
     }
   }
@@ -45,15 +51,23 @@ export class MaterialManagementComponent implements OnInit {
       this.verifyMaterialsTypes();
       this.createSimpleList(this.hierarchy);
     } else {
-      this.message = 'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+      this.message =
+        'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
       this.isBlocked = false;
     }
   }
 
   verifyMaterialsTypes() {
-    if (!this.hierarchy.solid.materials.glass.used && !this.hierarchy.solid.materials.isopor.used && !this.hierarchy.solid.materials.metal.used && !this.hierarchy.solid.materials.paper.used && !this.hierarchy.solid.materials.plastic.used && !this.hierarchy.solid.materials.tetrapack.used) {
-
-      this.message = 'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+    if (
+      !this.hierarchy.solid.materials.glass.used &&
+      !this.hierarchy.solid.materials.isopor.used &&
+      !this.hierarchy.solid.materials.metal.used &&
+      !this.hierarchy.solid.materials.paper.used &&
+      !this.hierarchy.solid.materials.plastic.used &&
+      !this.hierarchy.solid.materials.tetrapack.used
+    ) {
+      this.message =
+        'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
       this.isBlocked = false;
       return;
     }
@@ -114,55 +128,66 @@ export class MaterialManagementComponent implements OnInit {
     if (list.solid.materials[type] !== undefined) {
       list.solid.materials[type].items.forEach(item => {
         if (this.itemsMaterials === undefined) {
-          this.itemsMaterials = [{ _id: item._id, typeMaterial: typeMaterial, name: item.name, active: item.active }];
+          this.itemsMaterials = [
+            {
+              _id: item._id,
+              typeMaterial: typeMaterial,
+              name: item.name,
+              active: item.active,
+              pricing: item.pricing
+            }
+          ];
         } else {
           if (item.active) {
-            this.itemsMaterials.push({ _id: item._id, typeMaterial: typeMaterial, name: item.name, active: item.active });
+            this.itemsMaterials.push({
+              _id: item._id,
+              typeMaterial: typeMaterial,
+              name: item.name,
+              active: item.active,
+              pricing: item.pricing
+            });
           }
         }
       });
     }
   }
 
-
   newItem() {
     if (this.itemsMaterials === undefined) {
-      this.itemsMaterials = [{ _id: undefined, typeMaterial: '', name: undefined, active: true }];
+      this.itemsMaterials = [
+        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0 } }
+      ];
     } else {
-      this.itemsMaterials.push({ _id: undefined, typeMaterial: '', name: undefined, active: true });
+      this.itemsMaterials.push({
+        _id: undefined,
+        typeMaterial: '',
+        name: undefined,
+        active: true,
+        pricing: { unitPrice: [0], date: [new Date()], weight: 0 }
+      });
     }
   }
 
   veryfyBeforeSave(itemMaterial) {
-    if (
-      !itemMaterial.name ||
-      !itemMaterial.active
-    ) {
+    if (!itemMaterial.name || !itemMaterial.active) {
       throw new Error(
         'Por favor, preencha os campos antes de salvar os dados!'
       );
     }
   }
 
-
-
   private addToItemsMaterial(itemMaterial) {
     if (itemMaterial.typeMaterial === Hierarchy.Material.Glass) {
       this.insertValues(itemMaterial, Hierarchy.types.glass);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
       this.insertValues(itemMaterial, Hierarchy.types.isopor);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
       this.insertValues(itemMaterial, Hierarchy.types.metal);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
       this.insertValues(itemMaterial, Hierarchy.types.paper);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
       this.insertValues(itemMaterial, Hierarchy.types.plastic);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
       this.insertValues(itemMaterial, Hierarchy.types.tetrapack);
     }
   }
@@ -170,23 +195,17 @@ export class MaterialManagementComponent implements OnInit {
   remove(itemMaterial) {
     if (itemMaterial.typeMaterial === Hierarchy.Material.Glass) {
       this.removeItem(itemMaterial, Hierarchy.types.glass);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
       this.removeItem(itemMaterial, Hierarchy.types.isopor);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
       this.removeItem(itemMaterial, Hierarchy.types.metal);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
       this.removeItem(itemMaterial, Hierarchy.types.paper);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
       this.removeItem(itemMaterial, Hierarchy.types.plastic);
-    }
-    else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
+    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
       this.removeItem(itemMaterial, Hierarchy.types.tetrapack);
-    }
-    else {
+    } else {
       this.itemsMaterials.forEach((item, index) => {
         if (item === itemMaterial) {
           this.itemsMaterials.splice(index, 1);
@@ -199,7 +218,11 @@ export class MaterialManagementComponent implements OnInit {
     if (this.hierarchy.solid.materials[type].items !== undefined) {
       this.hierarchy.solid.materials[type].items.forEach((item, index) => {
         if (item._id === itemMaterial._id) {
-          let obj = { _id: itemMaterial._id, name: itemMaterial.name, active: false };
+          let obj = {
+            _id: itemMaterial._id,
+            name: itemMaterial.name,
+            active: false
+          };
           this.hierarchy.solid.materials[type].items[index] = obj;
           isRemoved = true;
           this.itemsMaterials.forEach((item, index) => {
@@ -228,20 +251,43 @@ export class MaterialManagementComponent implements OnInit {
     if (this.hierarchy.solid.materials[type].items !== undefined) {
       this.hierarchy.solid.materials[type].items.forEach((item, index) => {
         if (item === itemMaterial || item._id === itemMaterial._id) {
-          let obj = { _id: itemMaterial._id, name: itemMaterial.name, active: itemMaterial.active };
+          let obj = {
+            _id: itemMaterial._id,
+            name: itemMaterial.name,
+            active: itemMaterial.active,
+            pricing: itemMaterial.pricing
+          };
           this.hierarchy.solid.materials[type].items[index] = obj;
           isAdd = true;
         }
       });
       if (!isAdd) {
-        let obj = { _id: itemMaterial._id, name: itemMaterial.name, active: itemMaterial.active };
+        let obj = {
+          _id: itemMaterial._id,
+          name: itemMaterial.name,
+          active: itemMaterial.active,
+          pricing: itemMaterial.pricing
+        };
         this.hierarchy.solid.materials[type].items.push(obj);
       }
-    }
-    else {
-      let obj = { _id: itemMaterial._id, name: itemMaterial.name, active: itemMaterial.active };
+    } else {
+      let obj = {
+        _id: itemMaterial._id,
+        name: itemMaterial.name,
+        active: itemMaterial.active,
+        pricing: itemMaterial.pricing
+      };
       this.hierarchy.solid.materials[type].items = [obj];
     }
+  }
+
+  changePrice(oldValue, value, item) {
+    if (oldValue === value) {
+      return;
+    }
+    item.pricing.unitPrice[item.pricing.unitPrice.length - 1] = oldValue;
+    item.pricing.unitPrice.push(value);
+    item.pricing.date.push(new Date());
   }
 
   changeClassMaterial(selected, oldValue, item) {
@@ -285,7 +331,7 @@ export class MaterialManagementComponent implements OnInit {
   save(itemMaterial) {
     try {
       this.veryfyBeforeSave(itemMaterial);
-      this.addToItemsMaterial(itemMaterial)
+      this.addToItemsMaterial(itemMaterial);
       this.materialService.createOrUpdate(this.organizationId, this.hierarchy);
       this.message = 'Dados salvos com sucesso';
     } catch (error) {
@@ -293,5 +339,4 @@ export class MaterialManagementComponent implements OnInit {
       console.log(error);
     }
   }
-
 }

@@ -46,10 +46,21 @@ export class PricingComponent implements OnInit {
   private setItems(items: any, type: any) {
     if (items.solid.materials[type].items !== undefined || items.solid.materials[type].items.length > 0) {
       if (this.materials === undefined) {
-        this.materials = items.solid.materials[type].items;
+        if (items.solid.materials[type].items.length > 0) {
+          this.materials = items.solid.materials[type].items;
+        }
       } else {
-        this.materials.push.apply(items.solid.materials[type].items);
+        if (items.solid.materials[type].items.length > 0) {
+          this.materials.push.apply(items.solid.materials[type].items);
+        }
       }
     }
+  }
+  newPricing() {
+
+  }
+
+  remove(item) {
+
   }
 }

@@ -13,16 +13,17 @@
     Salvar ações
   </button>
 
-  <div class="tableVehicles">
+  <div class="tablePricing">
     <table class="table table-sm">
       <thead>
         <tr>
-          <button id="newVehicle" (click)="newVehicle()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+          <button id="newPricing" (click)="newPricing()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
             <i class="fa fa-plus"></i>
           </button>
         </tr>
         <tr id="Titles">
           <th>Material</th>
+          <th>Valor unitário</th>
           <th>Peso</th>
           <th>Preço</th>
           <th>Remover</th>
@@ -36,7 +37,7 @@
               <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" disabled="disabled" />
             </td>
             <td>
-              <input required [(ngModel)]="item.price" name="price" type="text" class="form-control" id="price" aria-describedby="price" />
+              <input required disabled="disabled" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" type="text" class="form-control" id="unitPrice" aria-describedby="unitPrice" />
             </td>
             <td>
               <input required [(ngModel)]="item.weight" name="weight" type="text" class="form-control" id="weight" aria-describedby="weight" />

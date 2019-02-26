@@ -1,6 +1,6 @@
 export class Pricing {
   _id: string;
-  price: [number];
+  unitPrice: [number];
   weight: number;
   date: [Date];
 }

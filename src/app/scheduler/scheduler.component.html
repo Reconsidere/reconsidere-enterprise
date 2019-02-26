@@ -1,65 +1,31 @@
 <app-toolbar></app-toolbar>
 <div class="container-fluid">
-  <div
-    *ngIf="message"
-    class="alert alert-warning alert-dismissible fade show"
-    role="alert"
-  >
+  <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>Atenção: </strong> {{ message }}
-    <button
-      type="button"
-      (click)="closeMessage()"
-      class="close"
-      data-dismiss="alert"
-      aria-label="Close"
-    >
+    <button type="button" (click)="closeMessage()" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
 
   <div id="flip-scroll" class="tableScheduler">
-    <button
-      id="newRoute"
-      (click)="newRoute()"
-      type="button"
-      class="btn btn-sm btn-primary"
-      data-toggle="button"
-      aria-pressed="false"
-      autocomplete="off"
-    >
+    <button id="newRoute" (click)="newRoute()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
       Nova rota
     </button>
 
-    <button
-      type="button"
-      id="save"
-      (click)="save()"
-      class="btn btn-success col-md-2 pull-right"
-    >
+    <button type="button" id="save" (click)="save()" class="btn btn-success col-md-2 pull-right">
       Salvar ações
     </button>
 
-    <input
-      #nameFilter
-      name="name"
-      type="text"
-      class="form-control"
-      (input)="searchRoute = nameFilter"
-    />
+    <input #nameFilter name="name" type="text" class="form-control" (input)="searchRoute = nameFilter" />
     <table class="table-sm">
-      <ng-template
-        ngFor
-        let-route
-        [ngForOf]="
+      <ng-template ngFor let-route [ngForOf]="
           georoutes
             | termFilter
               : searchRoute.name
               : searchRoute.value
               : paginate
               : { itemsPerPage: 5, currentPage: page }
-        "
-        let-i="index"
-      >
+        " let-i="index">
         <thead *ngIf="!route.archived">
           <tr id="Titles">
             <th>Nome</th>
@@ -67,65 +33,27 @@
           <tr>
             <td hidden>{{ route._id }}</td>
             <td class="" colspan="2">
-              <input
-                class="form-control"
-                type="text"
-                [(ngModel)]="route.name"
-                required
-              />
+              <input class="form-control" type="text" [(ngModel)]="route.name" required />
             </td>
 
             <td colspan="5">
-              <button
-                (click)="expand(route)"
-                type="button"
-                class="btn btn-sm btn-primary ml-1 pull-left "
-                data-toggle="button"
-                aria-pressed="false"
-                autocomplete="off"
-              >
+              <button (click)="expand(route)" type="button" class="btn btn-sm btn-primary ml-1 pull-left " data-toggle="button" aria-pressed="false" autocomplete="off">
                 Expandir/Retrair
                 <i class="fa fa-caret-down"></i>
               </button>
-              <button
-                (click)="addScheduler(route)"
-                type="button"
-                class="btn btn-sm btn-primary ml-1 pull-left "
-                data-toggle="button"
-                aria-pressed="false"
-                autocomplete="off"
-              >
+              <button (click)="addScheduler(route)" type="button" class="btn btn-sm btn-primary ml-1 pull-left " data-toggle="button" aria-pressed="false" autocomplete="off">
                 Novo agendamento
                 <i class="fa fa-plus"></i>
               </button>
 
-              <button
-                type="button"
-                id="save"
-                (click)="removeRoute(route)"
-                class="btn btn-sm btn-danger  pull-right ml-1 "
-              >
+              <button type="button" id="save" (click)="removeRoute(route)" class="btn btn-sm btn-danger  pull-right ml-1 ">
                 <i class="fa fa-trash"></i>
               </button>
-              <button
-                (click)="pause(route)"
-                type="button"
-                class="btn btn-sm btn-primary ml-1  pull-right"
-                data-toggle="button"
-                aria-pressed="false"
-                autocomplete="off"
-              >
+              <button (click)="pause(route)" type="button" class="btn btn-sm btn-primary ml-1  pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
                 Pausar rota
                 <i class="fa fa-pause"></i>
               </button>
-              <button
-                (click)="play(route)"
-                type="button"
-                class="btn btn-sm btn-primary ml-1 pull-right"
-                data-toggle="button"
-                aria-pressed="false"
-                autocomplete="off"
-              >
+              <button (click)="play(route)" type="button" class="btn btn-sm btn-primary ml-1 pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
                 Iniciar rota
                 <i class="fa fa-play"></i>
               </button>
@@ -135,62 +63,31 @@
             <th colspan="2"></th>
             <th>
               <div class="input-wrapper">
-                <input
-                  #carPlateFilter
-                  name="carPlate"
-                  type="text"
-                  class="inputFilter"
-                  (input)="search = carPlateFilter"
-                />
+                <input #carPlateFilter name="carPlate" type="text" class="inputFilter" (input)="search = carPlateFilter" />
                 <label class="fa fa-pencil input-icon"></label>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
-                <input
-                  #situationFilter
-                  name="situation"
-                  type="text"
-                  class="inputFilter"
-                  (input)="search = situationFilter"
-                />
+                <input #situationFilter name="situation" type="text" class="inputFilter" (input)="search = situationFilter" />
                 <label class="fa fa-pencil input-icon"></label>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
-                <p-calendar
-                  #dateFilter
-                  name="date"
-                  dateFormat="dd/mm/yy"
-                  (onSelect)="search = dateFilter"
-                ></p-calendar>
+                <p-calendar #dateFilter name="date" dateFormat="dd/mm/yy" (onSelect)="search = dateFilter"></p-calendar>
                 <label class="fa fa-calendar input-icon"></label>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
-                <p-calendar
-                  #startTime
-                  name="startTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  hourFormat="24"
-                  (onSelect)="search = startTime"
-                ></p-calendar>
+                <p-calendar #startTime name="startTime" pattern="HH:mm" timeOnly="true" hourFormat="24" (onSelect)="search = startTime"></p-calendar>
                 <label class="fa fa-clock-o input-icon"></label>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
-                <p-calendar
-                  #endTime
-                  name="endTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  hourFormat="24"
-                  (onSelect)="search = endTime"
-                ></p-calendar>
+                <p-calendar #endTime name="endTime" pattern="HH:mm" timeOnly="true" hourFormat="24" (onSelect)="search = endTime"></p-calendar>
                 <label class="fa fa-clock-o input-icon"></label>
               </div>
             </th>
@@ -206,117 +103,43 @@
           </tr>
         </thead>
         <tbody *ngIf="route.expand && !route.archived">
-          <ng-template
-            ngFor
-            let-schedule
-            [ngForOf]="route.schedules | termFilter: search.name:search.value"
-            let-igroup="index"
-          >
+          <ng-template ngFor let-schedule [ngForOf]="route.schedules | termFilter: search.name:search.value" let-igroup="index">
             <tr *ngIf="route.expand && !schedule.archived">
               <th colspan="2"></th>
               <td *ngIf="!schedule.readonly">
-                <div
-                  [attr.rowspan]="schedule.rowsVehicle"
-                  class="titleGroup"
-                  *ngIf="schedule.showVehicle"
-                >
-                  <select
-                    required
-                    [(ngModel)]="schedule.vehicle"
-                    name="carPlate"
-                    class="form-control"
-                    (change)="verifyConflict(schedule)"
-                  >
-                    <option
-                      id="vehicles"
-                      [ngValue]="item"
-                      *ngFor="let item of vehicles"
-                      >{{ item.carPlate }}</option
-                    >
+                <div [attr.rowspan]="schedule.rowsVehicle" class="titleGroup" *ngIf="schedule.showVehicle">
+                  <select required [(ngModel)]="schedule.vehicle" name="carPlate" class="form-control" (change)="verifyConflict(schedule)">
+                    <option id="vehicles" [ngValue]="item" *ngFor="let item of vehicles">{{ item.carPlate }}</option>
                   </select>
                 </div>
               </td>
 
               <td *ngIf="schedule.readonly">
-                <div
-                  class="titleGroup"
-                  [attr.rowspan]="schedule.rowsVehicle"
-                  *ngIf="schedule.showVehicle"
-                >
+                <div class="titleGroup" [attr.rowspan]="schedule.rowsVehicle" *ngIf="schedule.showVehicle">
                   {{ schedule.vehicle.carPlate }}
                 </div>
               </td>
               <td>{{ schedule.situation }}</td>
               <td>
-                <div
-                  class="titleGroup"
-                  [attr.rowspan]="schedule.rowsDate"
-                  *ngIf="schedule.showDate"
-                >
-                  <p-calendar
-                    name="date"
-                    dateFormat="dd/mm/yy"
-                    (ngModelChange)="schedule.date = $event"
-                    [ngModel]="schedule.date | dateconvert"
-                    [minDate]="minDateValue"
-                    [maxDate]="maxDateValue"
-                    (onSelect)="verifyConflict(schedule)"
-                    [readonlyInput]="false"
-                    [disabled]="schedule.readonly"
-                    required
-                  ></p-calendar>
+                <div class="titleGroup" [attr.rowspan]="schedule.rowsDate" *ngIf="schedule.showDate">
+                  <p-calendar name="date" dateFormat="dd/mm/yy" (ngModelChange)="schedule.date = $event" [ngModel]="schedule.date | dateconvert" [minDate]="minDateValue" [maxDate]="maxDateValue" (onSelect)="verifyConflict(schedule)" [readonlyInput]="false" [disabled]="schedule.readonly" required></p-calendar>
                 </div>
               </td>
               <td>
-                <p-calendar
-                  name="startTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  hourFormat="24"
-                  (ngModelChange)="schedule.startTime = $event"
-                  [ngModel]="schedule.startTime | dateconvert"
-                  [readonlyInput]="false"
-                  (onSelect)="verifyConflict(schedule)"
-                  required
-                ></p-calendar>
+                <p-calendar name="startTime" pattern="HH:mm" timeOnly="true" hourFormat="24" (ngModelChange)="schedule.startTime = $event" [ngModel]="schedule.startTime | dateconvert" [readonlyInput]="false" (onSelect)="verifyConflict(schedule)" required></p-calendar>
               </td>
               <td>
-                <p-calendar
-                  name="endTime"
-                  pattern="HH:mm"
-                  timeOnly="true"
-                  (ngModelChange)="schedule.endTime = $event"
-                  [ngModel]="schedule.endTime | dateconvert"
-                  showTime="true"
-                  hourFormat="24"
-                  (onSelect)="verifyConflict(schedule)"
-                  [readonlyInput]="false"
-                  required
-                ></p-calendar>
+                <p-calendar name="endTime" pattern="HH:mm" timeOnly="true" (ngModelChange)="schedule.endTime = $event" [ngModel]="schedule.endTime | dateconvert" showTime="true" hourFormat="24" (onSelect)="verifyConflict(schedule)" [readonlyInput]="false" required></p-calendar>
               </td>
               <td>
-                <button
-                  (click)="removeSchedule(schedule)"
-                  type="button"
-                  class="btn btn-sm btn-danger ml-5"
-                  data-toggle="button"
-                  aria-pressed="false"
-                  autocomplete="off"
-                >
+                <button (click)="removeSchedule(schedule)" type="button" class="btn btn-sm btn-danger ml-5" data-toggle="button" aria-pressed="false" autocomplete="off">
                   <i class="fa fa-trash"></i>
                 </button>
               </td>
             </tr>
           </ng-template>
         </tbody>
-        <pagination-controls
-          (pageChange)="page = $event"
-          previousLabel="Anterior"
-          nextLabel="Próxima"
-          autoHide="true"
-          responsive="true"
-          screenReaderPaginationLabel="Pagination"
-        ></pagination-controls>
+        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
       </ng-template>
     </table>
   </div>

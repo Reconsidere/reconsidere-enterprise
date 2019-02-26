@@ -20,7 +20,7 @@ var OrganizationSchema = new mongoose.Schema({
         materials: {
           paper: {
             name: String,
-            used: Boolean,
+            used: Boolean
           },
           plastic: {
             name: String,
@@ -45,7 +45,7 @@ var OrganizationSchema = new mongoose.Schema({
         },
         semiSolid: {},
         liquid: {}
-      },
+      }
     }
   ],
   units: [
@@ -90,40 +90,93 @@ var OrganizationSchema = new mongoose.Schema({
         paper: {
           name: String,
           used: Boolean,
-          items: [{
-            name: String, active: Boolean,
-            princing: {
-              price: [Number],
-              date: [Date],
-              weight: Number,
-            },
-
-          }]
+          items: [
+            {
+              name: String,
+              active: Boolean,
+              pricing: {
+                unitPrice: [Number],
+                date: [Date],
+                weight: Number
+              }
+            }
+          ]
         },
         plastic: {
           name: String,
           used: Boolean,
-          items: [{ name: String, active: Boolean }]
+          items: [
+            {
+              name: String,
+              active: Boolean,
+              pricing: {
+                unitPrice: [Number],
+                date: [Date],
+                weight: Number
+              }
+            }
+          ]
         },
         glass: {
           name: String,
           used: Boolean,
-          items: [{ name: String, active: Boolean }]
+          items: [
+            {
+              name: String,
+              active: Boolean,
+              pricing: {
+                unitPrice: [Number],
+                date: [Date],
+                weight: Number
+              }
+            }
+          ]
         },
         metal: {
           name: String,
           used: Boolean,
-          items: [{ name: String, active: Boolean }]
+          items: [
+            {
+              name: String,
+              active: Boolean,
+              pricing: {
+                unitPrice: [Number],
+                date: [Date],
+                weight: Number
+              }
+            }
+          ]
         },
         isopor: {
           name: String,
           used: Boolean,
-          items: [{ name: String, active: Boolean }]
+          items: [
+            {
+              name: String,
+              active: Boolean,
+              pricing: {
+                unitPrice: [Number],
+                date: [Date],
+                weight: Number
+              }
+            }
+          ]
         },
         tetrapack: {
           name: String,
           used: Boolean,
-          items: [{ name: String, active: Boolean }]
+          items: [
+            {
+              name: String,
+              active: Boolean,
+              pricing: {
+                unitPrice: [Number],
+                date: [Date],
+                weight: Number
+
+              }
+            }
+          ]
         }
       },
       semisolid: {},
@@ -532,7 +585,6 @@ organizations
 //    });
 // });
 
-
 //#region CRUD - Material
 organizations.route('/hierarchy/:id').get(function (req, res) {
   organizationModel.findById(req.params.id, function (err, org) {
@@ -561,7 +613,6 @@ organizations.route('/add/hierarchy/:id').post(function (req, res, next) {
   });
 });
 //#endregion
-
 
 //#region CRUD - pricing
 organizations.route('/pricing/:id').get(function (req, res) {

@@ -1,19 +1,74 @@
+import { Pricing } from './pricing';
+
 export class Hierarchy {
   solid = {
     materials: {
-      paper: { name: 'paper', used: false, items: [{ _id: String, name: String, active: Boolean}] },
-      metal: { name: 'metal', used: false, items: [{ _id: String, name: String, active: Boolean}] },
-      isopor: { name: 'isopor', used: false, items: [{ _id: String, name: String, active: Boolean}] },
-      glass: { name: 'glass', used: false, items: [{ _id: String, name: String, active: Boolean}] },
-      plastic: { name: 'plastic', used: false, items: [{ _id: String, name: String, active: Boolean}] },
-      tetrapack: { name: 'tetrapack', used: false, items: [{ _id: String, name: String, active: Boolean}] },
-    },
+      paper: {
+        name: 'paper',
+        used: false,
+        items: [
+          {
+            _id: String, name: String, active: Boolean,
+            pricing: { unitPrice: [], date: [], weight: Number }
+          }
+        ]
+      },
+      metal: {
+        name: 'metal',
+        used: false,
+        items: [
+          {
+            _id: String, name: String, active: Boolean,
+            pricing: { unitPrice: [], date: [], weight: Number }
+          }
+        ]
+      },
+      isopor: {
+        name: 'isopor',
+        used: false,
+        items: [
+          {
+            _id: String, name: String, active: Boolean,
+            pricing: { unitPrice: [], date: [], weight: Number }
+          }
+        ]
+      },
+      glass: {
+        name: 'glass',
+        used: false,
+        items: [
+          {
+            _id: String, name: String, active: Boolean,
+            pricing: { unitPrice: [], date: [], weight: Number }
+          }
+        ]
+      },
+      plastic: {
+        name: 'plastic',
+        used: false,
+        items: [
+          {
+            _id: String, name: String, active: Boolean,
+            pricing: { unitPrice: [], date: [], weight: Number }
+          }
+        ]
+      },
+      tetrapack: {
+        name: 'tetrapack',
+        used: false,
+        items: [
+          {
+            _id: String, name: String, active: Boolean,
+            pricing: { unitPrice: [], date: [], weight: Number }
+          }
+        ]
+      }
+    }
   };
   semisolid = {};
   liquid = {};
 
   constructor() { }
-
 }
 
 export namespace Hierarchy {
@@ -51,7 +106,3 @@ export namespace Hierarchy {
     tetrapack = 'tetrapack'
   }
 }
-
-
-
-
