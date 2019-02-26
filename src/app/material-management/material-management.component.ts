@@ -9,6 +9,8 @@ import { Pricing } from 'src/models/pricing';
   templateUrl: './material-management.component.html',
   styleUrls: ['./material-management.component.scss']
 })
+
+
 export class MaterialManagementComponent implements OnInit {
   hierarchy: Hierarchy;
   organizationId: string;
@@ -40,7 +42,7 @@ export class MaterialManagementComponent implements OnInit {
         .subscribe(item => this.loadHierarchy(item), error => error);
     } else {
       this.message =
-        'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
       this.isBlocked = false;
     }
   }
@@ -52,7 +54,7 @@ export class MaterialManagementComponent implements OnInit {
       this.createSimpleList(this.hierarchy);
     } else {
       this.message =
-        'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
       this.isBlocked = false;
     }
   }
@@ -67,7 +69,7 @@ export class MaterialManagementComponent implements OnInit {
       !this.hierarchy.solid.materials.tetrapack.used
     ) {
       this.message =
-        'Pro favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
       this.isBlocked = false;
       return;
     }
@@ -155,7 +157,7 @@ export class MaterialManagementComponent implements OnInit {
   newItem() {
     if (this.itemsMaterials === undefined) {
       this.itemsMaterials = [
-        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0 } }
+        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0 } }
       ];
     } else {
       this.itemsMaterials.push({
@@ -163,7 +165,7 @@ export class MaterialManagementComponent implements OnInit {
         typeMaterial: '',
         name: undefined,
         active: true,
-        pricing: { unitPrice: [0], date: [new Date()], weight: 0 }
+        pricing: { unitPrice: [0], date: [new Date()], weight: 0 , price: 0 }
       });
     }
   }
@@ -291,6 +293,7 @@ export class MaterialManagementComponent implements OnInit {
   }
 
   changeClassMaterial(selected, oldValue, item) {
+
     if (selected === oldValue) {
       return;
     }

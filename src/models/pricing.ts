@@ -3,4 +3,5 @@ export class Pricing {
   unitPrice: [number];
   weight: number;
   date: [Date];
+  price: number;
 }

@@ -97,7 +97,8 @@ var OrganizationSchema = new mongoose.Schema({
               pricing: {
                 unitPrice: [Number],
                 date: [Date],
-                weight: Number
+                weight: Number,
+                price: Number
               }
             }
           ]
@@ -112,7 +113,8 @@ var OrganizationSchema = new mongoose.Schema({
               pricing: {
                 unitPrice: [Number],
                 date: [Date],
-                weight: Number
+                weight: Number,
+                price: Number
               }
             }
           ]
@@ -127,7 +129,8 @@ var OrganizationSchema = new mongoose.Schema({
               pricing: {
                 unitPrice: [Number],
                 date: [Date],
-                weight: Number
+                weight: Number,
+                price: Number
               }
             }
           ]
@@ -142,7 +145,8 @@ var OrganizationSchema = new mongoose.Schema({
               pricing: {
                 unitPrice: [Number],
                 date: [Date],
-                weight: Number
+                weight: Number,
+                price: Number
               }
             }
           ]
@@ -157,7 +161,8 @@ var OrganizationSchema = new mongoose.Schema({
               pricing: {
                 unitPrice: [Number],
                 date: [Date],
-                weight: Number
+                weight: Number,
+                price: Number
               }
             }
           ]
@@ -172,7 +177,8 @@ var OrganizationSchema = new mongoose.Schema({
               pricing: {
                 unitPrice: [Number],
                 date: [Date],
-                weight: Number
+                weight: Number,
+                price: Number
 
               }
             }
@@ -231,8 +237,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
-//const TestURL = 'mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb'
+//const TestURL = `mongodb://localhost:27017/eowyn-reconsidere-enterprise`;
+const TestURL = 'mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb'
 const options = {
   autoIndex: false,
   reconnectTries: 30,
@@ -621,6 +627,23 @@ organizations.route('/pricing/:id').get(function (req, res) {
       console.log(err);
     } else {
       res.json(org.hierarchy);
+    }
+  });
+});
+
+organizations.route('/add/pricing/:id').post(function (req, res, next) {
+  organizationModel.findById(req.params.id, function (err, org) {
+    if (!org) return next(new Error('Could not load Document'));
+    else {
+      org.hierarchy = req.body;
+      org
+        .update(org)
+        .then(org => {
+          res.json('Update complete');
+        })
+        .catch(err => {
+          res.status(400).send('unable to update the database');
+        });
     }
   });
 });

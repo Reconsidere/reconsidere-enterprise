@@ -12,8 +12,8 @@ export const environment = {
     host: 'ec2-18-216-31-156.us-east-2.compute.amazonaws.com',
     port: '27017',
     dbname: 'reconsideredb',
-    uri: `http://localhost:3000`
-    //uri:`mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb`
+    //uri: `http://localhost:3000`
+    uri:`mongodb://reconsidere-enterprise:by4yY5A4@ec2-18-216-31-156.us-east-2.compute.amazonaws.com:27017/reconsideredb`
   },
   secret: '154097$#@$^@1ETI',
 };

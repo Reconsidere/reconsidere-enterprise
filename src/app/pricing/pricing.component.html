@@ -8,51 +8,57 @@
     </button>
   </div>
 
+  <div *ngIf="isBlocked">
 
-  <button type="button" id="save" (click)="save()" class="btn btn-success col-md-2 pull-right">
-    Salvar ações
-  </button>
+    <button type="button" id="save" (click)="save()" class="btn btn-success col-md-2 pull-right">
+      Salvar ações
+    </button>
 
-  <div class="tablePricing">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <button id="newPricing" (click)="newPricing()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <i class="fa fa-plus"></i>
-          </button>
-        </tr>
-        <tr id="Titles">
-          <th>Material</th>
-          <th>Valor unitário</th>
-          <th>Peso</th>
-          <th>Preço</th>
-          <th>Remover</th>
-        </tr>
-      </thead>
-      <tbody>
-
-        <ng-template ngFor let-item [ngForOf]="(materials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+    <div class="tablePricing">
+      <table class="table table-sm">
+        <thead>
           <tr>
-            <td>
-              <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" disabled="disabled" />
-            </td>
-            <td>
-              <input required disabled="disabled" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" type="text" class="form-control" id="unitPrice" aria-describedby="unitPrice" />
-            </td>
-            <td>
-              <input required [(ngModel)]="item.weight" name="weight" type="text" class="form-control" id="weight" aria-describedby="weight" />
-            </td>
-            <td>
-              <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
+            <button id="newPricing" (click)="newPricing()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <i class="fa fa-plus"></i>
+            </button>
           </tr>
+          <tr id="Titles">
+            <th>Material</th>
+            <th>Valor unitário</th>
+            <th>Peso</th>
+            <th>Preço</th>
+            <th>Remover</th>
+          </tr>
+        </thead>
+        <tbody>
 
-        </ng-template>
-      </tbody>
-      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
-    </table>
+          <ng-template ngFor let-item [ngForOf]="(materials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+            <tr>
+              <td>
+                <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" disabled="disabled" />
+              </td>
+              <td>
+                <input required disabled="disabled" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" type="text" class="form-control" id="unitPrice"
+                  aria-describedby="unitPrice" />
+              </td>
+              <td>
+                <input required [(ngModel)]="item.pricing.weight" name="weight" (blur)="calculatePrice(item)" type="number" class="form-control" id="weight" aria-describedby="weight" />
+              </td>
+              <td>
+                <input required disabled="disabled" [(ngModel)]="item.pricing.price" name="price" type="number" class="form-control" id="price" aria-describedby="price" />
+              </td>
+              <td>
+                <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+          </ng-template>
+        </tbody>
+        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+      </table>
+    </div>
   </div>
 
 </div>

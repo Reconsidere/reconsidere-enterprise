@@ -6,6 +6,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
+
   <div *ngIf="isBlocked" class="tableItemMaterial">
     <table class="table table-sm">
       <thead>
@@ -27,7 +28,8 @@
         <ng-template ngFor let-item [ngForOf]="(itemsMaterials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
           <tr>
             <td>
-              <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue, item)" required [(ngModel)]="item.typeMaterial" name="typeMaterial" class="form-control">
+              <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue, item)" required [(ngModel)]="item.typeMaterial" name="typeMaterial"
+                class="form-control">
                 <option id="typeMaterial" *ngFor="let type of materialsType">{{type}}</option>
               </select>
             </td>
@@ -35,7 +37,10 @@
               <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
             </td>
             <td>
-              <input required type="text" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" mask="0.00" (blur)="changePrice(oldValue, item.pricing.unitPrice[item.pricing.unitPrice.length - 1], item)" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" class="form-control" id="unitPrice" aria-describedby="unitPrice" />
+              <input required type="number" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
+               (blur)="changePrice(oldValue, item.pricing.unitPrice[item.pricing.unitPrice.length - 1], item)"
+                [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" class="form-control" id="unitPrice" aria-describedby="unitPrice"
+                />
             </td>
             <td>
               <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
