@@ -7,56 +7,56 @@
     </button>
   </div>
 
-  <div *ngIf="isBlocked" class="tableItemMaterial">
-    <table class="table table-sm">
-      <thead>
-        <tr>
-          <button id="newItem" (click)="newItem()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <i class="fa fa-plus"></i>
-          </button>
-        </tr>
-        <tr id="Titles">
-          <th>Classe do material</th>
-          <th>Nome</th>
-          <th>Valor unitário</th>
-          <th>Remover</th>
-          <th>Salvar</th>
-        </tr>
-      </thead>
+  <div *ngIf="isBlocked">
 
-      <tbody>
-        <ng-template ngFor let-item [ngForOf]="(itemsMaterials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+    <button type="button" id="save" (click)="save()" class="btn btn-success col-md-2 pull-right">
+      Salvar ações
+    </button>
+
+    <div class="tableItemMaterial">
+      <table class="table table-sm">
+        <thead>
           <tr>
-            <td>
-              <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue, item)" required [(ngModel)]="item.typeMaterial" name="typeMaterial"
-                class="form-control">
-                <option id="typeMaterial" *ngFor="let type of materialsType">{{type}}</option>
-              </select>
-            </td>
-            <td>
-              <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
-            </td>
-            <td>
-              <input required type="number" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
-               (blur)="changePrice(oldValue, item.pricing.unitPrice[item.pricing.unitPrice.length - 1], item)"
-                [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" class="form-control" id="unitPrice" aria-describedby="unitPrice"
-                />
-            </td>
-            <td>
-              <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
-            <td>
-              <button (click)="save(item)" type="button" class="btn btn-sm btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">
-                <i class="fa fa-save"></i>
-              </button>
-            </td>
+            <button id="newItem" (click)="newItem()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <i class="fa fa-plus"></i>
+            </button>
           </tr>
-        </ng-template>
-      </tbody>
-      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
-    </table>
+          <tr id="Titles">
+            <th>Classe do material</th>
+            <th>Nome</th>
+            <th>Valor unitário</th>
+            <th>Remover</th>
+          </tr>
+        </thead>
 
+        <tbody>
+          <ng-template ngFor let-item [ngForOf]="(itemsMaterials | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+            <tr>
+              <td>
+                <select (click)="oldValue = item.typeMaterial" (change)="changeClassMaterial(item.typeMaterial, oldValue, item)" required [(ngModel)]="item.typeMaterial" name="typeMaterial"
+                  class="form-control">
+                  <option id="typeMaterial" *ngFor="let type of materialsType">{{type}}</option>
+                </select>
+              </td>
+              <td>
+                <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+              </td>
+              <td>
+                <input required type="number" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
+                  (blur)="changePrice(oldValue, item.pricing.unitPrice[item.pricing.unitPrice.length - 1], item)" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
+                  name="unitPrice" class="form-control" id="unitPrice" aria-describedby="unitPrice" />
+              </td>
+              <td>
+                <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                  <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+      </table>
+
+    </div>
   </div>
 </div>

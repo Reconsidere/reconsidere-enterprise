@@ -18,7 +18,7 @@ export class MaterialManagementComponent implements OnInit {
   message: string;
   show = false;
   materialsType = [];
-  itemsMaterials: any;
+  itemsMaterials: any[];
   isBlocked = true;
 
   constructor(
@@ -165,33 +165,52 @@ export class MaterialManagementComponent implements OnInit {
         typeMaterial: '',
         name: undefined,
         active: true,
-        pricing: { unitPrice: [0], date: [new Date()], weight: 0 , price: 0 }
+        pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0 }
       });
     }
   }
 
-  veryfyBeforeSave(itemMaterial) {
-    if (!itemMaterial.name || !itemMaterial.active) {
+  veryfyBeforeSave() {
+    if (this.itemsMaterials === undefined || this.itemsMaterials.length <= 0) {
       throw new Error(
         'Por favor, preencha os campos antes de salvar os dados!'
       );
     }
+    this.itemsMaterials.forEach(item => {
+      if (item.name === undefined) {
+        throw new Error(
+          'Por favor, preencha os campos antes de salvar os dados!'
+        );
+      }
+      if ((item.pricing === undefined || item.pricing.unitPrice.length <= 0)) {
+        throw new Error(
+          'Por favor, preencha os campos antes de salvar os dados!'
+        );
+      }
+      if ((item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0)) {
+        throw new Error(
+          'Por favor, preencha os campos antes de salvar os dados!'
+        );
+      }
+    });
   }
 
-  private addToItemsMaterial(itemMaterial) {
-    if (itemMaterial.typeMaterial === Hierarchy.Material.Glass) {
-      this.insertValues(itemMaterial, Hierarchy.types.glass);
-    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
-      this.insertValues(itemMaterial, Hierarchy.types.isopor);
-    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
-      this.insertValues(itemMaterial, Hierarchy.types.metal);
-    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
-      this.insertValues(itemMaterial, Hierarchy.types.paper);
-    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
-      this.insertValues(itemMaterial, Hierarchy.types.plastic);
-    } else if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
-      this.insertValues(itemMaterial, Hierarchy.types.tetrapack);
-    }
+  private addToItemsMaterial() {
+    this.itemsMaterials.forEach(itemMaterial => {
+      if (itemMaterial.typeMaterial === Hierarchy.Material.Glass) {
+        this.insertValues(itemMaterial, Hierarchy.types.glass);
+      } if (itemMaterial.typeMaterial === Hierarchy.Material.Isopor) {
+        this.insertValues(itemMaterial, Hierarchy.types.isopor);
+      } if (itemMaterial.typeMaterial === Hierarchy.Material.Metal) {
+        this.insertValues(itemMaterial, Hierarchy.types.metal);
+      } if (itemMaterial.typeMaterial === Hierarchy.Material.Paper) {
+        this.insertValues(itemMaterial, Hierarchy.types.paper);
+      } if (itemMaterial.typeMaterial === Hierarchy.Material.Plastic) {
+        this.insertValues(itemMaterial, Hierarchy.types.plastic);
+      } if (itemMaterial.typeMaterial === Hierarchy.Material.Tetrapack) {
+        this.insertValues(itemMaterial, Hierarchy.types.tetrapack);
+      }
+    });
   }
 
   remove(itemMaterial) {
@@ -217,21 +236,13 @@ export class MaterialManagementComponent implements OnInit {
   }
   removeItem(itemMaterial: any, type: string) {
     let isRemoved = false;
-    if (this.hierarchy.solid.materials[type].items !== undefined) {
-      this.hierarchy.solid.materials[type].items.forEach((item, index) => {
-        if (item._id === itemMaterial._id) {
-          let obj = {
-            _id: itemMaterial._id,
-            name: itemMaterial.name,
-            active: false
-          };
-          this.hierarchy.solid.materials[type].items[index] = obj;
+    let isChanged = false;
+    if (this.itemsMaterials !== undefined) {
+      this.itemsMaterials.forEach((item, index) => {
+        if (item._id !== undefined && item._id === itemMaterial._id && !isChanged) {
+          this.itemsMaterials[index].active = false;
           isRemoved = true;
-          this.itemsMaterials.forEach((item, index) => {
-            if (item === itemMaterial) {
-              this.itemsMaterials.splice(index, 1);
-            }
-          });
+          isChanged = true;
         }
       });
       if (!isRemoved) {
@@ -243,16 +254,22 @@ export class MaterialManagementComponent implements OnInit {
         });
       }
     }
-    if (itemMaterial._id !== undefined) {
-      this.materialService.add(this.organizationId, this.hierarchy);
-    }
   }
 
   private insertValues(itemMaterial: any, type: string) {
     let isAdd = false;
     if (this.hierarchy.solid.materials[type].items !== undefined) {
       this.hierarchy.solid.materials[type].items.forEach((item, index) => {
-        if (item === itemMaterial || item._id === itemMaterial._id) {
+        if (item === itemMaterial) {
+          let obj = {
+            _id: itemMaterial._id,
+            name: itemMaterial.name,
+            active: itemMaterial.active,
+            pricing: itemMaterial.pricing
+          };
+          this.hierarchy.solid.materials[type].items[index] = obj;
+          isAdd = true;
+        } else if (item._id !== undefined && item._id === itemMaterial._id) {
           let obj = {
             _id: itemMaterial._id,
             name: itemMaterial.name,
@@ -299,42 +316,55 @@ export class MaterialManagementComponent implements OnInit {
     }
     if (oldValue === Hierarchy.Material.Glass) {
       this.changeClass(item, selected, Hierarchy.types.glass);
+      return;
     }
     if (oldValue === Hierarchy.Material.Isopor) {
       this.changeClass(item, selected, Hierarchy.types.isopor);
+      return;
     }
     if (oldValue === Hierarchy.Material.Metal) {
       this.changeClass(item, selected, Hierarchy.types.metal);
+      return;
     }
     if (oldValue === Hierarchy.Material.Paper) {
       this.changeClass(item, selected, Hierarchy.types.paper);
+      return;
     }
     if (oldValue === Hierarchy.Material.Plastic) {
       this.changeClass(item, selected, Hierarchy.types.plastic);
+      return;
     }
     if (oldValue === Hierarchy.Material.Tetrapack) {
       this.changeClass(item, selected, Hierarchy.types.tetrapack);
+      return;
     }
   }
 
   private changeClass(item: any, selected: any, type: any) {
+    let isChanged = false;
+    let isRemoved = false;
     this.itemsMaterials.forEach((element, index) => {
-      if (element === item) {
+      if (element._id !== undefined && element._id !== '' && !isChanged) {
         this.hierarchy.solid.materials[type].items.forEach((obj, i) => {
-          if (item === obj || item._id === obj._id) {
+          if (item._id === obj._id) {
             this.hierarchy.solid.materials[type].items.splice(i, 1);
+            isRemoved = true;
           }
         });
-        item.typeMaterial = selected;
-        this.itemsMaterials[index] = item;
+        if (isRemoved) {
+          item.typeMaterial = selected;
+          this.itemsMaterials[index] = item;
+          isChanged = true;
+          isRemoved = false;
+        }
       }
     });
   }
 
-  save(itemMaterial) {
+  save() {
     try {
-      this.veryfyBeforeSave(itemMaterial);
-      this.addToItemsMaterial(itemMaterial);
+      this.veryfyBeforeSave();
+      this.addToItemsMaterial();
       this.materialService.createOrUpdate(this.organizationId, this.hierarchy);
       this.message = 'Dados salvos com sucesso';
     } catch (error) {
