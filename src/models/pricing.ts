@@ -4,4 +4,5 @@ export class Pricing {
   weight: number;
   date: [Date];
   price: number;
+  dateEntry: Date;
 }

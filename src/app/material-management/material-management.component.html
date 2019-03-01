@@ -42,9 +42,11 @@
                 <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
               </td>
               <td>
-                <input required type="number" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
-                  (blur)="changePrice(oldValue, item.pricing.unitPrice[item.pricing.unitPrice.length - 1], item)" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
-                  name="unitPrice" class="form-control" id="unitPrice" aria-describedby="unitPrice" />
+                <input required type="text" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"
+                  (blur)="changePrice(oldValue, item.pricing.unitPrice[item.pricing.unitPrice.length - 1], item,$event)" [ngModel]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1] |currency:'BRL':'symbol':'2.2':allowZero: true"
+                  (ngModelChange)="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]=$event"
+                  name="unitPrice" class="form-control" id="unitPrice" aria-describedby="unitPrice"
+                  [ngModelOptions]="{updateOn:'blur'}" />
               </td>
               <td>
                 <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">

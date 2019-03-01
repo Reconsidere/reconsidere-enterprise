@@ -3,6 +3,7 @@ import { Hierarchy } from 'src/models/material';
 import { AuthService } from 'src/services';
 import { MaterialManagementService } from 'src/services/material-management.service';
 import { Pricing } from 'src/models/pricing';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-material-management',
@@ -157,7 +158,7 @@ export class MaterialManagementComponent implements OnInit {
   newItem() {
     if (this.itemsMaterials === undefined) {
       this.itemsMaterials = [
-        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0 } }
+        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0, dateEntry: undefined } }
       ];
     } else {
       this.itemsMaterials.push({
@@ -165,7 +166,7 @@ export class MaterialManagementComponent implements OnInit {
         typeMaterial: '',
         name: undefined,
         active: true,
-        pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0 }
+        pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0, dateEntry: undefined }
       });
     }
   }
@@ -300,12 +301,18 @@ export class MaterialManagementComponent implements OnInit {
     }
   }
 
-  changePrice(oldValue, value, item) {
+  changePrice(oldValue, value, item, e) {
     if (oldValue === value) {
       return;
     }
+    let number = value.replace(/[^0-9.,]+/, '');
+    number = Number(number.replace(',', '.')).toFixed(2);
+    if (number === 'NaN') {
+      item.pricing.unitPrice[item.pricing.unitPrice.length - 1] = '';
+      return;
+    }
     item.pricing.unitPrice[item.pricing.unitPrice.length - 1] = oldValue;
-    item.pricing.unitPrice.push(value);
+    item.pricing.unitPrice.push(number);
     item.pricing.date.push(new Date());
   }
 
@@ -360,6 +367,8 @@ export class MaterialManagementComponent implements OnInit {
       }
     });
   }
+
+
 
   save() {
     try {

@@ -88,7 +88,7 @@ export class SignUpComponent implements OnInit {
   }
 
   private loadOrganization(item) {
-    this.organization = item[0];
+    this.organization = item;
     if (this.organization.users !== undefined) {
       this.show = true;
     }

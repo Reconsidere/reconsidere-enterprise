@@ -98,7 +98,8 @@ var OrganizationSchema = new mongoose.Schema({
                 unitPrice: [Number],
                 date: [Date],
                 weight: Number,
-                price: Number
+                price: Number,
+                dateEntry: Date
               }
             }
           ]
@@ -114,7 +115,8 @@ var OrganizationSchema = new mongoose.Schema({
                 unitPrice: [Number],
                 date: [Date],
                 weight: Number,
-                price: Number
+                price: Number,
+                dateEntry: Date
               }
             }
           ]
@@ -130,7 +132,8 @@ var OrganizationSchema = new mongoose.Schema({
                 unitPrice: [Number],
                 date: [Date],
                 weight: Number,
-                price: Number
+                price: Number,
+                dateEntry: Date
               }
             }
           ]
@@ -146,7 +149,8 @@ var OrganizationSchema = new mongoose.Schema({
                 unitPrice: [Number],
                 date: [Date],
                 weight: Number,
-                price: Number
+                price: Number,
+                dateEntry: Date
               }
             }
           ]
@@ -162,7 +166,8 @@ var OrganizationSchema = new mongoose.Schema({
                 unitPrice: [Number],
                 date: [Date],
                 weight: Number,
-                price: Number
+                price: Number,
+                dateEntry: Date
               }
             }
           ]
@@ -178,7 +183,8 @@ var OrganizationSchema = new mongoose.Schema({
                 unitPrice: [Number],
                 date: [Date],
                 weight: Number,
-                price: Number
+                price: Number,
+                dateEntry: Date
 
               }
             }
@@ -286,7 +292,7 @@ organizations.route('/organizationid/:id').get(function (req, res) {
 
 /**Return organization object */
 organizations.route('/:id').get(function (req, res) {
-  organizationModel.find(function (err, org) {
+  organizationModel.findById(req.params.id,function (err, org) {
     if (err) {
       console.log(err);
     } else {

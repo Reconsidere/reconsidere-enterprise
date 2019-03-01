@@ -1,5 +1,4 @@
 import { environment } from 'src/environments/environment';
-import { AppService } from 'src/services/app.service';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { MatListModule } from '@angular/material/list';
 import { BrowserModule } from '@angular/platform-browser';
@@ -95,7 +94,6 @@ registerLocaleData(localePt);
     { provide: APP_BASE_HREF, useValue: '/' },
     { provide: LOCALE_ID, useValue: 'pt' },
     AuthService,
-    AppService,
     ReactiveFormsModule,
     BrowserModule,
     RouterModule,

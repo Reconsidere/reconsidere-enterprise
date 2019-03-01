@@ -26,8 +26,8 @@
             <th>Material</th>
             <th>Valor unitário</th>
             <th>Peso</th>
-            <th>Preço</th>
-            <th>Remover</th>
+            <th>Data entrada</th>
+            <th>Preço final</th>
           </tr>
         </thead>
         <tbody>
@@ -38,19 +38,20 @@
                 <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" disabled="disabled" />
               </td>
               <td>
-                <input required disabled="disabled" [(ngModel)]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]" name="unitPrice" type="text" class="form-control" id="unitPrice"
-                  aria-describedby="unitPrice" />
+                <input required disabled="disabled" [ngModel]="item.pricing.unitPrice[item.pricing.unitPrice.length - 1] |currency:'BRL':'symbol':'2.2':allowZero: true"
+                  (ngModelChange)="item.pricing.unitPrice[item.pricing.unitPrice.length - 1]=$event" name="unitPrice" type="text" class="form-control" id="unitPrice" aria-describedby="unitPrice" />
               </td>
               <td>
-                <input required [(ngModel)]="item.pricing.weight" name="weight" (blur)="calculatePrice(item)" type="number" class="form-control" id="weight" aria-describedby="weight" />
+                <input [disabled]="item.pricing.disabled" required [(ngModel)]="item.pricing.weight" name="weight" (blur)="calculatePrice(item)" type="number" class="form-control" id="weight"
+                  aria-describedby="weight" />
               </td>
               <td>
-                <input required disabled="disabled" [(ngModel)]="item.pricing.price" name="price" type="number" class="form-control" id="price" aria-describedby="price" />
+                <p-calendar required disabled="disabled" name="dateEntry" [(ngModel)]="item.pricing.dateEntry" dateFormat="dd/mm/yy"></p-calendar>
               </td>
               <td>
-                <button (click)="remove(item)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
-                  <i class="fa fa-trash"></i>
-                </button>
+                <input required disabled="disabled" [ngModel]="item.pricing.price |currency:'BRL':'symbol':'2.2':allowZero: true" name="price" type="text"
+                (ngModelChange)="item.pricing.price = $event"
+                class="form-control" id="price" aria-describedby="price" />
               </td>
             </tr>
 
