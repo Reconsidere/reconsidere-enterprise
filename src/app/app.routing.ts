@@ -1,3 +1,4 @@
+import { CitizenRegistrationComponent } from './forms/citizen-registration/citizen-registration.component';
 import { LogoutComponent } from './auth/logout/logout.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
@@ -11,42 +12,23 @@ import { MaterialManagementComponent } from './material-management/material-mana
 import { PricingComponent } from './pricing/pricing.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: StartcenterComponent,
-    canActivate: [AuthGuard]
-  },
-  { path: 'sign-up', component: SignUpComponent },
-  { path: 'account', component: SignUpComponent },
-  {
-    path: 'vehicle-management',
-    component: VehicleManagementComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'scheduler',
-    component: SchedulerComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'login',
-    component: SignInComponent
-  },
-  {
-    path: 'logout',
-    component: LogoutComponent
-  },
-  {
-    path: 'material-management',
-    component: MaterialManagementComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'pricing',
-    component: PricingComponent,
-    canActivate: [AuthGuard]
-  },
-  // otherwise redirect to home
-  { path: '**', redirectTo: '' }
+  //Módulo de segurança
+  {path: '', component: StartcenterComponent, canActivate: [AuthGuard]},
+  {path: 'sign-up', component: SignUpComponent },
+  {path: 'login', component: SignInComponent},
+  {path: 'logout', component: LogoutComponent},
+
+  //Módulo de materiais
+  {path: 'account', component: SignUpComponent, canActivate: [AuthGuard] },
+  {path: 'vehicle-management', component: VehicleManagementComponent, canActivate: [AuthGuard] },
+  {path: 'material-management', component: MaterialManagementComponent, canActivate: [AuthGuard]},
+  {path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard]},
+  {path: 'pricing', component: PricingComponent, canActivate: [AuthGuard]},
+
+  //Módulo de formulários
+  {path: 'forms/citizen-registration', component: CitizenRegistrationComponent},
+
+  //Qualquer outro acesso
+  {path: '**', redirectTo: '' }
 ];
 export const ROUTING: ModuleWithProviders = RouterModule.forRoot(routes);
