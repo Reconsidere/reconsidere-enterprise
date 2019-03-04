@@ -1,18 +1,14 @@
-import { Vehicle } from './../models/vehicle';
 import { Organization } from 'src/models/organization';
 import { Injectable } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { environment } from 'src/environments/environment';
-import { User } from 'src/models';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import jwt from 'jsonwebtoken';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { cleanSession } from 'selenium-webdriver/safari';
-import { DecriptEncript } from 'src/app/_helpers/decriptencript';
+import { DecriptEncript } from 'src/app/security/decriptencript';
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +55,7 @@ export class AuthService {
 
   add(organization: Organization) {
     this.http
-      .post(environment.database.uri + `/organization/add`, organization)
+      .post(environment.api.uri + `api/organization/add`, organization)
       .subscribe(res => console.log('Done'));
   }
 

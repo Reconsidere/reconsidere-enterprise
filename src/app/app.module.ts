@@ -28,9 +28,9 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import localePt from '@angular/common/locales/pt';
 import { registerLocaleData } from '@angular/common';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { JwtInterceptor } from './_helpers/jwt.interceptor';
-import { ErrorInterceptor } from './_helpers/error.interceptor';
-import { DecriptEncript } from './_helpers/decriptencript';
+import { JwtInterceptor } from './security/jwt.interceptor';
+import { ErrorInterceptor } from './security/error.interceptor';
+import { DecriptEncript } from './security/decriptencript';
 import { RecaptchaModule } from 'angular-google-recaptcha';
 import { BooltransformPipe } from '../pipes/booltransform.pipe';
 import { CalendarModule } from 'primeng/calendar';
@@ -40,7 +40,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { PricingComponent } from './pricing/pricing.component';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { NotFoundComponent } from './errors/not-found/not-found.component';
+import { InternalErrorComponent } from './errors/internal-error/internal-error.component';
 
 
 
@@ -65,6 +66,7 @@ registerLocaleData(localePt);
     MaterialManagementComponent,
     PricingComponent,
     NotFoundComponent,
+    InternalErrorComponent,
   ],
   imports: [
     BrowserModule,

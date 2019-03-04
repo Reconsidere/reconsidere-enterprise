@@ -6,7 +6,7 @@ import { ModuleWithProviders } from '@angular/core/src/metadata/ng_module';
 import { VehicleManagementComponent } from './vehicle-management/vehicle-management.component';
 import { SignInComponent } from './auth/sign-in/sign-in.component';
 import { StartcenterComponent } from './startcenter/startcenter.component';
-import { AuthGuard } from './_guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import { PricingComponent } from './pricing/pricing.component';
 
