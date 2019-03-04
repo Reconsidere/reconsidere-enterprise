@@ -19,14 +19,17 @@
     "WRE002": { "status": "WARNNING", "summary": "CNPJ incorreto!", "message": ""},
     "WRE003": { "status": "WARNNING", "summary": "Verifique se todos os dados da localização foram inseridos!", "message": ""},
     "WRE004": { "status": "WARNNING", "summary": "Verifique se todos os dados do usuário foram inseridos!", "message": ""},
-    "WRE005": { "status": "WARNNING", "summary": "", "message": ""}
+    "WRE005": { "status": "WARNNING", "summary": "Email já está em uso", "message": "Não é permitido a utilização de emails duplicados."}
   },
   "ERROR": {
     "ERE001": { "status": "ERROR", "summary": "Usuário ou senha incorretos", "message": ""},
     "ERE002": { "status": "ERROR", "summary": "Falha de conexão ao banco de dados inacessível", "message": ""},
     "ERE003": { "status": "ERROR", "summary": "Impossível conectar a interface de persistência", "message": ""},
     "ERE004": { "status": "ERROR", "summary": "A conexão foi perdida, efetue o login novamente", "message": ""},
-    "ERE005": { "status": "ERROR", "summary": "Não foi possível carregar o documento a partir do banco de dados", "message": ""}
+    "ERE005": { "status": "ERROR", "summary": "Não foi possível carregar o documento a partir do banco de dados", "message": ""},
+    "ERE006": { "status": "ERROR", "summary": "Não foi possível salvar os dados", "message": ""},
+    "ERE008": { "status": "ERROR", "summary": "Não foi possível localizar o usuário", "message": ""},
+    "ERE007": { "status": "ERROR", "summary": "Não foi possível remover os dados", "message": ""}
   },
   "DANGER": {
     "DRE001": { "status": "DANGER", "summary": "", "message": ""},

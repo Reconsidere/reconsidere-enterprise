@@ -378,7 +378,11 @@ export class SignUpComponent implements OnInit {
     return prof;
   }
 
+  ScrollScreamTop() {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+  }
   save() {
+    this.ScrollScreamTop();
     if (!this.isLogged) {
       this.user.profile = this.getAdmProfile();
       this.user.active = true;
