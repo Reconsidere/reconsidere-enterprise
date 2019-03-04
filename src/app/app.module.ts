@@ -40,6 +40,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { PricingComponent } from './pricing/pricing.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 
 
@@ -63,6 +64,7 @@ registerLocaleData(localePt);
     TermFilterPipe,
     MaterialManagementComponent,
     PricingComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
