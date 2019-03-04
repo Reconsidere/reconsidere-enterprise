@@ -34,6 +34,7 @@ export namespace Organization {
     Cooperativa = 'Cooperativa',
     Coletora = 'Empresa Coletora',
     Beneficiadora = 'Empresa Beneficiadora',
-    Municipio = 'Município'
+    Municipio = 'Município',
+    Privada = 'Empresa Privada'
   }
 }
