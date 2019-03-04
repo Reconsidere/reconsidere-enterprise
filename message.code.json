@@ -1,23 +1,24 @@
 {
   "INFO": {
     "IRE001": { "status": "INFO", "summary": "O usuário foi desconectado com sucesso!", "message": ""},
-    "IRE002": { "status": "INFO", "summary": "", "message": ""},
-    "IRE003": { "status": "INFO", "summary": "", "message": ""},
-    "IRE004": { "status": "INFO", "summary": "", "message": ""},
-    "IRE005": { "status": "INFO", "summary": "", "message": ""}
+    "IRE002": { "status": "INFO", "summary": "Unidade adicionada!", "message": ""},
+    "IRE003": { "status": "INFO", "summary": "Usuário adicionado!", "message": ""},
+    "IRE004": { "status": "INFO", "summary": "Unidade removida!", "message": ""},
+    "IRE005": { "status": "INFO", "summary": "Usuário removido!", "message": ""},
+    "IRE006": { "status": "INFO", "summary": "Por favor, confirme: Não sou um robo!", "message": ""}
   },
   "SUCCESS": {
-    "SRE001": { "status": "SUCCESS", "summary": "", "message": ""},
+    "SRE001": { "status": "SUCCESS", "summary": "Dados salvos com sucesso!", "message": ""},
     "SRE002": { "status": "SUCCESS", "summary": "", "message": ""},
     "SRE003": { "status": "SUCCESS", "summary": "", "message": ""},
     "SRE004": { "status": "SUCCESS", "summary": "", "message": ""},
     "SRE005": { "status": "SUCCESS", "summary": "", "message": ""}
   },
   "WARNNING": {
-    "WRE001": { "status": "WARNNING", "summary": "", "message": ""},
-    "WRE002": { "status": "WARNNING", "summary": "", "message": ""},
-    "WRE003": { "status": "WARNNING", "summary": "", "message": ""},
-    "WRE004": { "status": "WARNNING", "summary": "", "message": ""},
+    "WRE001": { "status": "WARNNING", "summary": "'Por favor, preencha os campos antes de salvar os dados!", "message": ""},
+    "WRE002": { "status": "WARNNING", "summary": "CNPJ incorreto!", "message": ""},
+    "WRE003": { "status": "WARNNING", "summary": "Verifique se todos os dados da localização foram inseridos!", "message": ""},
+    "WRE004": { "status": "WARNNING", "summary": "Verifique se todos os dados do usuário foram inseridos!", "message": ""},
     "WRE005": { "status": "WARNNING", "summary": "", "message": ""}
   },
   "ERROR": {

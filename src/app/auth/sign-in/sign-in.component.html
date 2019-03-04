@@ -1,63 +1,39 @@
-<div class="login-box">
-  <div class="login-logo">
-    <a><img id="imageLogo" src="assets/images/sign-up.jpg" alt="sign-up"/></a>
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-box-body">
-    <p class="login-box-msg">Loge-se para acessar</p>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="username">Usuário</label>
-        <input
-          type="text"
-          formControlName="username"
-          class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
-        />
-        <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-          <div *ngIf="f.username.errors.required">Usuário obrigatório</div>
+<div class="container">
+  <div class="wrapper">
+    <div class="row h-100 justify-content-left align-items-left alignCenter pull-left">
+      <img src="./assets/images/reconsidere-logo.png" width="300px" height="50px" />
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" name="Login_Form" class="form-signin">
+      <div class="row text-center bol"><i class="fa fa-circle"></i></div>
+      <h3 class="form-signin-heading text-center">
+        <img src="http://codigocomcafe.com.br/demo/form/image/logo.png" alt="" />
+      </h3>
+      <hr class="spartan">
+      <div class="input-group">
+        <span class="input-group-addon" id="sizing-addon1">
+          <i class="fa fa-user"></i>
+        </span>
+        <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" placeholder="Email" autofocus="" required />
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon" id="sizing-addon1">
+          <i class="fa fa-lock"></i>
+        </span>
+        <input #passwordfield type="{{hidepassword ? 'password' : 'text'}}" type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" placeholder="Senha" required />
+        <div class="input-group-append">
+          <span class="input-group-text">
+            <i (click)="hidepassword = !hidepassword" class="fa fa-eye" *ngIf="!hidepassword"></i>
+            <i (click)="hidepassword = !hidepassword" class="fa fa-eye-slash" *ngIf="hidepassword"></i>
+          </span>
         </div>
       </div>
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <div class="input-group">
-            <div class="input-group-append">
-                <span class="input-group-text">
-                  <i
-                    (click)="hidepassword = !hidepassword"
-                    class="fa fa-eye"
-                    *ngIf="!hidepassword"
-                  ></i>
-                  <i
-                    (click)="hidepassword = !hidepassword"
-                    class="fa fa-eye-slash"
-                    *ngIf="hidepassword"
-                  ></i>
-                </span>
-              </div>
-            <input #passwordfield type="{{hidepassword ? 'password' : 'text'}}"
-            type="password"
-            formControlName="password"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
-          />
-          <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-            <div *ngIf="f.password.errors.required">Senha obrigatória</div>
-          </div>
-
-        </div>
-      </div>
-      <div class="form-group">
-        <button [disabled]="loading" class="btn btn-primary">Login</button>
-        <img
-          *ngIf="loading"
-          class="pl-2"
-          src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA=="
-        />
-      </div>
+      <button [disabled]="loading" class="btn btn-lg btn-primary btn-block primaryButton primaryButtonHover" name="Submit" value="Entrar" type="Submit">Entrar</button>
+      <img *ngIf="loading" class="pl-2"
+        src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <div class="marginStyle">
+        <a class="" routerLink="/sign-up">Registrar organização</a>
+      </div>
     </form>
   </div>
-  <a routerLink="/sign-up">Registrar organização</a>
-  <!-- /.login-box-body -->
 </div>

@@ -44,6 +44,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 
 
 
+
 registerLocaleData(localePt);
 
 @NgModule({
@@ -87,7 +88,7 @@ registerLocaleData(localePt);
     }),
     CalendarModule,
     MatFormFieldModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
   ],
 
   providers: [
