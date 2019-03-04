@@ -1,6 +1,6 @@
 {
-    "/signUp/*": {
-        "target": "http://localhost:3000",
+    "/api": {
+        "target": "http://devops.reconsidere.online:32546",
         "secure": "false"
     }
 }

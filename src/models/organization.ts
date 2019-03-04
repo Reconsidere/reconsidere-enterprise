@@ -30,8 +30,11 @@ export class Organization {
 
 export namespace Organization {
   export enum Classification {
+    Comercio = 'Comércio Comum',
     Cooperativa = 'Cooperativa',
-    Privada = 'Empresa Privada',
-    Municipio = 'Município'
+    Coletora = 'Empresa Coletora',
+    Beneficiadora = 'Empresa Beneficiadora',
+    Municipio = 'Município',
+    Privada = 'Empresa Privada'
   }
 }
