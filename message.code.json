@@ -1,0 +1,44 @@
+{
+  "INFO": {
+    "IRE001": { "status": "INFO", "summary": "O usuário foi desconectado com sucesso!", "message": ""},
+    "IRE002": { "status": "INFO", "summary": "", "message": ""},
+    "IRE003": { "status": "INFO", "summary": "", "message": ""},
+    "IRE004": { "status": "INFO", "summary": "", "message": ""},
+    "IRE005": { "status": "INFO", "summary": "", "message": ""}
+  },
+  "SUCCESS": {
+    "SRE001": { "status": "SUCCESS", "summary": "", "message": ""},
+    "SRE002": { "status": "SUCCESS", "summary": "", "message": ""},
+    "SRE003": { "status": "SUCCESS", "summary": "", "message": ""},
+    "SRE004": { "status": "SUCCESS", "summary": "", "message": ""},
+    "SRE005": { "status": "SUCCESS", "summary": "", "message": ""}
+  },
+  "WARNNING": {
+    "WRE001": { "status": "WARNNING", "summary": "", "message": ""},
+    "WRE002": { "status": "WARNNING", "summary": "", "message": ""},
+    "WRE003": { "status": "WARNNING", "summary": "", "message": ""},
+    "WRE004": { "status": "WARNNING", "summary": "", "message": ""},
+    "WRE005": { "status": "WARNNING", "summary": "", "message": ""}
+  },
+  "ERROR": {
+    "ERE001": { "status": "ERROR", "summary": "Usuário ou senha incorretos", "message": ""},
+    "ERE002": { "status": "ERROR", "summary": "Falha de conexão ao banco de dados inacessível", "message": ""},
+    "ERE003": { "status": "ERROR", "summary": "Impossível conectar a interface de persistência", "message": ""},
+    "ERE004": { "status": "ERROR", "summary": "A conexão foi perdida, efetue o login novamente", "message": ""},
+    "ERE005": { "status": "ERROR", "summary": "", "message": ""}
+  },
+  "DANGER": {
+    "DRE001": { "status": "DANGER", "summary": "", "message": ""},
+    "DRE002": { "status": "DANGER", "summary": "", "message": ""},
+    "DRE003": { "status": "DANGER", "summary": "", "message": ""},
+    "DRE004": { "status": "DANGER", "summary": "", "message": ""},
+    "DRE005": { "status": "DANGER", "summary": "", "message": ""}
+  },
+  "FATAL": {
+    "FRE001": { "status": "FATAL", "summary": "", "message": ""},
+    "FRE002": { "status": "FATAL", "summary": "", "message": ""},
+    "FRE003": { "status": "FATAL", "summary": "", "message": ""},
+    "FRE004": { "status": "FATAL", "summary": "", "message": ""},
+    "FRE005": { "status": "FATAL", "summary": "", "message": ""}
+  }
+}
