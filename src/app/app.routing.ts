@@ -1,4 +1,3 @@
-import { CitizenRegistrationComponent } from './forms/citizen-registration/citizen-registration.component';
 import { LogoutComponent } from './auth/logout/logout.component';
 import { SchedulerComponent } from './scheduler/scheduler.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
@@ -26,7 +25,6 @@ export const routes: Routes = [
   {path: 'pricing', component: PricingComponent, canActivate: [AuthGuard]},
 
   //Módulo de formulários
-  {path: 'forms/citizen-registration', component: CitizenRegistrationComponent},
 
   //Qualquer outro acesso
   {path: '**', redirectTo: '' }
