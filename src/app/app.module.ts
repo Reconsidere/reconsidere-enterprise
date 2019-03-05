@@ -42,6 +42,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { PricingComponent } from './pricing/pricing.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { InternalErrorComponent } from './errors/internal-error/internal-error.component';
+import { UcFormComponent } from './forms/uc-form/uc-form.component';
+
 
 
 
@@ -67,6 +69,7 @@ registerLocaleData(localePt);
     PricingComponent,
     NotFoundComponent,
     InternalErrorComponent,
+    UcFormComponent
   ],
   imports: [
     BrowserModule,

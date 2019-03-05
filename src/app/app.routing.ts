@@ -9,6 +9,7 @@ import { StartcenterComponent } from './startcenter/startcenter.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { UcFormComponent } from './forms/uc-form/uc-form.component';
 
 export const routes: Routes = [
   //Módulo de segurança
@@ -25,6 +26,7 @@ export const routes: Routes = [
   {path: 'pricing', component: PricingComponent, canActivate: [AuthGuard]},
 
   //Módulo de formulários
+  {path: 'uc-form', component: UcFormComponent },
 
   //Qualquer outro acesso
   {path: '**', redirectTo: '' }
