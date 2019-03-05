@@ -47,6 +47,7 @@ import { UcFormComponent } from './forms/uc-form/uc-form.component';
 
 
 
+
 registerLocaleData(localePt);
 
 @NgModule({
@@ -92,7 +93,7 @@ registerLocaleData(localePt);
     }),
     CalendarModule,
     MatFormFieldModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
   ],
 
   providers: [

@@ -49,6 +49,8 @@ export class SignUpComponent implements OnInit {
   dynamicCnpj: boolean;
   loading: boolean;
   hierarchy: Hierarchy;
+  termService: boolean;
+  termPrivacity: boolean;
 
   constructor(private authService: AuthService, private cepService: CepService, private userService: UserService, private router: Router) {
     this.classifications = Object.values(Organization.Classification);
@@ -84,6 +86,8 @@ export class SignUpComponent implements OnInit {
       this.authService.getOrganization(this.organizationId, this.organization).subscribe(item => this.loadOrganization(item), error => error);
     } else {
       this.isLogged = false;
+      this.termService = false;
+      this.termPrivacity = false;
     }
   }
 
@@ -93,6 +97,8 @@ export class SignUpComponent implements OnInit {
       this.show = true;
     }
     this.hierarchy = this.organization.hierarchy;
+    this.termService = true;
+    this.termPrivacity = true;
   }
 
   CEPSearch(value, e) {
@@ -174,8 +180,8 @@ export class SignUpComponent implements OnInit {
   }
   veryfyBeforeSave() {
     if (!this.isLogged) {
-      if (this.organization.email === undefined || this.organization.company === undefined || this.organization.tradingName === undefined || this.organization.phone === undefined || this.organization.cellPhone === undefined || this.organization.classification === undefined) {
-        this.msgStatus = 'Por favor, preencha os campos antes de salvar os dados!';
+      if (this.organization.email === undefined || this.organization.company === undefined || this.organization.tradingName === undefined || this.organization.phone === undefined || this.organization.cellPhone === undefined || this.organization.classification === undefined || this.termPrivacity === false || this.termService === false) {
+        this.msgStatus = 'WRE001';
         return false;
       }
     } else if (
@@ -189,21 +195,22 @@ export class SignUpComponent implements OnInit {
       this.organization.units === undefined ||
       this.organization.hierarchy === undefined ||
       this.organization.units.length <= 0
-      || this.hierarchy.solid === undefined
+      || this.hierarchy.solid === undefined ||
+      this.termPrivacity === false || this.termService === false
     ) {
-      this.msgStatus = 'Por favor, preencha os campos antes de salvar os dados!';
+      this.msgStatus = 'WRE001';
       return false;
     }
     if (this.organization.classification !== Organization.Classification.Municipio) {
       if (this.organization.cnpj === undefined) {
-        this.msgStatus = 'Por favor, preencha os campos antes de salvar os dados!';
+        this.msgStatus = 'WRE001';
         return false;
       }
     }
 
     this.message = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
     if (!this.message) {
-      this.msgStatus = 'CNPJ incorreto.';
+      this.msgStatus = 'WRE002';
       return false;
     } else {
       return true;
@@ -245,7 +252,7 @@ export class SignUpComponent implements OnInit {
     }
     this.cleanLocation();
     this.showUnit = true;
-    this.msgStatus = 'Unidade adicionada com sucesso';
+    this.msgStatus = 'IRE002';
   }
 
   cleanLocation() {
@@ -256,12 +263,12 @@ export class SignUpComponent implements OnInit {
   veryfyBeforeAddLocation() {
     if (this.unit.location === undefined) {
       this.message = true;
-      this.msgStatus = 'Verifique se todos os dados da localização foram inseridos.';
+      this.msgStatus = 'WRE003';
       return false;
     }
     if (this.unit.location.state === undefined || this.unit.location.cep === undefined || this.unit.location.publicPlace === undefined || this.unit.location.neighborhood === undefined || this.unit.location.number === undefined || this.unit.location.number < 0 || this.unit.location.county === undefined) {
       this.message = true;
-      this.msgStatus = 'Verifique se todos os dados do usuário foram inseridos.';
+      this.msgStatus = 'WRE004';
       return false;
     }
     return true;
@@ -293,7 +300,7 @@ export class SignUpComponent implements OnInit {
       this.cleanUser();
     }
     this.show = true;
-    this.msgStatus = 'Usuário adicionado com sucesso';
+    this.msgStatus = 'IRE003';
   }
   cleanUser() {
     this.user = new User();
@@ -311,12 +318,12 @@ export class SignUpComponent implements OnInit {
   veryfyBeforeAddUser() {
     if (this.user === undefined) {
       this.message = true;
-      this.msgStatus = 'Verifique se todos os dados do usuário foram inseridos.';
+      this.msgStatus = 'WRE004';
       return false;
     }
     if (this.user.email === undefined || this.user.name === undefined || this.user.password === undefined || this.user.active === undefined) {
       this.message = true;
-      this.msgStatus = 'Verifique se todos os dados do usuário foram inseridos.';
+      this.msgStatus = 'WRE004';
       return false;
     }
     return true;
@@ -342,7 +349,7 @@ export class SignUpComponent implements OnInit {
       if (item === unit) {
         this.organization.units.splice(index, 1);
         this.message = true;
-        this.msgStatus = 'Unidade removida';
+        this.msgStatus = 'IRE004';
       } else {
       }
     });
@@ -357,7 +364,7 @@ export class SignUpComponent implements OnInit {
         if (item === user) {
           this.organization.users.splice(index, 1);
           this.message = true;
-          this.msgStatus = 'Usuário removido';
+          this.msgStatus = 'IRE005';
         } else {
         }
       });
@@ -371,7 +378,11 @@ export class SignUpComponent implements OnInit {
     return prof;
   }
 
+  ScrollScreamTop() {
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+  }
   save() {
+    this.ScrollScreamTop();
     if (!this.isLogged) {
       this.user.profile = this.getAdmProfile();
       this.user.active = true;
@@ -383,7 +394,7 @@ export class SignUpComponent implements OnInit {
 
     if (!this.myRecaptcha) {
       this.message = true;
-      this.msgStatus = 'Por favor, confirme: Não sou um robo';
+      this.msgStatus = 'IRE006';
       return;
     }
 
@@ -397,7 +408,7 @@ export class SignUpComponent implements OnInit {
       if (this.organization._id === undefined) {
         this.router.navigate(['/']);
       }
-      this.msgStatus = 'Dados salvos com sucesso';
+      this.msgStatus = 'SRE001';
     } catch (error) {
       this.msgStatus = 'Erro ao salvar!';
       console.log(error);

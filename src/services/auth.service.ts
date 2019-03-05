@@ -91,11 +91,11 @@ export class AuthService {
           user => {
             const isLogged = this.generateToken(user, password);
             if (!isLogged) {
-              throw new Error('Login incorreto');
+              throw new Error('ERE001');
             }
           },
           error => {
-            throw new Error('Login incorreto');
+            throw new Error('ERE001');
           }
         )
       );

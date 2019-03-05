@@ -1,31 +1,35 @@
 {
   "INFO": {
     "IRE001": { "status": "INFO", "summary": "O usuário foi desconectado com sucesso!", "message": "O usuário foi desconectado a partir de uma requisição do mesmo"},
-    "IRE002": { "status": "INFO", "summary": "", "message": ""},
-    "IRE003": { "status": "INFO", "summary": "", "message": ""},
-    "IRE004": { "status": "INFO", "summary": "", "message": ""},
-    "IRE005": { "status": "INFO", "summary": "", "message": ""}
+    "IRE002": { "status": "INFO", "summary": "Unidade adicionada!", "message": ""},
+    "IRE003": { "status": "INFO", "summary": "Usuário adicionado!", "message": ""},
+    "IRE004": { "status": "INFO", "summary": "Unidade removida!", "message": ""},
+    "IRE005": { "status": "INFO", "summary": "Usuário removido!", "message": ""},
+    "IRE006": { "status": "INFO", "summary": "Por favor, confirme: Não sou um robo!", "message": ""}
   },
   "SUCCESS": {
-    "SRE001": { "status": "SUCCESS", "summary": "", "message": ""},
+    "SRE001": { "status": "SUCCESS", "summary": "Dados salvos com sucesso!", "message": ""},
     "SRE002": { "status": "SUCCESS", "summary": "", "message": ""},
     "SRE003": { "status": "SUCCESS", "summary": "", "message": ""},
     "SRE004": { "status": "SUCCESS", "summary": "", "message": ""},
     "SRE005": { "status": "SUCCESS", "summary": "", "message": ""}
   },
   "WARNNING": {
-    "WRE001": { "status": "WARNING", "summary": "Por favor, preencha os campos antes de salvar os dados!", "message": "Alguns dados neste formulário são obrigatórios"},
-    "WRE002": { "status": "WARNING", "summary": "", "message": ""},
-    "WRE003": { "status": "WARNING", "summary": "", "message": ""},
-    "WRE004": { "status": "WARNING", "summary": "", "message": ""},
-    "WRE005": { "status": "WARNING", "summary": "", "message": ""}
+    "WRE001": { "status": "WARNNING", "summary": "'Por favor, preencha os campos antes de salvar os dados!", "message": "Alguns dados neste formulário são obrigatórios"},
+    "WRE002": { "status": "WARNNING", "summary": "CNPJ incorreto!", "message": ""},
+    "WRE003": { "status": "WARNNING", "summary": "Verifique se todos os dados da localização foram inseridos!", "message": ""},
+    "WRE004": { "status": "WARNNING", "summary": "Verifique se todos os dados do usuário foram inseridos!", "message": ""},
+    "WRE005": { "status": "WARNNING", "summary": "Email já está em uso", "message": "Não é permitido a utilização de emails duplicados."}
   },
   "ERROR": {
     "ERE001": { "status": "ERROR", "summary": "Usuário ou senha incorretos", "message": ""},
     "ERE002": { "status": "ERROR", "summary": "Falha de conexão ao banco de dados inacessível", "message": ""},
     "ERE003": { "status": "ERROR", "summary": "Impossível conectar a interface de persistência", "message": ""},
     "ERE004": { "status": "ERROR", "summary": "A conexão foi perdida, efetue o login novamente", "message": ""},
-    "ERE005": { "status": "ERROR", "summary": "Não foi possível carregar o documento a partir do banco de dados", "message": ""}
+    "ERE005": { "status": "ERROR", "summary": "Não foi possível carregar o documento a partir do banco de dados", "message": ""},
+    "ERE006": { "status": "ERROR", "summary": "Não foi possível salvar os dados", "message": ""},
+    "ERE008": { "status": "ERROR", "summary": "Não foi possível localizar o usuário", "message": ""},
+    "ERE007": { "status": "ERROR", "summary": "Não foi possível remover os dados", "message": ""}
   },
   "DANGER": {
     "DRE001": { "status": "DANGER", "summary": "", "message": ""},
