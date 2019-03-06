@@ -8,11 +8,11 @@
   </div>
 
   <div id="flip-scroll" class="tableScheduler">
-    <button id="newRoute" (click)="newRoute()" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+    <button id="newRoute" (click)="newRoute()" mat-raised-button color="accent" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
       Nova rota
     </button>
 
-    <button type="button" id="save" (click)="save()" class="btn btn-success col-md-2 pull-right">
+    <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
       Salvar ações
     </button>
 
@@ -37,25 +37,25 @@
             </td>
 
             <td colspan="5">
-              <button (click)="expand(route)" type="button" class="btn btn-sm btn-primary ml-1 pull-left " data-toggle="button" aria-pressed="false" autocomplete="off">
+              <button (click)="expand(route)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary ml-1 pull-left " data-toggle="button" aria-pressed="false" autocomplete="off">
                 Expandir/Retrair
-                <i class="fa fa-caret-down"></i>
+                <mat-icon>keyboard_arrow_down</mat-icon>
               </button>
-              <button (click)="addScheduler(route)" type="button" class="btn btn-sm btn-primary ml-1 pull-left " data-toggle="button" aria-pressed="false" autocomplete="off">
+              <button (click)="addScheduler(route)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary ml-1 pull-left " data-toggle="button" aria-pressed="false" autocomplete="off">
                 Novo agendamento
-                <i class="fa fa-plus"></i>
+                <mat-icon>add</mat-icon>
               </button>
 
-              <button type="button" id="save" (click)="removeRoute(route)" class="btn btn-sm btn-danger  pull-right ml-1 ">
-                <i class="fa fa-trash"></i>
+              <button type="button" id="save" (click)="removeRoute(route)" mat-raised-button color="warn" class="btn btn-sm btn-danger  pull-right ml-1 ">
+                <mat-icon>delete_forever</mat-icon>
               </button>
-              <button (click)="pause(route)" type="button" class="btn btn-sm btn-primary ml-1  pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <button (click)="pause(route)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary ml-1  pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
                 Pausar rota
-                <i class="fa fa-pause"></i>
+                <mat-icon>pause</mat-icon>
               </button>
-              <button (click)="play(route)" type="button" class="btn btn-sm btn-primary ml-1 pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <button (click)="play(route)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary ml-1 pull-right" data-toggle="button" aria-pressed="false" autocomplete="off">
                 Iniciar rota
-                <i class="fa fa-play"></i>
+                <mat-icon>play_arrow</mat-icon>
               </button>
             </td>
           </tr>
@@ -64,31 +64,31 @@
             <th>
               <div class="input-wrapper">
                 <input #carPlateFilter name="carPlate" type="text" class="inputFilter" (input)="search = carPlateFilter" />
-                <label class="fa fa-pencil input-icon"></label>
+                <mat-icon class="input-icon">edit</mat-icon>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
                 <input #situationFilter name="situation" type="text" class="inputFilter" (input)="search = situationFilter" />
-                <label class="fa fa-pencil input-icon"></label>
+                <mat-icon class="input-icon">edit</mat-icon>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
                 <p-calendar #dateFilter name="date" dateFormat="dd/mm/yy" (onSelect)="search = dateFilter"></p-calendar>
-                <label class="fa fa-calendar input-icon"></label>
+                <mat-icon class="input-icon">date_range</mat-icon>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
                 <p-calendar #startTime name="startTime" pattern="HH:mm" timeOnly="true" hourFormat="24" (onSelect)="search = startTime"></p-calendar>
-                <label class="fa fa-clock-o input-icon"></label>
+                <mat-icon class="input-icon">access_time</mat-icon>
               </div>
             </th>
             <th>
               <div class="input-wrapper">
                 <p-calendar #endTime name="endTime" pattern="HH:mm" timeOnly="true" hourFormat="24" (onSelect)="search = endTime"></p-calendar>
-                <label class="fa fa-clock-o input-icon"></label>
+                <mat-icon class="input-icon">access_time</mat-icon>
               </div>
             </th>
           </tr>
@@ -132,8 +132,8 @@
                 <p-calendar name="endTime" pattern="HH:mm" timeOnly="true" (ngModelChange)="schedule.endTime = $event" [ngModel]="schedule.endTime | dateconvert" showTime="true" hourFormat="24" (onSelect)="verifyConflict(schedule)" [readonlyInput]="false" required></p-calendar>
               </td>
               <td>
-                <button (click)="removeSchedule(schedule)" type="button" class="btn btn-sm btn-danger ml-5" data-toggle="button" aria-pressed="false" autocomplete="off">
-                  <i class="fa fa-trash"></i>
+                <button (click)="removeSchedule(schedule)" mat-raised-button color="warn" type="button" class="btn btn-sm btn-danger ml-5" data-toggle="button" aria-pressed="false" autocomplete="off">
+                  <mat-icon>delete_forever</mat-icon>
                 </button>
               </td>
             </tr>

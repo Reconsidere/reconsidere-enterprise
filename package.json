@@ -43,6 +43,7 @@
     "font-awesome": "^4.7.0",
     "iana-tz-data": "^2018.5.0",
     "jsonwebtoken": "^8.4.0",
+    "material-design-icons": "^3.0.1",
     "mongoose": "^5.4.0",
     "ngx-mask": "^7.0.1",
     "ngx-pagination": "^3.2.1",

@@ -1,18 +1,8 @@
 <app-toolbar></app-toolbar>
 <div class="container-fluid">
-  <div
-    *ngIf="message"
-    class="alert alert-warning alert-dismissible fade show"
-    role="alert"
-  >
+  <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>Atenção: </strong> {{ message }}
-    <button
-      type="button"
-      (click)="closeMessage()"
-      class="close"
-      data-dismiss="alert"
-      aria-label="Close"
-    >
+    <button type="button" (click)="closeMessage()" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
@@ -20,16 +10,8 @@
     <table class="table table-sm">
       <thead>
         <tr>
-          <button
-            id="newVehicle"
-            (click)="newVehicle()"
-            type="button"
-            class="btn btn-sm btn-primary"
-            data-toggle="button"
-            aria-pressed="false"
-            autocomplete="off"
-          >
-            <i class="fa fa-plus"></i>
+          <button id="newVehicle" (click)="newVehicle()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <mat-icon>add</mat-icon>
           </button>
         </tr>
         <tr id="Titles">
@@ -44,42 +26,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="
+        <tr *ngFor="
             let vehicle of (vehicles
               | paginate: { itemsPerPage: 5, currentPage: page })
-          "
-        >
+          ">
           <td hidden>{{ vehicle._id }}</td>
           <td>
-            <input
-              required
-              [(ngModel)]="vehicle.carPlate"
-              name="carPlate"
-              type="text"
-              class="form-control"
-              pattern="[a-zA-Z]{3}-[0-9]{4}"
-              id="carPlate"
-              aria-describedby="carPlate"
-              placeholder="AAA-0000"
-              mask="SSS-0000"
-              (blur)="verifyPlate(vehicle, $event)"
-            />
+            <input required [(ngModel)]="vehicle.carPlate" name="carPlate" type="text" class="form-control" pattern="[a-zA-Z]{3}-[0-9]{4}" id="carPlate" aria-describedby="carPlate" placeholder="AAA-0000" mask="SSS-0000" (blur)="verifyPlate(vehicle, $event)" />
           </td>
           <td>
             <div class="input-group">
-              <input
-                required
-                [(ngModel)]="vehicle.weightCapacity"
-                name="weightCapacity"
-                type="text"
-                mask="000.0000"
-                class="form-control"
-                id="weightCapacity"
-                aria-describedby="weightCapacity"
-                placeholder="000.0000"
-                (blur)="requiredCheck($event)"
-              />
+              <input required [(ngModel)]="vehicle.weightCapacity" name="weightCapacity" type="text" mask="000.0000" class="form-control" id="weightCapacity" aria-describedby="weightCapacity" placeholder="000.0000" (blur)="requiredCheck($event)" />
               <div class="input-group-append">
                 <span class="input-group-text">
                   <span>t</span>
@@ -89,18 +46,7 @@
           </td>
           <td>
             <div class="input-group">
-              <input
-                required
-                [(ngModel)]="vehicle.emptyVehicleWeight"
-                name="emptyVehicleWeight"
-                type="text"
-                mask="000.0000"
-                class="form-control"
-                id="emptyVehicleWeight"
-                aria-describedby="emptyVehicleWeight"
-                placeholder="000.0000"
-                (blur)="requiredCheck($event)"
-              />
+              <input required [(ngModel)]="vehicle.emptyVehicleWeight" name="emptyVehicleWeight" type="text" mask="000.0000" class="form-control" id="emptyVehicleWeight" aria-describedby="emptyVehicleWeight" placeholder="000.0000" (blur)="requiredCheck($event)" />
               <div class="input-group-append">
                 <span class="input-group-text">
                   <span>t</span>
@@ -110,19 +56,7 @@
           </td>
           <td>
             <div class="input-group">
-              <input
-                required
-                [(ngModel)]="vehicle.fuel"
-                name="fuel"
-                min="0"
-                class="form-control"
-                id="fuel"
-                aria-describedby="fuel"
-                type="text"
-                mask="0000.00"
-                placeholder="0000.00"
-                (blur)="requiredCheck($event)"
-              />
+              <input required [(ngModel)]="vehicle.fuel" name="fuel" min="0" class="form-control" id="fuel" aria-describedby="fuel" type="text" mask="0000.00" placeholder="0000.00" (blur)="requiredCheck($event)" />
               <div class="input-group-append">
                 <span class="input-group-text">
                   <span>l</span>
@@ -131,13 +65,7 @@
             </div>
           </td>
           <td colspan="2">
-            <select
-              required
-              [(ngModel)]="vehicle.typeFuel"
-              name="typeFuel"
-              class="form-control"
-              (blur)="requiredCheck($event)"
-            >
+            <select required [(ngModel)]="vehicle.typeFuel" name="typeFuel" class="form-control" (blur)="requiredCheck($event)">
               <option id="typeFuel" *ngFor="let item of typesFuel">{{
                 item
               }}</option>
@@ -145,53 +73,25 @@
           </td>
           <td>
             <label class="btn btn-default">
-              <input
-                #vehicleActive
-                [(ngModel)]="vehicle.active"
-                name="active"
-                type="checkbox"
-                autocomplete="off"
-                (change)="enableDisbale(vehicle, vehicleActive)"
-              />
+              <mat-checkbox #vehicleActive [(ngModel)]="vehicle.active" name="active" type="checkbox" autocomplete="off" (change)="enableDisbale(vehicle, vehicleActive)"></mat-checkbox>
               <span class="glyphicon glyphicon-ok"></span>
             </label>
 
             <label class="" for="active">Ativo</label>
           </td>
           <td>
-            <button
-              (click)="remove(vehicle)"
-              type="button"
-              class="btn btn-sm btn-danger"
-              data-toggle="button"
-              aria-pressed="false"
-              autocomplete="off"
-            >
-              <i class="fa fa-trash"></i>
+            <button (click)="remove(vehicle)" type="button" mat-raised-button color="warn" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <mat-icon>delete_forever</mat-icon>
             </button>
           </td>
           <td>
-            <button
-              (click)="save(vehicle)"
-              type="button"
-              class="btn btn-sm btn-success"
-              data-toggle="button"
-              aria-pressed="false"
-              autocomplete="off"
-            >
-              <i class="fa fa-save"></i>
+            <button (click)="save(vehicle)" type="button" mat-raised-button color="primary" class="btn btn-sm btn-success" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <mat-icon>save</mat-icon>
             </button>
           </td>
         </tr>
       </tbody>
-      <pagination-controls
-      (pageChange)="page = $event"
-      previousLabel="Anterior"
-      nextLabel="Próxima"
-      autoHide="true"
-      responsive="true"
-      screenReaderPaginationLabel="Pagination"
-    ></pagination-controls>
+      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
     </table>
   </div>
 </div>

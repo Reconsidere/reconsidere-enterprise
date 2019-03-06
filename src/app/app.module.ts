@@ -45,6 +45,12 @@ import { InternalErrorComponent } from './errors/internal-error/internal-error.c
 import { UcFormComponent } from './forms/uc-form/uc-form.component';
 import { HeaderComponent } from './forms/header/header.component';
 import { FooterComponent } from './forms/footer/footer.component';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+
+
+
 
 registerLocaleData(localePt);
 
@@ -94,6 +100,9 @@ registerLocaleData(localePt);
     CalendarModule,
     MatFormFieldModule,
     MatSlideToggleModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCheckboxModule
   ],
 
   providers: [

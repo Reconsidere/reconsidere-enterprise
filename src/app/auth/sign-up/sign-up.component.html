@@ -122,13 +122,8 @@
 
       <div *ngIf="isLogged" class="row">
         <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-          <div class="anil_nepal">
-            <label class="switch switch-left-right">
-              <input #organizationActive name="activeOrganization" class="switch-input" type="checkbox" checked="organization.active" checklist-value="organization.active" checklist-model="organization.active" (change)="enableDisbale(organization, organizationActive)" />
-
-              <span class="switch-label" data-on="On" data-off="Off"></span>
-              <span class="switch-handle"></span>Ativo
-            </label>
+          <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
+            <mat-slide-toggle color="accent" #organizationActive name="activeOrganization" checked="organization.active" checklist-value="organization.active" checklist-model="organization.active" (change)="enableDisbale(organization, organizationActive)">Ativo</mat-slide-toggle>
           </div>
         </div>
       </div>
@@ -156,13 +151,13 @@
                   <td>{{ unit.location.neighborhood }}</td>
                   <td>{{ unit.location.state }}</td>
                   <td>
-                    <button (click)="editLocation(unit)" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-                      <i class="fa fa-edit"></i>
+                    <button (click)="editLocation(unit)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                      <mat-icon>edit</mat-icon>
                     </button>
                   </td>
                   <td>
-                    <button (click)="removeUnit(unit)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
-                      <i class="fa fa-trash"></i>
+                    <button (click)="removeUnit(unit)" type="button" mat-raised-button color="warn" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                      <mat-icon>delete_forever</mat-icon>
                     </button>
                   </td>
                 </tr>
@@ -242,7 +237,7 @@
               </div>
             </div>
           </div>
-          <button type="button" id="addLocation" (click)="addOrUpdateLocation()" class="btn btn-success col-md-2">
+          <button type="button" id="addLocation" (click)="addOrUpdateLocation()" mat-raised-button class="col-md-2" color="primary">
             Adicionar
           </button>
         </div>
@@ -269,13 +264,13 @@
                   <td>{{ user.email }}</td>
                   <td>{{ user.active | booltransform }}</td>
                   <td>
-                    <button (click)="editUser(user)" type="button" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-                      <i class="fa fa-edit"></i>
+                    <button (click)="editUser(user)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                      <mat-icon>edit</mat-icon>
                     </button>
                   </td>
                   <td>
-                    <button (click)="removeUser(user)" type="button" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
-                      <i class="fa fa-trash"></i>
+                    <button (click)="removeUser(user)" type="button" mat-raised-button color="warn" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                      <mat-icon>delete_forever</mat-icon>
                     </button>
                   </td>
                 </tr>
@@ -351,18 +346,11 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xl-1 col-lg-6 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input #userActive name="userActive" class="switch-input" type="checkbox" checked="user.active" checklist-value="user.active" checklist-model="user.active" (change)="enableDisbale(user, userActive)" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Ativo
-                </label>
-              </div>
+            <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
+              <mat-slide-toggle color="accent" #userActive name="userActive" checked="user.active" checklist-value="user.active" checklist-model="user.active" (change)="enableDisbale(user, userActive)">Ativo</mat-slide-toggle>
             </div>
           </div>
-          <button type="button" id="add" (click)="addOrUpdateUser()" class="btn btn-success col-md-2">
+          <button type="button" id="add" (click)="addOrUpdateUser()" mat-raised-button class="col-md-2" color="primary">
             Adicionar
           </button>
         </div>
@@ -373,69 +361,27 @@
         <div class="card-body">
           <div class="row">
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input name="paper" class="switch-input" type="checkbox" [(ngModel)]="hierarchy.solid.materials.paper.used" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Papel
-                </label>
-              </div>
+              <mat-slide-toggle color="accent" name="paper" [(ngModel)]="hierarchy.solid.materials.paper.used">Papel</mat-slide-toggle>
             </div>
 
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input name="plastic" class="switch-input" type="checkbox" [(ngModel)]="hierarchy.solid.materials.plastic.used" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Plastico
-                </label>
-              </div>
+              <mat-slide-toggle color="accent" name="plastic" [(ngModel)]="hierarchy.solid.materials.plastic.used">Plástico</mat-slide-toggle>
             </div>
 
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input name="glass" class="switch-input" type="checkbox" [(ngModel)]="hierarchy.solid.materials.glass.used" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Vidro
-                </label>
-              </div>
+              <mat-slide-toggle color="accent" name="glass" [(ngModel)]="hierarchy.solid.materials.glass.used">Vidro</mat-slide-toggle>
             </div>
 
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input name="metal" class="switch-input" type="checkbox" [(ngModel)]="hierarchy.solid.materials.metal.used" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Metal
-                </label>
-              </div>
+              <mat-slide-toggle color="accent" name="metal" [(ngModel)]="hierarchy.solid.materials.metal.used">Metal</mat-slide-toggle>
             </div>
 
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input name="isopor" class="switch-input" type="checkbox" [(ngModel)]="hierarchy.solid.materials.isopor.used" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Isopor
-                </label>
-              </div>
+              <mat-slide-toggle color="accent" name="isopor" [(ngModel)]="hierarchy.solid.materials.isopor.used">Isopor</mat-slide-toggle>
             </div>
 
             <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 col-12">
-              <div class="anil_nepal">
-                <label class="switch switch-left-right">
-                  <input name="tetrapack" class="switch-input" type="checkbox" [(ngModel)]="hierarchy.solid.materials.tetrapack.used" />
-
-                  <span class="switch-label" data-on="On" data-off="Off"></span>
-                  <span class="switch-handle"></span>Tetrapack
-                </label>
-              </div>
+              <mat-slide-toggle color="accent" name="tetrapack" [(ngModel)]="hierarchy.solid.materials.tetrapack.used">Tetrapack</mat-slide-toggle>
             </div>
           </div>
         </div>
@@ -446,14 +392,16 @@
         <div class="card-body"></div>
       </div>
     </div>
-    <div class="custom-control custom-checkbox marginterms">
-      <input type="checkbox" [(ngModel)]="termService" class="custom-control-input" id="termService">
-      <label class="custom-control-label" for="termService">Eu concordo com os <a target="_blank" class="" href="http://blog.reconsidere.online/termos-de-servico">Termos de Serviço</a> do Reconsidere</label>
+    <div class="marginterms">
+      <mat-checkbox mat-checkbox color="accent" type="checkbox" [(ngModel)]="termService" name="termService" id="termService"></mat-checkbox>
+      <label for="termService">Eu li e aceito os <a target="_blank" class="" href="http://blog.reconsidere.online/termos-de-servico">Termos de Serviço</a> do Reconsidere</label>
     </div>
 
-    <div class="custom-control custom-checkbox marginterms">
-      <input type="checkbox" [(ngModel)]="termPrivacity" class="custom-control-input" id="termPrivacity">
-      <label class="custom-control-label" for="termPrivacity">Eu concordo com a <a target="_blank" class="" href="http://blog.reconsidere.online/politica-de-privacidade">Política de Privacidade</a> e os termos de <a target="_blank" class="" href="http://blog.reconsidere.online/termos-de-processamento-de-dados">Processamentos de Dados</a> </label>
+    <div class=" marginterms">
+      <mat-checkbox color="accent" type="checkbox" name="termPrivacity" [(ngModel)]="termPrivacity" id="termPrivacity">
+      </mat-checkbox>
+
+      <label for="termPrivacity">Eu li e aceito as <a target="_blank" class="" href="http://blog.reconsidere.online/politica-de-privacidade">Política de Privacidade</a> Eu li e aceito os <a target="_blank" class="" href="http://blog.reconsidere.online/termos-de-processamento-de-dados">Processamentos de Dados</a> </label>
     </div>
 
 
@@ -466,13 +414,13 @@
 
     <div class="row">
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-        <button type="submit" id="clean" (click)="clean()" class=" form-control btn btn-primary btn-block  primaryCleanButton primaryCleanButtonHover">
+        <button mat-raised-button class="form-control" color="accent" type="submit" id="clean" (click)="clean()">
           Limpar
         </button>
       </div>
 
       <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
-        <button type="submit" id="save" (click)="save()" class="form-control btn btn-primary primaryButton btn-block primaryButtonHover">
+        <button mat-raised-button class="form-control" color="primary" type="submit" id="save" (click)="save()">
           Salvar
         </button>
       </div>
