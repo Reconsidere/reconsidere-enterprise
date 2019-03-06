@@ -1,14 +1,21 @@
-<!-- <app-header></app-header> -->
+<form-header></form-header>
 <form class="container">
+
+  <section id="heading">
+  </section>
+
   <section id="responsavel">
     <div class="form-group">
-      <label for="name">Responsável</label>
+      <h1 class="display-4">Principal Responsável</h1>
+      <hr>
+      <label for="name">Nome completo</label>
       <input class="form-control" type="text" id="name" />
     </div>
-
   </section>
 
   <section id="contact">
+    <h1 class="display-4">Contato</h1>
+    <hr>
     <div class="row">
       <div class="col-6 form-group">
         <label for="email">E-mail</label>
@@ -27,8 +34,46 @@
     </div>
   </section>
 
-  <section id="address">
+  <section id="other">
+    <div class="form-group">
+      <h1 class="display-4">Outros moradores</h1>
+      <hr>
+      <div class="row">
+        <div class="col-8">
+          <label for="other1">Nome completo</label>
+          <input class="form-control" type="text" id="other1" />
+        </div>
+        <div class="col-4">
+          <label for="other1-cel">Telefone</label>
+          <input class="form-control" type="text" id="other1-cel" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <label for="other2">Nome completo</label>
+          <input class="form-control" type="text" id="other2" />
+        </div>
+        <div class="col-4">
+          <label for="other2-cel">Telefone</label>
+          <input class="form-control" type="text" id="other2-cel" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8">
+          <label for="other3">Nome completo</label>
+          <input class="form-control" type="text" id="other3" />
+        </div>
+        <div class="col-4">
+          <label for="other3-cel">Telefone</label>
+          <input class="form-control" type="text" id="other3-cel" />
+        </div>
+      </div>
+    </div>
+  </section>
 
+  <section id="address">
+    <h1 class="display-4">Endereço</h1>
+    <hr>
     <div class="row">
       <div class="col-3 form-group">
         <label for="cep">CEP</label>
@@ -75,66 +120,17 @@
       </div>
     </div>
   </section>
-  <section id="requirements">
-    <div class="row">
-      <div class="col-12">
-        <input type="checkbox" class="form-check-input" id="commitment-term">
-        <label class="form-check-label" for="commitment-term">Eu, aceito o <a
-            href="http://blog.reconsidere.online/termo-de-compromisso-residencial">Termo
-            de Compromisso</a>.</label>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="col-12">
-        <button class="form-control btn btn-success" type="submit">Registrar</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="">
+  <section id="dificult">
+    <h1 class="display-4">Questionário</h1>
+    <hr>
     Tenho grande dificultade em descartar:
-    <div class="row">
-      <div class="col-3">
-        <div class="anil_nepal">
-          <label class="switch switch-left-right">
-            <input id="reciclaveis" type="checkbox" class="switch-input">
-          </label>
-          <span class="switch-label" data-on="On" data-Off="Off"></span>
-          <span class="switch-handle"></span>Recicláveis
-        </div>
-      </div>
-
-      <div class="col-3">
-        <div class="anil_nepal">
-          <label class="switch switch-left-right">
-            <input id="reciclaveis" type="checkbox" class="switch-input">
-          </label>
-          <span class="switch-label" data-on="On" data-Off="Off"></span>
-          <span class="switch-handle"></span>Compostáveis
-        </div>
-      </div>
-
-      <div class="col-3">
-        <div class="anil_nepal">
-          <label class="switch switch-left-right">
-            <input id="reciclaveis" type="checkbox" class="switch-input">
-          </label>
-          <span class="switch-label" data-on="On" data-Off="Off"></span>
-          <span class="switch-handle"></span>Não recicláveis
-        </div>
-      </div>
-
-      <div class="col-3">
-        <div class="anil_nepal">
-          <label class="switch switch-left-right">
-            <input id="reciclaveis" type="checkbox" class="switch-input">
-          </label>
-          <span class="switch-label" data-on="On" data-Off="Off"></span>
-          <span class="switch-handle"></span>Perigosos
-        </div>
-      </div>
-    </div>
-
+    <mat-slide-toggle>Recicláveis</mat-slide-toggle>
+    <mat-slide-toggle>Não Recicláveis</mat-slide-toggle>
+    <mat-slide-toggle>Compostáveis</mat-slide-toggle>
+    <mat-slide-toggle>Eletrônicos</mat-slide-toggle>
+    <mat-slide-toggle>Perigosos</mat-slide-toggle>
   </section>
+
+  <form-footer></form-footer>
 </form>

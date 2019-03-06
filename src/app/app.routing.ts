@@ -27,6 +27,7 @@ export const routes: Routes = [
 
   //Módulo de formulários
   {path: 'uc-form', component: UcFormComponent },
+  {path: 'citizen-registration', component: UcFormComponent },
 
   //Qualquer outro acesso
   {path: '**', redirectTo: '' }

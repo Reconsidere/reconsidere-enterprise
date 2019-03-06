@@ -43,10 +43,8 @@ import { PricingComponent } from './pricing/pricing.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { InternalErrorComponent } from './errors/internal-error/internal-error.component';
 import { UcFormComponent } from './forms/uc-form/uc-form.component';
-
-
-
-
+import { HeaderComponent } from './forms/header/header.component';
+import { FooterComponent } from './forms/footer/footer.component';
 
 registerLocaleData(localePt);
 
@@ -70,7 +68,9 @@ registerLocaleData(localePt);
     PricingComponent,
     NotFoundComponent,
     InternalErrorComponent,
-    UcFormComponent
+    UcFormComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
