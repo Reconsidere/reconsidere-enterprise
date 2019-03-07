@@ -5,3 +5,56 @@
 @import "../node_modules/flatpickr/dist/flatpickr.min.css";
 @import '~@angular/material/theming';
 @import 'theme';
+
+
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin:50px auto;
+	}
+
+th {
+	font-weight: bold;
+	}
+
+td, th {
+	padding: 5px;
+	text-align: left;
+	}
+
+@media
+only screen and (max-width: 760px),
+(min-device-width: 768px) and (max-device-width: 1024px)  {
+
+	table {
+	  	width: 100%;
+	}
+
+	table, thead, tbody, th, td, tr {
+		display: block;
+	}
+
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	td {
+		border: none;
+		position: relative;
+		padding-left: 50%;
+	}
+
+	td:before {
+		position: absolute;
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+		content: attr(data-column);
+		font-weight: bold;
+	}
+}

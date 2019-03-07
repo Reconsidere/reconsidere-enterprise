@@ -1,5 +1,5 @@
 <app-toolbar></app-toolbar>
-<div class="container-fluid">
+<div class="container">
   <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
     <strong>Atenção: </strong> {{ message }}
     <button type="button" (click)="closeMessage()" mat-raised-button color="warn" class="close" data-dismiss="alert" aria-label="Close">
@@ -14,7 +14,7 @@
     </button>
 
     <div class="tableItemMaterial">
-      <table class="table table-sm">
+      <table class="table-sm">
         <thead>
           <tr>
             <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
