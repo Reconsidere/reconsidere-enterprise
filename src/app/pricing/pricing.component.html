@@ -44,9 +44,8 @@
                 <p-calendar required disabled="disabled" name="dateEntry" [(ngModel)]="item.pricing.dateEntry" dateFormat="dd/mm/yy"></p-calendar>
               </td>
               <td>
-                <input required disabled="disabled" [ngModel]="item.pricing.price |currency:'BRL':'symbol':'2.2':allowZero: true" name="price" type="text"
-                (ngModelChange)="item.pricing.price = $event"
-                class="form-control" id="price" aria-describedby="price" />
+                <input required disabled="disabled" [ngModel]="item.pricing.price |currency:'BRL':'symbol':'2.2':allowZero: true" name="price" type="text" (ngModelChange)="item.pricing.price = $event"
+                  class="form-control" id="price" aria-describedby="price" />
               </td>
             </tr>
 

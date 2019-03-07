@@ -19,7 +19,15 @@
     "WRE002": { "status": "WARNNING", "summary": "CNPJ incorreto!", "message": ""},
     "WRE003": { "status": "WARNNING", "summary": "Verifique se todos os dados da localização foram inseridos!", "message": ""},
     "WRE004": { "status": "WARNNING", "summary": "Verifique se todos os dados do usuário foram inseridos!", "message": ""},
-    "WRE005": { "status": "WARNNING", "summary": "Email já está em uso", "message": "Não é permitido a utilização de emails duplicados."}
+    "WRE005": { "status": "WARNNING", "summary": "Email já está em uso", "message": "Não é permitido a utilização de emails duplicados."},
+    "WRE006": { "status": "WARNNING", "summary": "Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.", "message": "Não é permitido a utilização deste recurso, existe uma dependência de informações de outras áreas do sistema que precisam ser cadastradas antes."},
+    "WRE007": { "status": "WARNNING", "summary": "Por favor, para utilizar este recurso primeiro, vá ate a tela de Materiais e cadastre-o", "message": "Não é permitido a utilização deste recurso, existe uma dependência de informações de outras áreas do sistema que precisam ser cadastradas antes."},
+    "WRE008": { "status": "WARNNING", "summary": "Este item já foi salvo, e não pode ser alterado.", "message": ""},
+    "WRE009": { "status": "WARNNING", "summary": "Por favor, é necessário ter o valor unitário e o peso para calcular o preço final.", "message": ""},
+    "WRE010": { "status": "WARNNING", "summary": "Nenhuma alteração foi realizada, todos os items já foram precificados!", "message": ""},
+    "WRE011": { "status": "WARNNING", "summary": "Está placa já está em uso!", "message": ""},
+    "WRE012": { "status": "WARNNING", "summary": "", "message": ""}
+
   },
   "ERROR": {
     "ERE001": { "status": "ERROR", "summary": "Usuário ou senha incorretos", "message": ""},

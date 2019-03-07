@@ -2,8 +2,8 @@
   <app-toolbar></app-toolbar>
 </div>
 <div class="container">
-  <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Atenção: </strong> {{ msgStatus }}
+  <div *ngIf="message"  class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Atenção: </strong> {{ message }}
     <button type="button" (click)="closeMessage()" class="close" data-dismiss="alert" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>

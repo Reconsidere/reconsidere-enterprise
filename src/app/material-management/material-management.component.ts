@@ -4,7 +4,7 @@ import { AuthService } from 'src/services';
 import { MaterialManagementService } from 'src/services/material-management.service';
 import { Pricing } from 'src/models/pricing';
 import { CurrencyPipe } from '@angular/common';
-
+import * as messageCode from 'message.code.json';
 @Component({
   selector: 'app-material-management',
   templateUrl: './material-management.component.html',
@@ -21,6 +21,14 @@ export class MaterialManagementComponent implements OnInit {
   materialsType = [];
   itemsMaterials: any[];
   isBlocked = true;
+
+  private readonly REGEX = /[^0-9.,]+/;
+
+  private readonly NOTNUMBER = 'NaN';
+
+  private readonly COMMA = ',';
+
+  private readonly DOT = '.';
 
   constructor(
     private authService: AuthService,
@@ -42,8 +50,7 @@ export class MaterialManagementComponent implements OnInit {
         .getHierarchy(this.organizationId)
         .subscribe(item => this.loadHierarchy(item), error => error);
     } else {
-      this.message =
-        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+      this.message = messageCode['WARNNING']['WRE006']['summary'];
       this.isBlocked = false;
     }
   }
@@ -54,8 +61,7 @@ export class MaterialManagementComponent implements OnInit {
       this.verifyMaterialsTypes();
       this.createSimpleList(this.hierarchy);
     } else {
-      this.message =
-        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+      this.message = messageCode['WARNNING']['WRE006']['summary'];
       this.isBlocked = false;
     }
   }
@@ -69,8 +75,7 @@ export class MaterialManagementComponent implements OnInit {
       !this.hierarchy.solid.materials.plastic.used &&
       !this.hierarchy.solid.materials.tetrapack.used
     ) {
-      this.message =
-        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Conta e insira as a classe de materias que deseja utilizar.';
+      this.message = messageCode['WARNNING']['WRE006']['summary'];
       this.isBlocked = false;
       return;
     }
@@ -119,12 +124,16 @@ export class MaterialManagementComponent implements OnInit {
     }
   }
   createSimpleList(list: Hierarchy) {
-    this.insertItems(Hierarchy.types.glass, 'Vidro', list);
-    this.insertItems(Hierarchy.types.isopor, 'Isopor', list);
-    this.insertItems(Hierarchy.types.metal, 'Metal', list);
-    this.insertItems(Hierarchy.types.paper, 'Papel', list);
-    this.insertItems(Hierarchy.types.plastic, 'Plástico', list);
-    this.insertItems(Hierarchy.types.tetrapack, 'Tetrapack', list);
+    this.insertItems(Hierarchy.types.glass, Hierarchy.Material.Glass, list);
+    this.insertItems(Hierarchy.types.isopor, Hierarchy.Material.Isopor, list);
+    this.insertItems(Hierarchy.types.metal, Hierarchy.Material.Metal, list);
+    this.insertItems(Hierarchy.types.paper, Hierarchy.Material.Paper, list);
+    this.insertItems(Hierarchy.types.plastic, Hierarchy.Material.Plastic, list);
+    this.insertItems(Hierarchy.types.tetrapack, Hierarchy.Material.Tetrapack, list);
+  }
+
+  closeMessage() {
+    this.message = undefined;
   }
 
   insertItems(type: any, typeMaterial: any, list: Hierarchy) {
@@ -173,25 +182,17 @@ export class MaterialManagementComponent implements OnInit {
 
   veryfyBeforeSave() {
     if (this.itemsMaterials === undefined || this.itemsMaterials.length <= 0) {
-      throw new Error(
-        'Por favor, preencha os campos antes de salvar os dados!'
-      );
+      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
     }
     this.itemsMaterials.forEach(item => {
       if (item.name === undefined) {
-        throw new Error(
-          'Por favor, preencha os campos antes de salvar os dados!'
-        );
+        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
       }
       if ((item.pricing === undefined || item.pricing.unitPrice.length <= 0)) {
-        throw new Error(
-          'Por favor, preencha os campos antes de salvar os dados!'
-        );
+        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
       }
       if ((item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0)) {
-        throw new Error(
-          'Por favor, preencha os campos antes de salvar os dados!'
-        );
+        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
       }
     });
   }
@@ -305,9 +306,9 @@ export class MaterialManagementComponent implements OnInit {
     if (oldValue === value) {
       return;
     }
-    let number = value.replace(/[^0-9.,]+/, '');
-    number = Number(number.replace(',', '.')).toFixed(2);
-    if (number === 'NaN') {
+    let number = value.replace(this.REGEX, '');
+    number = Number(number.replace(this.COMMA, this.DOT)).toFixed(2);
+    if (number === this.NOTNUMBER) {
       item.pricing.unitPrice[item.pricing.unitPrice.length - 1] = '';
       return;
     }
@@ -368,17 +369,32 @@ export class MaterialManagementComponent implements OnInit {
     });
   }
 
+  ScrollScreamTop() {
+    let scrollToTop = window.setInterval(() => {
+      let pos = window.pageYOffset;
+      if (pos > 0) {
+        window.scrollTo(0, pos - 20);
+      } else {
+        window.clearInterval(scrollToTop);
+      }
+    }, 0);
+  }
+
 
 
   save() {
     try {
+      this.ScrollScreamTop();
       this.veryfyBeforeSave();
       this.addToItemsMaterial();
       this.materialService.createOrUpdate(this.organizationId, this.hierarchy);
-      this.message = 'Dados salvos com sucesso';
+      this.message = messageCode['SUCCESS']['SRE001']['summary'];
     } catch (error) {
-      this.message = error;
-      console.log(error);
+      try {
+        this.message = messageCode['ERROR'][error]['summary'];
+      } catch (e) {
+        this.message = error.message;
+      }
     }
   }
 }

@@ -17,6 +17,7 @@ import { Profile } from 'src/models/profile';
 import { access } from 'fs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import * as messageCode from 'message.code.json';
 
 @Component({
   selector: 'app-sign-up',
@@ -31,8 +32,7 @@ export class SignUpComponent implements OnInit {
   profiles: string[];
   organization: Organization;
   user: User;
-  msgStatus: string;
-  message: boolean;
+  message: string;
   passwordUser: string;
   confirmPasswordUser: string;
   myRecaptcha: boolean;
@@ -176,12 +176,12 @@ export class SignUpComponent implements OnInit {
   }
 
   closeAlertMessage() {
-    this.message = false;
+    this.message = undefined;
   }
   veryfyBeforeSave() {
     if (!this.isLogged) {
       if (this.organization.email === undefined || this.organization.company === undefined || this.organization.tradingName === undefined || this.organization.phone === undefined || this.organization.cellPhone === undefined || this.organization.classification === undefined || this.termPrivacity === false || this.termService === false) {
-        this.msgStatus = 'WRE001';
+        this.message = messageCode['WARNNING']['WRE001']['summary'];
         return false;
       }
     } else if (
@@ -198,19 +198,19 @@ export class SignUpComponent implements OnInit {
       || this.hierarchy.solid === undefined ||
       this.termPrivacity === false || this.termService === false
     ) {
-      this.msgStatus = 'WRE001';
+      this.message = messageCode['WARNNING']['WRE001']['summary'];
       return false;
     }
     if (this.organization.classification !== Organization.Classification.Municipio) {
       if (this.organization.cnpj === undefined) {
-        this.msgStatus = 'WRE001';
+        this.message = messageCode['WARNNING']['WRE001']['summary'];
         return false;
       }
     }
 
-    this.message = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
-    if (!this.message) {
-      this.msgStatus = 'WRE002';
+    let valid = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
+    if (!valid) {
+      this.message = messageCode['WARNNING']['WRE002']['summary'];
       return false;
     } else {
       return true;
@@ -227,7 +227,7 @@ export class SignUpComponent implements OnInit {
 
   addOrUpdateLocation() {
     let add = false;
-    this.message = true;
+    this.message = undefined;
     if (!this.veryfyBeforeAddLocation()) {
       return;
     }
@@ -252,7 +252,7 @@ export class SignUpComponent implements OnInit {
     }
     this.cleanLocation();
     this.showUnit = true;
-    this.msgStatus = 'IRE002';
+    this.message = messageCode['INFO']['IRE002']['summary'];
   }
 
   cleanLocation() {
@@ -262,13 +262,11 @@ export class SignUpComponent implements OnInit {
 
   veryfyBeforeAddLocation() {
     if (this.unit.location === undefined) {
-      this.message = true;
-      this.msgStatus = 'WRE003';
+      this.message = messageCode['WARNNING']['WRE003']['summary'];
       return false;
     }
     if (this.unit.location.state === undefined || this.unit.location.cep === undefined || this.unit.location.publicPlace === undefined || this.unit.location.neighborhood === undefined || this.unit.location.number === undefined || this.unit.location.number < 0 || this.unit.location.county === undefined) {
-      this.message = true;
-      this.msgStatus = 'WRE004';
+      this.message = messageCode['WARNNING']['WRE004']['summary'];
       return false;
     }
     return true;
@@ -280,7 +278,7 @@ export class SignUpComponent implements OnInit {
 
   addOrUpdateUser() {
     let add = false;
-    this.message = true;
+    this.message = undefined;
     if (!this.veryfyBeforeAddUser()) {
       return;
     }
@@ -300,7 +298,7 @@ export class SignUpComponent implements OnInit {
       this.cleanUser();
     }
     this.show = true;
-    this.msgStatus = 'IRE003';
+    this.message = messageCode['INFO']['IRE003']['summary'];
   }
   cleanUser() {
     this.user = new User();
@@ -317,13 +315,11 @@ export class SignUpComponent implements OnInit {
 
   veryfyBeforeAddUser() {
     if (this.user === undefined) {
-      this.message = true;
-      this.msgStatus = 'WRE004';
+      this.message = messageCode['WARNNING']['WRE004']['summary'];
       return false;
     }
     if (this.user.email === undefined || this.user.name === undefined || this.user.password === undefined || this.user.active === undefined) {
-      this.message = true;
-      this.msgStatus = 'WRE004';
+      this.message = messageCode['WARNNING']['WRE004']['summary'];
       return false;
     }
     return true;
@@ -348,8 +344,7 @@ export class SignUpComponent implements OnInit {
     this.organization.units.forEach((item, index) => {
       if (item === unit) {
         this.organization.units.splice(index, 1);
-        this.message = true;
-        this.msgStatus = 'IRE004';
+        this.message = messageCode['INFO']['IRE004']['summary'];
       } else {
       }
     });
@@ -363,8 +358,7 @@ export class SignUpComponent implements OnInit {
       this.organization.users.forEach((item, index) => {
         if (item === user) {
           this.organization.users.splice(index, 1);
-          this.message = true;
-          this.msgStatus = 'IRE005';
+          this.message = messageCode['INFO']['IRE005']['summary'];
         } else {
         }
       });
@@ -379,7 +373,14 @@ export class SignUpComponent implements OnInit {
   }
 
   ScrollScreamTop() {
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    let scrollToTop = window.setInterval(() => {
+      let pos = window.pageYOffset;
+      if (pos > 0) {
+        window.scrollTo(0, pos - 20);
+      } else {
+        window.clearInterval(scrollToTop);
+      }
+    }, 0);
   }
   save() {
     this.ScrollScreamTop();
@@ -393,12 +394,10 @@ export class SignUpComponent implements OnInit {
     this.organization.hierarchy.solid.materials = this.hierarchy.solid.materials;
 
     if (!this.myRecaptcha) {
-      this.message = true;
-      this.msgStatus = 'IRE006';
+      this.message = messageCode['INFO']['IRE006']['summary'];
       return;
     }
 
-    this.message = true;
     if (!this.veryfyBeforeSave()) {
       return;
     }
@@ -408,9 +407,9 @@ export class SignUpComponent implements OnInit {
       if (this.organization._id === undefined) {
         this.router.navigate(['/']);
       }
-      this.msgStatus = 'SRE001';
+      this.message = messageCode['SUCCESS']['SRE001']['summary'];
     } catch (error) {
-      this.msgStatus = 'Erro ao salvar!';
+      this.message = messageCode['ERROR'][error]['summary'];
       console.log(error);
     }
   }

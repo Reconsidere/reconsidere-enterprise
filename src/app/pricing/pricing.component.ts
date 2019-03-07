@@ -3,6 +3,8 @@ import { PricingService } from 'src/services/pricing.service';
 import { AuthService } from 'src/services';
 import { Hierarchy } from 'src/models/material';
 import { DatePipe } from '@angular/common';
+import * as messageCode from 'message.code.json';
+
 
 @Component({
   selector: 'app-pricing',
@@ -19,6 +21,10 @@ export class PricingComponent implements OnInit {
   isBlocked = true;
 
 
+  private readonly DATEFORMAT = 'dd/MM/yyyy';
+
+  private readonly DISABLED = 'disabled';
+
   constructor(private authService: AuthService, private pricingService: PricingService, private datePipe: DatePipe) {
     this.hierarchy = new Hierarchy();
   }
@@ -34,8 +40,7 @@ export class PricingComponent implements OnInit {
     if (id !== undefined) {
       this.pricingService.getHierarchy(this.organizationId).subscribe(items => this.loadMaterials(items), error => error);
     } else {
-      this.message =
-        'Por favor, para utilizar este recurso primeiro, vá ate a tela de Materiais e cadastre-os';
+      this.message = messageCode['WARNNING']['WRE007']['summary'];
       this.isBlocked = false;
       return;
     }
@@ -48,8 +53,7 @@ export class PricingComponent implements OnInit {
       && items.solid.materials[Hierarchy.types.paper].items.length <= 0
       && items.solid.materials[Hierarchy.types.plastic].items.length <= 0
       && items.solid.materials[Hierarchy.types.tetrapack].items.length <= 0) {
-      this.message =
-        'Por favor, para utilizar este recurso, primeiro vá ate a tela de Materiais e cadastre-os';
+      this.message = messageCode['WARNNING']['WRE007']['summary'];
       this.isBlocked = false;
       return;
     } else {
@@ -89,8 +93,8 @@ export class PricingComponent implements OnInit {
   blockItems(items) {
     items.forEach(item => {
       if (item._id !== undefined && item._id !== '' && item.pricing.dateEntry !== undefined) {
-        item.pricing.disabled = 'disabled';
-        item.pricing.dateEntry = this.datePipe.transform(item.pricing.dateEntry, 'dd/MM/yyyy');
+        item.pricing.disabled = this.DISABLED;
+        item.pricing.dateEntry = this.datePipe.transform(item.pricing.dateEntry, this.DATEFORMAT);
       }
     });
 
@@ -99,53 +103,39 @@ export class PricingComponent implements OnInit {
   calculatePrice(item) {
     if (item.pricing !== undefined && item.pricing.unitPrice.length > 0) {
       if (item.pricing.dateEntry !== undefined && item._id) {
-        this.message =
-          'Este item já foi salvo, e não pode ser alterado.';
+        this.message = messageCode['WARNNING']['WRE008']['summary'];
         return;
       }
     }
     if (item.pricing.unitPrice[item.pricing.unitPrice.length - 1] > 0 && item.pricing.weight > 0) {
       item.pricing.price = item.pricing.weight * item.pricing.unitPrice[item.pricing.unitPrice.length - 1];
     } else {
-      this.message =
-        'Por favor, é necessário ter o valor unitário e o peso para calcular o preço final.';
+      this.message = messageCode['WARNNING']['WRE009']['summary'];
     }
   }
 
   veryfyBeforeSave() {
     if (this.materials === undefined || this.materials.length <= 0) {
-      throw new Error(
-        'Por favor, preencha os campos antes de salvar os dados!'
-      );
+      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
     }
     this.materials.forEach(item => {
       if (item.pricing.dateEntry !== undefined) {
 
         if ((item.pricing === undefined || item.pricing.unitPrice.length <= 0)) {
-          throw new Error(
-            'Por favor, preencha os campos antes de salvar os dados!'
-          );
+          throw new Error(messageCode['WARNNING']['WRE001']['summary']);
         }
         if (item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0 || item.pricing.weight <= 0 || item.pricing.price <= 0) {
-          throw new Error(
-            'Por favor, preencha os campos antes de salvar os dados!'
-          );
+          throw new Error(messageCode['WARNNING']['WRE001']['summary']);
         }
       }
       if (item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0 || item.pricing.date[item.pricing.date.length - 1] === undefined) {
-        throw new Error(
-          'Por favor, preencha os campos antes de salvar os dados!!'
-        );
+        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
       }
       if (item.pricing.dateEntry === undefined && item.pricing.weight > 0) {
-        throw new Error(
-          'Por favor, preencha os campos antes de salvar os dados!!'
-        );
+        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
       }
       if (item.pricing.dateEntry === undefined && item.pricing.price > 0) {
-        throw new Error(
-          'Por favor, preencha os campos antes de salvar os dados!!'
-        );
+        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
       }
     });
 
@@ -189,26 +179,45 @@ export class PricingComponent implements OnInit {
     items.forEach(item => {
       if (item.pricing.price > 0 && item.dateEntry === undefined) {
         item.pricing.dateEntry = new Date();
-        item.pricing.disabled = 'disabled';
+        item.pricing.disabled = this.DISABLED;
       }
     });
   }
 
+  closeMessage() {
+    this.message = undefined;
+  }
+
+  ScrollScreamTop() {
+    let scrollToTop = window.setInterval(() => {
+      let pos = window.pageYOffset;
+      if (pos > 0) {
+        window.scrollTo(0, pos - 20);
+      } else {
+        window.clearInterval(scrollToTop);
+      }
+    }, 0);
+  }
+
   save() {
     try {
+      this.ScrollScreamTop();
       let existToSave = this.materials.filter(x => x.blockChange === false);
       if (!existToSave === undefined || existToSave.length <= 0) {
-        this.message = 'Nenhuma alteração foi realizada, todos os items já foram precificados!';
+        this.message = messageCode['WARNNING']['WRE001']['summary'];
         return;
       }
       this.addDate(this.materials);
       this.veryfyBeforeSave();
       this.addToMaterial();
       this.pricingService.createOrUpdate(this.organizationId, this.hierarchy);
-      this.message = 'Dados salvos com sucesso';
+      this.message = messageCode['SUCCESS']['SRE010']['summary'];
     } catch (error) {
-      this.message = error;
-      console.log(error);
+      try {
+        this.message = messageCode['ERROR'][error]['summary'];
+      } catch (e) {
+        this.message = error.message;
+      }
     }
   }
 }

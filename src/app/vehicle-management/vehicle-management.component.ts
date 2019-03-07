@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/services/auth.service';
 import { Observable } from 'rxjs';
 import { VehicleManagementService } from 'src/services/vehicle-management.service';
+import * as messageCode from 'message.code.json';
 
 @Component({
   selector: 'app-vehicle-management',
@@ -22,11 +23,11 @@ export class VehicleManagementComponent implements OnInit {
   constructor(
     private vehicleService: VehicleManagementService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.page = 1;
-    //this.authService.isAuthenticated();
+    this.authService.isAuthenticated();
     this.getVehicles();
   }
 
@@ -63,21 +64,38 @@ export class VehicleManagementComponent implements OnInit {
     }
   }
 
+  ScrollScreamTop() {
+    let scrollToTop = window.setInterval(() => {
+      let pos = window.pageYOffset;
+      if (pos > 0) {
+        window.scrollTo(0, pos - 20);
+      } else {
+        window.clearInterval(scrollToTop);
+      }
+    }, 0);
+  }
+
+
+
   remove(vehicle) {
     try {
-      if(vehicle._id !== undefined){
-        this.vehicleService.remove(this.organizationId,vehicle._id);
+      this.ScrollScreamTop();
+      if (vehicle._id !== undefined) {
+        this.vehicleService.remove(this.organizationId, vehicle._id);
       }
-      this.message = 'Dados salvos com sucesso';
+      this.message = messageCode['SUCCESS']['SRE010']['summary'];
 
-      this.vehicles.forEach((item,index) => {
-        if(item === vehicle){
+      this.vehicles.forEach((item, index) => {
+        if (item === vehicle) {
           this.vehicles.splice(index, 1);
         }
       });
     } catch (error) {
-      this.message = error;
-      console.log(error);
+      try {
+        this.message = messageCode['ERROR'][error]['summary'];
+      } catch (e) {
+        this.message = error.message;
+      }
     }
   }
 
@@ -104,7 +122,7 @@ export class VehicleManagementComponent implements OnInit {
     this.vehicles.forEach(item => {
       if (vehicle !== item) {
         if (item.carPlate === vehicle.carPlate) {
-          throw new Error('Está placa já está em uso!');
+          throw new Error(messageCode['WARNNING']['WRE011']['summary']);
         }
       }
     });
@@ -116,13 +134,17 @@ export class VehicleManagementComponent implements OnInit {
 
   save(vehicle) {
     try {
+      this.ScrollScreamTop();
       this.verify(vehicle);
       this.veryfyBeforeSave(vehicle);
       this.vehicleService.createOrUpdate(this.organizationId, vehicle);
-      this.message = 'Dados salvos com sucesso';
+      this.message = messageCode['SUCCESS']['SRE010']['summary'];
     } catch (error) {
-      this.message = error;
-      console.log(error);
+      try {
+        this.message = messageCode['ERROR'][error]['summary'];
+      } catch (e) {
+        this.message = error.message;
+      }
     }
   }
 
@@ -141,9 +163,7 @@ export class VehicleManagementComponent implements OnInit {
       !vehicle.emptyVehicleWeight ||
       !vehicle.typeFuel
     ) {
-      throw new Error(
-        'Por favor, preencha os campos antes de salvar os dados!'
-      );
+      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
     }
   }
 }
