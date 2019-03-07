@@ -10,6 +10,7 @@ import { AuthGuard } from '../guards/auth.guard';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { UcFormComponent } from './forms/uc-form/uc-form.component';
+import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
 
 export const routes: Routes = [
   //Módulo de segurança
@@ -24,6 +25,9 @@ export const routes: Routes = [
   {path: 'material-management', component: MaterialManagementComponent, canActivate: [AuthGuard]},
   {path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard]},
   {path: 'pricing', component: PricingComponent, canActivate: [AuthGuard]},
+
+  //Módulo financeiro
+  {path: 'fixed-cost-management', component: FixedCostManagementComponent, canActivate: [AuthGuard]},
 
   //Módulo de formulários
   {path: 'uc-form', component: UcFormComponent },

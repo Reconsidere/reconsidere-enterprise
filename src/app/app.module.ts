@@ -48,6 +48,7 @@ import { FooterComponent } from './forms/footer/footer.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
 
 
 
@@ -76,7 +77,8 @@ registerLocaleData(localePt);
     InternalErrorComponent,
     UcFormComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    FixedCostManagementComponent
   ],
   imports: [
     BrowserModule,
