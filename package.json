@@ -14,7 +14,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^7.2.7",
+    "@angular/animations": "^7.2.8",
     "@angular/cdk": "github:angular/cdk-builds",
     "@angular/common": "~7.0.0",
     "@angular/compiler": "~7.0.0",
@@ -48,6 +48,7 @@
     "mongoose": "^5.4.0",
     "ngx-mask": "^7.0.1",
     "ngx-pagination": "^3.2.1",
+    "ngx-toastr": "^9.1.2",
     "nodemon": "^1.18.7",
     "primeicons": "^1.0.0",
     "primeng": "^7.0.4",

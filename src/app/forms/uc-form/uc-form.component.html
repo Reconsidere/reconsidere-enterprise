@@ -8,8 +8,16 @@
     <div class="form-group">
       <h1 class="display-4">Principal Responsável</h1>
       <hr>
-      <label for="name">Nome completo</label>
-      <input class="form-control" type="text" id="name" />
+      <div class="row">
+        <div class="col-9">
+          <label for="name">Nome completo</label>
+          <input class="form-control" type="text" id="name" />
+        </div>
+        <div class="col-3">
+          <label for="cpf">CPF</label>
+          <input class="form-control" type="text" id="cpf" />
+        </div>
+      </div>
     </div>
   </section>
 
@@ -17,119 +25,181 @@
     <h1 class="display-4">Contato</h1>
     <hr>
     <div class="row">
-      <div class="col-6 form-group">
+      <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 form-group">
         <label for="email">E-mail</label>
         <input class="form-control" type="email" id="email" />
       </div>
 
-      <div class="col-3 form-group">
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 form-group">
         <label for="phone">Telefone</label>
         <input class="form-control" type="text" id="phone" />
       </div>
 
-      <div class="col-3 form-group">
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 form-group">
         <label for="cel">Celular</label>
         <input class="form-control" type="text" id="cel" />
       </div>
     </div>
   </section>
 
+  
+  <section id="address">
+    <h1 class="display-4">Endereço</h1>
+    <hr>
+    <div class="row">
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 form-group">
+        <label for="cep">CEP</label>
+        <input class="form-control" type="text" id="cep" />
+      </div>
+      
+      <div class="col-sm-9 col-md-9 col-lg-9 col-xl-9 form-group">
+        <label for="street">Rua</label>
+        <input class="form-control" type="text" id="street" />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-1 col-md-1 col-lg-1 col-xl-1 form-group">
+        <label for="number">Número</label>
+        <input class="form-control" type="text" id="number" />
+      </div>
+      
+      <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6 form-group">
+        <label for="complemento">Complemento</label>
+        <input class="form-control" type="text" id="complemento" />
+      </div>
+      
+      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 form-group">
+        <label for="neighborhood">Bairro</label>
+        <input class="form-control" type="text" id="neighborhood" />
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5 form-group">
+        <label for="city">Cidade</label>
+        <input class="form-control" type="text" id="city" />
+      </div>
+      
+      <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 form-group">
+        <label for="state">Estado</label>
+        <input class="form-control" type="text" id="state" />
+      </div>
+      
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 form-group">
+        <label for="country">País</label>
+        <input class="form-control" type="text" id="country" />
+      </div>
+    </div>
+  </section>
+  
   <section id="other">
     <div class="form-group">
       <h1 class="display-4">Outros moradores</h1>
       <hr>
       <div class="row">
-        <div class="col-8">
+        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label for="other1">Nome completo</label>
           <input class="form-control" type="text" id="other1" />
         </div>
-        <div class="col-4">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+          <label for="other1-email">E-mail</label>
+          <input class="form-control" type="email" id="other1-email" />
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
           <label for="other1-cel">Telefone</label>
           <input class="form-control" type="text" id="other1-cel" />
         </div>
       </div>
       <div class="row">
-        <div class="col-8">
+        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label for="other2">Nome completo</label>
           <input class="form-control" type="text" id="other2" />
         </div>
-        <div class="col-4">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+          <label for="other2-email">E-mail</label>
+          <input class="form-control" type="email" id="other2-email" />
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
           <label for="other2-cel">Telefone</label>
           <input class="form-control" type="text" id="other2-cel" />
         </div>
       </div>
       <div class="row">
-        <div class="col-8">
+        <div class="col-sm-6 col-md-6 col-lg-6 col-xl-6">
           <label for="other3">Nome completo</label>
           <input class="form-control" type="text" id="other3" />
         </div>
-        <div class="col-4">
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
+          <label for="other3-email">E-mail</label>
+          <input class="form-control" type="email" id="other3-email" />
+        </div>
+        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3">
           <label for="other3-cel">Telefone</label>
           <input class="form-control" type="text" id="other3-cel" />
         </div>
       </div>
     </div>
   </section>
-
-  <section id="address">
-    <h1 class="display-4">Endereço</h1>
-    <hr>
-    <div class="row">
-      <div class="col-3 form-group">
-        <label for="cep">CEP</label>
-        <input class="form-control" type="text" id="cep" />
-      </div>
-
-      <div class="col-9 form-group">
-        <label for="street">Rua</label>
-        <input class="form-control" type="text" id="street" />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-1 form-group">
-        <label for="number">Número</label>
-        <input class="form-control" type="text" id="number" />
-      </div>
-
-      <div class="col-6 form-group">
-        <label for="complemento">Complemento</label>
-        <input class="form-control" type="text" id="complemento" />
-      </div>
-
-      <div class="col-5 form-group">
-        <label for="neighborhood">Bairro</label>
-        <input class="form-control" type="text" id="neighborhood" />
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-5 form-group">
-        <label for="city">Cidade</label>
-        <input class="form-control" type="text" id="city" />
-      </div>
-
-      <div class="col-4 form-group">
-        <label for="state">Estado</label>
-        <input class="form-control" type="text" id="state" />
-      </div>
-
-      <div class="col-3 form-group">
-        <label for="country">País</label>
-        <input class="form-control" type="text" id="country" />
-      </div>
-    </div>
-  </section>
-
-  <section id="dificult">
+  
+  <section id="questionary">
     <h1 class="display-4">Questionário</h1>
     <hr>
-    Tenho grande dificultade em descartar:
-    <mat-slide-toggle>Recicláveis</mat-slide-toggle>
-    <mat-slide-toggle>Não Recicláveis</mat-slide-toggle>
-    <mat-slide-toggle>Compostáveis</mat-slide-toggle>
-    <mat-slide-toggle>Eletrônicos</mat-slide-toggle>
-    <mat-slide-toggle>Perigosos</mat-slide-toggle>
+    <div class="row">
+      <div class="col-sm-2 col-md-2 col-lg-2 col-xl-2 form-group">
+        <label for="residents">Nº Residentes</label>
+        <input class="form-control" type="number" id="residents" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 form-group">
+        <mat-slide-toggle>Moradia própria?</mat-slide-toggle>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-5 col-md-5 col-lg-5 col-xl-5  form-group">
+        <label for="horario">Coloca o lixo em horário especifico? Qual horário?</label>
+        <input class="form-control" type="time" id="horario" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 form-group">
+        <label for="habito">Possui algum hábito de separar os reciclaveis?</label>
+        <input class="form-control" type="text" id="habito" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-8 col-md-8 col-lg-8 col-xl-8 form-group">
+        <label for="recicla">Se recicla para quem entrega o material?</label>
+        <input class="form-control" type="text" id="recicla" />
+      </div>
+    </div>
+
+    <section id="dificult">
+      <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <hr>
+        Tenho grande dificultade em descartar:
+        <mat-slide-toggle>Recicláveis</mat-slide-toggle>
+        <mat-slide-toggle>Não Recicláveis</mat-slide-toggle>
+        <mat-slide-toggle>Compostáveis</mat-slide-toggle>
+        <mat-slide-toggle>Eletrônicos</mat-slide-toggle>
+        <mat-slide-toggle>Perigosos</mat-slide-toggle>
+      </div>
+    </section>
+  </section>
+
+  <section id="term">
+
+  </section>
+
+  <section id="button-group">
+    <hr>
+    <div class="row">
+      <div class="col-sm-12 col-md-4 col-lg-6 col-xl-6">
+        <button type="submit" class="form-control btn btn-success" (click)="save()">Salvar</button>
+      </div>
+    </div>
   </section>
 
   <form-footer></form-footer>

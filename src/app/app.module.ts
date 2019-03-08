@@ -48,10 +48,8 @@ import { FooterComponent } from './forms/footer/footer.component';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { ToastrModule } from 'ngx-toastr';
 import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
-
-
-
 
 registerLocaleData(localePt);
 
@@ -94,6 +92,11 @@ registerLocaleData(localePt);
     MatSidenavModule,
     BrowserAnimationsModule,
     NgxPaginationModule,
+    ToastrModule.forRoot({
+        timeOut: 3000,
+        progressBar: true,
+        preventDuplicates: true
+    }),
     FlatpickrModule.forRoot(),
     CommonModule,
     RecaptchaModule.forRoot({

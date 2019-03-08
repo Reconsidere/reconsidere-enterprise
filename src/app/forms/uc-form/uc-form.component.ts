@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import * as messages from 'message.code.json';
 
 @Component({
   selector: 'app-uc-form',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UcFormComponent implements OnInit {
 
-  constructor() { }
+  constructor(private toastr: ToastrService) { }
 
   ngOnInit() {
   }
+
+  save() {
+    this.toastr.success(
+      messages["SUCCESS"]["SRE002"]["message"], 
+      messages["SUCCESS"]["SRE002"]["summary"]
+    );
+    this.toastr.error(
+      messages["SUCCESS"]["SRE002"]["message"], 
+      messages["SUCCESS"]["SRE002"]["summary"]
+    );
+    this.toastr.error(
+      messages["SUCCESS"]["SRE002"]["message"], 
+      messages["SUCCESS"]["SRE002"]["summary"]
+    );
+  }''
 
 }
