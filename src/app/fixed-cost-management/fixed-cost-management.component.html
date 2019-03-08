@@ -1,10 +1,50 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-  <div *ngIf="message" class="alert alert-warning alert-dismissible fade show" role="alert">
-    <strong>Atenção: </strong> {{ message }}
-    <button type="button" (click)="closeMessage()" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
+  <div *ngIf="isBlocked">
+    <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
+      Salvar ações
     </button>
-  </div>
 
-</div>
+    <div class="tableFixedCost">
+      <table class="table-sm">
+        <thead>
+          <tr>
+            <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <mat-icon>add</mat-icon>
+            </button>
+          </tr>
+          <tr id="Titles">
+            <th>Cadeia de processamento</th>
+            <th>nome</th>
+            <th>Preço</th>
+            <th>Data entrada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-item [ngForOf]="(fixedCosts | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+            <tr>
+              <td>
+                <select (click)="oldValue = item" (change)="changeTypeProcessing
+                (item, oldValue, item)" required [(ngModel)]="item.processingType.name" name="processingType" class="form-control">
+                  <option id="processingType" *ngFor="let type of typeProcessing">{{type.name}}</option>
+                </select>
+              </td>
+              <td>
+                <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+              </td>
+              <td>
+                <input required type="text" (focus)="oldValue = item.price" (blur)="changePrice(oldValue, item.price, item,$event)" [ngModel]="item.price|currency:'BRL':'symbol':'2.2':allowZero: true"
+                  (ngModelChange)="item.price=$event" name="price" class="form-control" id="price" aria-describedby="price" [ngModelOptions]="{updateOn:'blur'}" />
+              </td>
+              <td>
+                <p-calendar required disabled="disabled" name="date" [(ngModel)]="item.date" dateFormat="dd/mm/yy"></p-calendar>
+              </td>
+            </tr>
+
+          </ng-template>
+        </tbody>
+        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+      </table>
+    </div>
+
+  </div>

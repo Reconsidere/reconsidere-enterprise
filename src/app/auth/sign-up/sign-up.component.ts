@@ -18,6 +18,7 @@ import { access } from 'fs';
 import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import * as messageCode from 'message.code.json';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-up',
@@ -32,12 +33,10 @@ export class SignUpComponent implements OnInit {
   profiles: string[];
   organization: Organization;
   user: User;
-  message: string;
   passwordUser: string;
   confirmPasswordUser: string;
   myRecaptcha: boolean;
   unit: Units;
-  show: boolean;
   showUnit: boolean;
   page: number;
   pageUnit: number;
@@ -52,7 +51,7 @@ export class SignUpComponent implements OnInit {
   termService: boolean;
   termPrivacity: boolean;
 
-  constructor(private authService: AuthService, private cepService: CepService, private userService: UserService, private router: Router) {
+  constructor(private authService: AuthService, private cepService: CepService, private userService: UserService, private router: Router, private toastr: ToastrService) {
     this.classifications = Object.values(Organization.Classification);
     this.profiles = Object.values(User.Profiles);
     this.organization = new Organization();
@@ -93,9 +92,6 @@ export class SignUpComponent implements OnInit {
 
   private loadOrganization(item) {
     this.organization = item;
-    if (this.organization.users !== undefined) {
-      this.show = true;
-    }
     this.hierarchy = this.organization.hierarchy;
     this.termService = true;
     this.termPrivacity = true;
@@ -122,9 +118,6 @@ export class SignUpComponent implements OnInit {
     this.passwordUser = undefined;
   }
 
-  closeMessage() {
-    this.message = undefined;
-  }
 
   TypeOrganization(value, e) {
     if (value === Organization.Classification.Cooperativa) {
@@ -175,13 +168,10 @@ export class SignUpComponent implements OnInit {
     setTimeout(function () { }.bind(this), 1000);
   }
 
-  closeAlertMessage() {
-    this.message = undefined;
-  }
   veryfyBeforeSave() {
     if (!this.isLogged) {
       if (this.organization.email === undefined || this.organization.company === undefined || this.organization.tradingName === undefined || this.organization.phone === undefined || this.organization.cellPhone === undefined || this.organization.classification === undefined || this.termPrivacity === false || this.termService === false) {
-        this.message = messageCode['WARNNING']['WRE001']['summary'];
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         return false;
       }
     } else if (
@@ -198,19 +188,19 @@ export class SignUpComponent implements OnInit {
       || this.hierarchy.solid === undefined ||
       this.termPrivacity === false || this.termService === false
     ) {
-      this.message = messageCode['WARNNING']['WRE001']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
       return false;
     }
     if (this.organization.classification !== Organization.Classification.Municipio) {
       if (this.organization.cnpj === undefined) {
-        this.message = messageCode['WARNNING']['WRE001']['summary'];
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         return false;
       }
     }
 
     let valid = this.isValidCNPJ = CNPJValidator.MatchCNPJ(this.organization.cnpj);
     if (!valid) {
-      this.message = messageCode['WARNNING']['WRE002']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE002']['summary']);
       return false;
     } else {
       return true;
@@ -227,7 +217,6 @@ export class SignUpComponent implements OnInit {
 
   addOrUpdateLocation() {
     let add = false;
-    this.message = undefined;
     if (!this.veryfyBeforeAddLocation()) {
       return;
     }
@@ -252,7 +241,7 @@ export class SignUpComponent implements OnInit {
     }
     this.cleanLocation();
     this.showUnit = true;
-    this.message = messageCode['INFO']['IRE002']['summary'];
+    this.toastr.info(messageCode['INFO']['IRE002']['summary']);
   }
 
   cleanLocation() {
@@ -262,11 +251,11 @@ export class SignUpComponent implements OnInit {
 
   veryfyBeforeAddLocation() {
     if (this.unit.location === undefined) {
-      this.message = messageCode['WARNNING']['WRE003']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE003']['summary']);
       return false;
     }
     if (this.unit.location.state === undefined || this.unit.location.cep === undefined || this.unit.location.publicPlace === undefined || this.unit.location.neighborhood === undefined || this.unit.location.number === undefined || this.unit.location.number < 0 || this.unit.location.county === undefined) {
-      this.message = messageCode['WARNNING']['WRE004']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE004']['summary']);
       return false;
     }
     return true;
@@ -278,7 +267,6 @@ export class SignUpComponent implements OnInit {
 
   addOrUpdateUser() {
     let add = false;
-    this.message = undefined;
     if (!this.veryfyBeforeAddUser()) {
       return;
     }
@@ -297,8 +285,7 @@ export class SignUpComponent implements OnInit {
       }
       this.cleanUser();
     }
-    this.show = true;
-    this.message = messageCode['INFO']['IRE003']['summary'];
+    this.toastr.info(messageCode['INFO']['IRE003']['summary']);
   }
   cleanUser() {
     this.user = new User();
@@ -315,11 +302,11 @@ export class SignUpComponent implements OnInit {
 
   veryfyBeforeAddUser() {
     if (this.user === undefined) {
-      this.message = messageCode['WARNNING']['WRE004']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE004']['summary']);
       return false;
     }
     if (this.user.email === undefined || this.user.name === undefined || this.user.password === undefined || this.user.active === undefined) {
-      this.message = messageCode['WARNNING']['WRE004']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE004']['summary']);
       return false;
     }
     return true;
@@ -344,7 +331,7 @@ export class SignUpComponent implements OnInit {
     this.organization.units.forEach((item, index) => {
       if (item === unit) {
         this.organization.units.splice(index, 1);
-        this.message = messageCode['INFO']['IRE004']['summary'];
+        this.toastr.info(messageCode['INFO']['IRE004']['summary']);
       } else {
       }
     });
@@ -358,7 +345,7 @@ export class SignUpComponent implements OnInit {
       this.organization.users.forEach((item, index) => {
         if (item === user) {
           this.organization.users.splice(index, 1);
-          this.message = messageCode['INFO']['IRE005']['summary'];
+          this.toastr.info(messageCode['INFO']['IRE005']['summary']);
         } else {
         }
       });
@@ -372,18 +359,7 @@ export class SignUpComponent implements OnInit {
     return prof;
   }
 
-  ScrollScreamTop() {
-    let scrollToTop = window.setInterval(() => {
-      let pos = window.pageYOffset;
-      if (pos > 0) {
-        window.scrollTo(0, pos - 20);
-      } else {
-        window.clearInterval(scrollToTop);
-      }
-    }, 0);
-  }
   save() {
-    this.ScrollScreamTop();
     if (!this.isLogged) {
       this.user.profile = this.getAdmProfile();
       this.user.active = true;
@@ -394,7 +370,7 @@ export class SignUpComponent implements OnInit {
     this.organization.hierarchy.solid.materials = this.hierarchy.solid.materials;
 
     if (!this.myRecaptcha) {
-      this.message = messageCode['INFO']['IRE006']['summary'];
+      this.toastr.info(messageCode['INFO']['IRE006']['summary']);
       return;
     }
 
@@ -407,9 +383,9 @@ export class SignUpComponent implements OnInit {
       if (this.organization._id === undefined) {
         this.router.navigate(['/']);
       }
-      this.message = messageCode['SUCCESS']['SRE001']['summary'];
+      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
     } catch (error) {
-      this.message = messageCode['ERROR'][error]['summary'];
+      this.toastr.error(messageCode['ERROR'][error]['summary']);
       console.log(error);
     }
   }

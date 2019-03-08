@@ -4,6 +4,7 @@ import { AuthService } from 'src/services';
 import { Hierarchy } from 'src/models/material';
 import { DatePipe } from '@angular/common';
 import * as messageCode from 'message.code.json';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -15,8 +16,6 @@ export class PricingComponent implements OnInit {
   materials: any[];
   organizationId: string;
   page: number;
-  message: string;
-  show = false;
   hierarchy: Hierarchy;
   isBlocked = true;
 
@@ -25,7 +24,7 @@ export class PricingComponent implements OnInit {
 
   private readonly DISABLED = 'disabled';
 
-  constructor(private authService: AuthService, private pricingService: PricingService, private datePipe: DatePipe) {
+  constructor(private authService: AuthService, private pricingService: PricingService, private datePipe: DatePipe, private toastr: ToastrService) {
     this.hierarchy = new Hierarchy();
   }
 
@@ -40,7 +39,7 @@ export class PricingComponent implements OnInit {
     if (id !== undefined) {
       this.pricingService.getHierarchy(this.organizationId).subscribe(items => this.loadMaterials(items), error => error);
     } else {
-      this.message = messageCode['WARNNING']['WRE007']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE007']['summary']);
       this.isBlocked = false;
       return;
     }
@@ -53,7 +52,7 @@ export class PricingComponent implements OnInit {
       && items.solid.materials[Hierarchy.types.paper].items.length <= 0
       && items.solid.materials[Hierarchy.types.plastic].items.length <= 0
       && items.solid.materials[Hierarchy.types.tetrapack].items.length <= 0) {
-      this.message = messageCode['WARNNING']['WRE007']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE007']['summary']);
       this.isBlocked = false;
       return;
     } else {
@@ -103,39 +102,45 @@ export class PricingComponent implements OnInit {
   calculatePrice(item) {
     if (item.pricing !== undefined && item.pricing.unitPrice.length > 0) {
       if (item.pricing.dateEntry !== undefined && item._id) {
-        this.message = messageCode['WARNNING']['WRE008']['summary'];
+        this.toastr.warning(messageCode['WARNNING']['WRE008']['summary']);
         return;
       }
     }
     if (item.pricing.unitPrice[item.pricing.unitPrice.length - 1] > 0 && item.pricing.weight > 0) {
       item.pricing.price = item.pricing.weight * item.pricing.unitPrice[item.pricing.unitPrice.length - 1];
     } else {
-      this.message = messageCode['WARNNING']['WRE009']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE009']['summary']);
     }
   }
 
   veryfyBeforeSave() {
     if (this.materials === undefined || this.materials.length <= 0) {
-      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
     }
     this.materials.forEach(item => {
       if (item.pricing.dateEntry !== undefined) {
 
         if ((item.pricing === undefined || item.pricing.unitPrice.length <= 0)) {
-          throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+          this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+          throw new Error();
         }
         if (item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0 || item.pricing.weight <= 0 || item.pricing.price <= 0) {
-          throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+          this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+          throw new Error();
         }
       }
       if (item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0 || item.pricing.date[item.pricing.date.length - 1] === undefined) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
       if (item.pricing.dateEntry === undefined && item.pricing.weight > 0) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
       if (item.pricing.dateEntry === undefined && item.pricing.price > 0) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
     });
 
@@ -184,39 +189,24 @@ export class PricingComponent implements OnInit {
     });
   }
 
-  closeMessage() {
-    this.message = undefined;
-  }
-
-  ScrollScreamTop() {
-    let scrollToTop = window.setInterval(() => {
-      let pos = window.pageYOffset;
-      if (pos > 0) {
-        window.scrollTo(0, pos - 20);
-      } else {
-        window.clearInterval(scrollToTop);
-      }
-    }, 0);
-  }
 
   save() {
     try {
-      this.ScrollScreamTop();
       let existToSave = this.materials.filter(x => x.blockChange === false);
       if (!existToSave === undefined || existToSave.length <= 0) {
-        this.message = messageCode['WARNNING']['WRE001']['summary'];
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         return;
       }
       this.addDate(this.materials);
       this.veryfyBeforeSave();
       this.addToMaterial();
       this.pricingService.createOrUpdate(this.organizationId, this.hierarchy);
-      this.message = messageCode['SUCCESS']['SRE010']['summary'];
+      this.toastr.success(messageCode['SUCCESS']['SRE010']['summary']);
     } catch (error) {
       try {
-        this.message = messageCode['ERROR'][error]['summary'];
+        this.toastr.error(messageCode['ERROR'][error]['summary']);
       } catch (e) {
-        this.message = error.message;
+        this.toastr.error(error.message);
       }
     }
   }

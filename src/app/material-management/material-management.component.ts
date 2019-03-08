@@ -5,6 +5,7 @@ import { MaterialManagementService } from 'src/services/material-management.serv
 import { Pricing } from 'src/models/pricing';
 import { CurrencyPipe } from '@angular/common';
 import * as messageCode from 'message.code.json';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-material-management',
   templateUrl: './material-management.component.html',
@@ -16,8 +17,6 @@ export class MaterialManagementComponent implements OnInit {
   hierarchy: Hierarchy;
   organizationId: string;
   page: number;
-  message: string;
-  show = false;
   materialsType = [];
   itemsMaterials: any[];
   isBlocked = true;
@@ -32,7 +31,8 @@ export class MaterialManagementComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private materialService: MaterialManagementService
+    private materialService: MaterialManagementService,
+    private toastr: ToastrService
   ) {
     this.hierarchy = new Hierarchy();
   }
@@ -50,7 +50,7 @@ export class MaterialManagementComponent implements OnInit {
         .getHierarchy(this.organizationId)
         .subscribe(item => this.loadHierarchy(item), error => error);
     } else {
-      this.message = messageCode['WARNNING']['WRE006']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE006']['summary']);
       this.isBlocked = false;
     }
   }
@@ -61,7 +61,7 @@ export class MaterialManagementComponent implements OnInit {
       this.verifyMaterialsTypes();
       this.createSimpleList(this.hierarchy);
     } else {
-      this.message = messageCode['WARNNING']['WRE006']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE006']['summary']);
       this.isBlocked = false;
     }
   }
@@ -75,7 +75,7 @@ export class MaterialManagementComponent implements OnInit {
       !this.hierarchy.solid.materials.plastic.used &&
       !this.hierarchy.solid.materials.tetrapack.used
     ) {
-      this.message = messageCode['WARNNING']['WRE006']['summary'];
+      this.toastr.warning(messageCode['WARNNING']['WRE006']['summary']);
       this.isBlocked = false;
       return;
     }
@@ -132,10 +132,6 @@ export class MaterialManagementComponent implements OnInit {
     this.insertItems(Hierarchy.types.tetrapack, Hierarchy.Material.Tetrapack, list);
   }
 
-  closeMessage() {
-    this.message = undefined;
-  }
-
   insertItems(type: any, typeMaterial: any, list: Hierarchy) {
     if (list.solid.materials[type] !== undefined) {
       list.solid.materials[type].items.forEach(item => {
@@ -182,17 +178,21 @@ export class MaterialManagementComponent implements OnInit {
 
   veryfyBeforeSave() {
     if (this.itemsMaterials === undefined || this.itemsMaterials.length <= 0) {
-      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
     }
     this.itemsMaterials.forEach(item => {
       if (item.name === undefined) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
       if ((item.pricing === undefined || item.pricing.unitPrice.length <= 0)) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
       if ((item.pricing.unitPrice[item.pricing.unitPrice.length - 1] <= 0)) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
     });
   }
@@ -369,31 +369,17 @@ export class MaterialManagementComponent implements OnInit {
     });
   }
 
-  ScrollScreamTop() {
-    let scrollToTop = window.setInterval(() => {
-      let pos = window.pageYOffset;
-      if (pos > 0) {
-        window.scrollTo(0, pos - 20);
-      } else {
-        window.clearInterval(scrollToTop);
-      }
-    }, 0);
-  }
-
-
-
   save() {
     try {
-      this.ScrollScreamTop();
       this.veryfyBeforeSave();
       this.addToItemsMaterial();
       this.materialService.createOrUpdate(this.organizationId, this.hierarchy);
-      this.message = messageCode['SUCCESS']['SRE001']['summary'];
+      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
     } catch (error) {
       try {
-        this.message = messageCode['ERROR'][error]['summary'];
+        this.toastr.error(messageCode['ERROR'][error]['summary']);
       } catch (e) {
-        this.message = error.message;
+        this.toastr.error(error.message);
       }
     }
   }

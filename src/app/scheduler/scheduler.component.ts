@@ -19,6 +19,7 @@ import { Vehicle } from 'src/models/vehicle';
 import { DatePipe } from '@angular/common';
 import { TermFilterPipe } from 'src/pipes/term-filter.pipe';
 import * as messageCode from 'message.code.json';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -27,8 +28,6 @@ import * as messageCode from 'message.code.json';
   styleUrls: ['./scheduler.component.scss']
 })
 export class SchedulerComponent implements OnInit {
-  message: string;
-  show = false;
   users: User[] = [];
   georoutes: [GeoRoute];
   page: number;
@@ -51,7 +50,8 @@ export class SchedulerComponent implements OnInit {
     private userService: UserService,
     private authService: AuthService,
     private vehicleService: VehicleManagementService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -220,16 +220,15 @@ export class SchedulerComponent implements OnInit {
     return scheduler;
   }
 
-  closeMessage() {
-    this.message = undefined;
-  }
 
   veryfyBeforeSave(route: GeoRoute) {
     if (route.name === undefined) {
-      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
     }
     if (route.schedules.length <= 0) {
-      throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
     }
     route.schedules.forEach(schedule => {
       if (
@@ -241,10 +240,12 @@ export class SchedulerComponent implements OnInit {
         this.organizationId === undefined ||
         this.organizationId === ''
       ) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
       if (schedule.situation === Schedule.Situation.Conflict) {
-        throw new Error(messageCode['WARNNING']['WRE001']['summary']);
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
       }
     });
   }
@@ -283,22 +284,9 @@ export class SchedulerComponent implements OnInit {
     route.status = GeoRoute.Status.Inactive;
   }
 
-  ScrollScreamTop() {
-    let scrollToTop = window.setInterval(() => {
-      let pos = window.pageYOffset;
-      if (pos > 0) {
-        window.scrollTo(0, pos - 20);
-      } else {
-        window.clearInterval(scrollToTop);
-      }
-    }, 0);
-  }
-
-
 
   save() {
     try {
-      this.ScrollScreamTop();
       this.georoutes.forEach(route => {
         if (route._id === undefined) {
           route.status = GeoRoute.Status.Draft;
@@ -306,7 +294,7 @@ export class SchedulerComponent implements OnInit {
         this.veryfyBeforeSave(route);
       });
       this.schedulerServive.createOrUpdate(this.organizationId, this.georoutes);
-      this.message = messageCode['SUCCESS']['SRE001']['summary'];
+      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
       this.blockEdition();
       this.termfilter = new TermFilterPipe(new DatePipe(this.FORMAT_LOCALE));
       this.georoutes.forEach(route => {
@@ -315,9 +303,9 @@ export class SchedulerComponent implements OnInit {
       });
     } catch (error) {
       try {
-        this.message = messageCode['ERROR'][error]['summary'];
+        this.toastr.error(messageCode['ERROR'][error]['summary']);
       } catch (e) {
-        this.message = error.message;
+        this.toastr.error(error.message);
       }
     }
   }

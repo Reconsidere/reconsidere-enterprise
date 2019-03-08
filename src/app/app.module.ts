@@ -93,7 +93,7 @@ registerLocaleData(localePt);
     BrowserAnimationsModule,
     NgxPaginationModule,
     ToastrModule.forRoot({
-        timeOut: 3000,
+        timeOut: 5000,
         progressBar: true,
         preventDuplicates: true
     }),
