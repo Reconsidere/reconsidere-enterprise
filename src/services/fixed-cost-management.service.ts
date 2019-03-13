@@ -11,11 +11,11 @@ export class FixedCostManagementService {
   constructor(private http: HttpClient) { }
 
 
-  createOrUpdate(organizatioId: string, processingChain: ProcessingChain) {
+  createOrUpdate(organizatioId: string, processingChain: ProcessingChain[]) {
     this.update(organizatioId, processingChain);
   }
 
-  update(organizationId: string, processingChain: ProcessingChain) {
+  update(organizationId: string, processingChain: ProcessingChain[]) {
     this.http
       .put(
         environment.database.uri +

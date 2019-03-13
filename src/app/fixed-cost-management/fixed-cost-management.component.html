@@ -22,22 +22,22 @@
         </thead>
         <tbody>
           <ng-template ngFor let-item [ngForOf]="(fixedCosts | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
-            <tr>
+            <tr *ngIf="item.active">
               <td>
-                <select (click)="oldValue = item" (change)="changeTypeProcessing
-                (item, oldValue, item)" required [(ngModel)]="item.processingType.name" name="processingType" class="form-control">
-                  <option id="processingType" *ngFor="let type of typeProcessing">{{type.name}}</option>
+                <select (click)="oldValue = item.processingType" (change)="changeTypeProcessing
+                (item.processingType, oldValue, item)" required [(ngModel)]="item.processingType" name="processingType" class="form-control">
+                  <option id="processingType" [ngValue]="type" *ngFor="let type of typeProcessing">{{type.name}}</option>
                 </select>
               </td>
               <td>
                 <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
               </td>
               <td>
-                <input required type="text" (focus)="oldValue = item.price" (blur)="changePrice(oldValue, item.price, item,$event)" [ngModel]="item.price|currency:'BRL':'symbol':'2.2':allowZero: true"
-                  (ngModelChange)="item.price=$event" name="price" class="form-control" id="price" aria-describedby="price" [ngModelOptions]="{updateOn:'blur'}" />
+                <input required type="text" (focus)="oldValue = item.price[item.price.length - 1]" (blur)="changePrice(oldValue, item.price[item.price.length - 1], item,$event)" [ngModel]="item.price[item.price.length - 1]|currency:'BRL':'symbol':'2.2':allowZero: true" (ngModelChange)="item.price[item.price.length - 1]=$event" name="price" class="form-control" id="price" aria-describedby="price"
+                  [ngModelOptions]="{updateOn:'blur'}" />
               </td>
               <td>
-                <p-calendar required disabled="disabled" name="date" [(ngModel)]="item.date" dateFormat="dd/mm/yy"></p-calendar>
+                <p-calendar required disabled="disabled" (ngModelChange)="item.date[item.date.length - 1]=$event" name="date" [ngModel]="item.date[item.date.length - 1] | date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
               </td>
             </tr>
 

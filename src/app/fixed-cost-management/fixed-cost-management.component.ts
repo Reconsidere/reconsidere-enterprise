@@ -21,12 +21,12 @@ export class FixedCostManagementComponent implements OnInit {
   private readonly COMMA = ',';
 
   private readonly DOT = '.';
-  processingChain: ProcessingChain;
   organizationId: string;
   page: number;
   isBlocked = true;
   fixedCosts: any[];
   typeProcessing: [];
+  processChain: ProcessingChain[];
 
   constructor(private authService: AuthService, private fixedCostService: FixedCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
 
@@ -52,6 +52,7 @@ export class FixedCostManagementComponent implements OnInit {
       this.toastr.warning(messageCode['WARNNING']['WRE012']['summary']);
       return;
     }
+    this.processChain = items;
     this.typeProcessing = items;
     items.forEach(processingChain => {
       processingChain.fixedCost.forEach(fixedCost => {
@@ -59,9 +60,9 @@ export class FixedCostManagementComponent implements OnInit {
           _id: fixedCost._id,
           name: fixedCost.name,
           active: fixedCost.active,
-          price: fixedCost.price[fixedCost.price.length - 1],
+          price: fixedCost.price,
           processingType: processingChain,
-          date: this.datePipe.transform(fixedCost.date[fixedCost.date.length - 1], this.DATEFORMAT),
+          date: fixedCost.date,
         };
         if (this.fixedCosts === undefined || this.fixedCosts.length <= 0) {
           this.fixedCosts = [obj];
@@ -75,12 +76,12 @@ export class FixedCostManagementComponent implements OnInit {
   newItem() {
     if (this.fixedCosts === undefined) {
       this.fixedCosts = [{
-        _id: undefined, processingType: '', name: undefined, active: true, price: 0, date: undefined
+        _id: undefined, processingType: '', name: undefined, active: true, price: [0.0], date: [undefined]
       }
       ];
     } else {
       this.fixedCosts.push({
-        _id: undefined, processingType: '', name: undefined,active: true, price: 0, date: undefined
+        _id: undefined, processingType: '', name: undefined, active: true, price: [0.0], date: [undefined]
       });
     }
   }
@@ -92,25 +93,112 @@ export class FixedCostManagementComponent implements OnInit {
     let number = value.replace(this.REGEX, '');
     number = Number(number.replace(this.COMMA, this.DOT)).toFixed(2);
     if (number === this.NOTNUMBER) {
-      item.price[item.price.length - 1] = '';
+      item.price = '';
       return;
     }
     if (item._id === undefined) {
-      item.price = number;
-      item.date = new Date();
+      item.price = [number];
+      item.date = [new Date()];
       return;
     }
-    item.price[item.price.length - 1] = oldValue;
+    item.price = [oldValue];
     item.price.push(number);
     item.date.push(new Date());
   }
 
-  changeTypeProcessing(selected, oldValue, item) {
-     this.fixedCosts.forEach(fixedCost => {
-       if(fixedCost === item){
-
-       }
-     });
+  private changeTypeProcessing(selected, oldValue, item) {
+    let isRemoved = false;
+    this.fixedCosts.forEach((element, index) => {
+      if (element._id !== undefined && element._id !== '') {
+        this.processChain.forEach((obj, i) => {
+          obj.fixedCost.forEach((cost, remove) => {
+            if (item._id === cost._id) {
+              obj.fixedCost.splice(remove, 1);
+              isRemoved = true;
+            } else {
+            }
+          });
+        });
+      }
+    });
   }
 
+  addToItemsFixedCost() {
+    this.fixedCosts.forEach(fixedCost => {
+      let isAdd = false;
+      if (this.processChain !== undefined) {
+        this.processChain.forEach((processChain, index) => {
+          if (fixedCost.processingType === processChain) {
+            let obj = {
+              _id: fixedCost._id,
+              name: fixedCost.name,
+              active: fixedCost.active,
+              price: fixedCost.price,
+              date: fixedCost.date,
+            };
+            processChain.fixedCost.forEach((ProcessChainFixedCost, index) => {
+              if (fixedCost._id === ProcessChainFixedCost._id) {
+                processChain.fixedCost[index] = obj;
+                isAdd = true;
+              }
+            });
+            if (!isAdd) {
+              if (processChain.fixedCost === undefined || processChain.fixedCost.length <= 0) {
+                processChain.fixedCost = [obj];
+              } else {
+                processChain.fixedCost.push(obj);
+              }
+              isAdd = false;
+            }
+          }
+        });
+      }
+    });
+  }
+
+
+  veryfyBeforeSave() {
+    if (this.fixedCosts === undefined || this.fixedCosts.length <= 0) {
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
+    }
+    this.fixedCosts.forEach(item => {
+      if (item.name === undefined) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if ((item.price === undefined || item.price.length <= 0)) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if ((item.price[item.price.length - 1] <= 0)) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if ((item.date === undefined || item.date.length <= 0)) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if ((item.date[item.date.length - 1] === undefined || item.date[item.date.length - 1] === '')) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+    });
+  }
+
+
+  save() {
+    try {
+      this.veryfyBeforeSave();
+      this.addToItemsFixedCost();
+      this.fixedCostService.createOrUpdate(this.organizationId, this.processChain);
+      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
+    } catch (error) {
+      try {
+        this.toastr.error(messageCode['ERROR'][error]['summary']);
+      } catch (e) {
+        this.toastr.error(error.message);
+      }
+    }
+  }
 }
