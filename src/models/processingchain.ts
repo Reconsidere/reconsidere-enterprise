@@ -3,7 +3,9 @@ import { FixedCost } from "./fixedcost";
 export class ProcessingChain {
   _id: string;
   name: string;
+  date: Date;
   description: string;
-  fixedCost: [FixedCost];
+  fixedCost: [];
   hierarchy: [];
+  active: boolean;
 }

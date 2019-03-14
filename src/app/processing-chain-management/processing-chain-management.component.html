@@ -1,0 +1,39 @@
+<app-toolbar></app-toolbar>
+<div class="container">
+  <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
+    Salvar ações
+  </button>
+
+  <div class="tableFixedCost">
+    <table class="table-sm">
+      <thead>
+        <tr>
+          <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <mat-icon>add</mat-icon>
+          </button>
+        </tr>
+        <tr id="Titles">
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-item [ngForOf]="(processChain | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+          <tr *ngIf="item.active">
+            <td>
+              <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+            </td>
+            <td>
+              <input required [(ngModel)]="item.description" name="description" type="text" class="form-control" id="description" aria-describedby="description" />
+            </td>
+            <td>
+              <p-calendar required disabled="disabled"  name="date" (ngModelChange)="item.date=$event" [ngModel]="item.date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
+            </td>
+          </tr>
+        </ng-template>
+      </tbody>
+      <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+    </table>
+  </div>
+</div>

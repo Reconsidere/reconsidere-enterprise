@@ -50,6 +50,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { ToastrModule } from 'ngx-toastr';
 import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
+import { ProcessingChainManagementComponent } from './processing-chain-management/processing-chain-management.component';
 
 registerLocaleData(localePt);
 
@@ -76,7 +77,8 @@ registerLocaleData(localePt);
     UcFormComponent,
     HeaderComponent,
     FooterComponent,
-    FixedCostManagementComponent
+    FixedCostManagementComponent,
+    ProcessingChainManagementComponent
   ],
   imports: [
     BrowserModule,
