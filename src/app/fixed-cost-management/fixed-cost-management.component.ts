@@ -26,7 +26,7 @@ export class FixedCostManagementComponent implements OnInit {
   isBlocked = true;
   fixedCosts: any[];
   typeProcessing: [];
-  processChain: ProcessingChain[];
+  processChain: any[];
 
   constructor(private authService: AuthService, private fixedCostService: FixedCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
 
@@ -50,6 +50,7 @@ export class FixedCostManagementComponent implements OnInit {
   loadFixedCosts(items) {
     if (items === undefined || items.length <= 0) {
       this.toastr.warning(messageCode['WARNNING']['WRE012']['summary']);
+      this.isBlocked = false;
       return;
     }
     this.processChain = items;
