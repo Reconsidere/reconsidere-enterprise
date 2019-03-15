@@ -8,4 +8,6 @@ export class ProcessingChain {
   fixedCost: [];
   hierarchy: [];
   active: boolean;
+  collectionCost: [];
+  expanses: [];
 }

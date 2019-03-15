@@ -1,4 +1,5 @@
 import { Vehicle } from "./vehicle";
+import { NumberValueAccessor } from "@angular/forms/src/directives";
 
 export class CollectionCost {
     _id: string;
@@ -8,4 +9,7 @@ export class CollectionCost {
     priceFuel: Number;
     vehicle: Vehicle;
     averageConsumption: Number;
+    active: boolean;
+    price: Number;
+    consumption: Number;
 }

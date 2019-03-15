@@ -13,6 +13,7 @@ import { UcFormComponent } from './forms/uc-form/uc-form.component';
 import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
 import { ProcessingChainManagementComponent } from './processing-chain-management/processing-chain-management.component';
 import { CollectionCostManagementComponent } from './collection-cost-management/collection-cost-management.component';
+import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
 
 export const routes: Routes = [
   //Módulo de segurança
@@ -32,6 +33,7 @@ export const routes: Routes = [
   {path: 'fixed-cost-management', component: FixedCostManagementComponent, canActivate: [AuthGuard]},
   {path: 'processing-chain-management', component: ProcessingChainManagementComponent, canActivate: [AuthGuard]},
   {path: 'collection-cost-management', component: CollectionCostManagementComponent, canActivate: [AuthGuard]},
+  {path: 'expenses-management', component: ExpensesManagementComponent, canActivate: [AuthGuard]},
 
   //Módulo de formulários
   {path: 'uc-form', component: UcFormComponent },

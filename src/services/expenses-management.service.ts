@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
 import { ProcessingChain } from 'src/models/processingchain';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CollectionCostManagementService {
+export class ExpensesManagementService {
 
   constructor(private http: HttpClient) { }
 
@@ -18,13 +18,13 @@ export class CollectionCostManagementService {
     this.http
       .put(
         environment.database.uri +
-        `/organization/update/collectioncost/${organizationId}/`,
+        `/organization/update/expanses/${organizationId}/`,
         processingChain
       )
       .subscribe(res => console.log('Done'));
   }
 
   getProcessingChain(id) {
-    return this.http.get<any>(`${environment.database.uri}/organization/collectioncost/${id}`);
+    return this.http.get<any>(`${environment.database.uri}/organization/expanses/${id}`);
   }
 }

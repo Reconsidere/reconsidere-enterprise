@@ -1,3 +1,67 @@
-<p>
-  collection-cost-management works!
-</p>
+<app-toolbar></app-toolbar>
+<div class="container">
+  <div *ngIf="isBlocked">
+    <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
+      Salvar ações
+    </button>
+
+    <div class="tableCollectionCost">
+      <table class="table-sm">
+        <thead>
+          <tr>
+            <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+              <mat-icon>add</mat-icon>
+            </button>
+          </tr>
+          <tr id="Titles">
+            <th>Cadeia de processamento</th>
+            <th>Nome</th>
+            <th>Distância</th>
+            <th>Preço combustível</th>
+            <th>Veículo</th>
+            <th>Média consumo</th>
+            <th>Preço gasto</th>
+            <th>Consumo de combustível</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tbody>
+          <ng-template ngFor let-item [ngForOf]="(collectionCosts | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+            <tr *ngIf="item.active">
+              <td>
+                <select (click)="oldValue = item.processingType" (change)="changeTypeProcessing
+                    (item.processingType, oldValue, item)" required [(ngModel)]="item.processingType" name="processingType" class="form-control">
+                  <option id="processingType" [ngValue]="type" *ngFor="let type of typeProcessing">{{type.name}}</option>
+                </select>
+              </td>
+              <td>
+                <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+              </td>
+              <td>
+                <input required [(ngModel)]="item.distance"  name="distance" type="text" class="form-control" id="distance" aria-describedby="distance" />
+              </td>
+              <td>
+                <input required  (ngModelChange)="item.priceFuel" [ngModel]="item.priceFuel | currency:'BRL':'symbol':'2.2':allowZero: true" name="priceFuel" type="text" class="form-control" id="priceFuel" aria-describedby="priceFuel" />
+              </td>
+              <td>
+                <select required (ngModelChange)="item.vehicle = $event" [ngModel]="item.vehicle?.carPlate" name="vehicle" class="form-control">
+                  <option id="vehicle" [ngValue]="vehicle" *ngFor="let vehicle of vehicles">{{ vehicle.carPlate }}</option>
+                </select>
+              </td>
+              <td>
+                <input required [(ngModel)]="item.averageConsumption" (blur)="calculatePrice(item)" name="averageConsumption" type="text" class="form-control" id="averageConsumption" aria-describedby="averageConsumption" />
+              </td>
+              <td>
+                <input required disabled="disabled" [ngModel]="item.price |currency:'BRL':'symbol':'2.2':allowZero: true" name="price" type="text" (ngModelChange)="item.price = $event" class="form-control" id="price" aria-describedby="price" />
+              </td>
+              <td>
+                  <input required disabled="disabled" [ngModel]="item.consumption" name="consumption" type="text" (ngModelChange)="item.consumption = $event" class="form-control" id="consumption" aria-describedby="consumption" />
+                </td>
+            </tr>
+          </ng-template>
+        </tbody>
+        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+      </table>
+    </div>
+  </div>
+</div>

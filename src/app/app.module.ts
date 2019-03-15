@@ -52,6 +52,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
 import { ProcessingChainManagementComponent } from './processing-chain-management/processing-chain-management.component';
 import { CollectionCostManagementComponent } from './collection-cost-management/collection-cost-management.component';
+import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
 
 registerLocaleData(localePt);
 
@@ -80,7 +81,8 @@ registerLocaleData(localePt);
     FooterComponent,
     FixedCostManagementComponent,
     ProcessingChainManagementComponent,
-    CollectionCostManagementComponent
+    CollectionCostManagementComponent,
+    ExpensesManagementComponent
   ],
   imports: [
     BrowserModule,

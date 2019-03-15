@@ -47,9 +47,9 @@ export class ProcessingChainManagementComponent implements OnInit {
 
   newItem() {
     if (this.processChain === undefined) {
-      this.processChain = [{ _id: undefined, name: '', description: '', active: true, date: new Date(), fixedCost: [], hierarchy: [] }];
+      this.processChain = [{ _id: undefined, name: '', description: '', active: true, date: new Date(), fixedCost: [], hierarchy: [], collectionCost: [], expanses:[] }];
     } else {
-      this.processChain.push({ _id: undefined, name: '', description: '', active: true, date: new Date(), fixedCost: [], hierarchy: [] });
+      this.processChain.push({ _id: undefined, name: '', description: '', active: true, date: new Date(), fixedCost: [], hierarchy: [], collectionCost: [], expanses:[] });
     }
   }
 
