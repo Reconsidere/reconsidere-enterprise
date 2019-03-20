@@ -1,13 +1,11 @@
-import { FixedCost } from "./fixedcost";
+import { Fixed } from "./fixed";
 
 export class ProcessingChain {
   _id: string;
   name: string;
   date: Date;
   description: string;
-  fixedCost: [];
   hierarchy: [];
   active: boolean;
-  collectionCost: [];
-  expanses: [];
+
 }

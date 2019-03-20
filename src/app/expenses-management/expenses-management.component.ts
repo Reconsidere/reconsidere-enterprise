@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewChildren } from '@angular/core';
 import { AuthService } from 'src/services';
 import { ToastrService } from 'ngx-toastr';
 import * as messageCode from 'message.code.json';
 import { ExpensesManagementService } from 'src/services/expenses-management.service';
+import { FixedCostManagementComponent } from '../fixed-cost-management/fixed-cost-management.component';
 
 
 @Component({
@@ -13,16 +14,20 @@ import { ExpensesManagementService } from 'src/services/expenses-management.serv
 export class ExpensesManagementComponent implements OnInit {
   organizationId: string;
   page: number;
-  typeProcessing: [];
-  processChain: any[];
-  expanses: any[];
-  isBlocked = true;
+  expanse;
   typeExpanse: [];
+  existMonth;
+  monthDate: Date;
+  isExpand;
 
 
-  constructor(private authService: AuthService, private toastr: ToastrService, private expansesService: ExpensesManagementService) { }
+  @ViewChild('myComponentFixed') fixed: any;
+  constructor(private authService: AuthService, private toastr: ToastrService, private expansesService: ExpensesManagementService) {
+  }
 
   ngOnInit() {
+    this.existMonth = false;
+    this.monthDate = new Date();
     this.page = 1;
     this.authService.isAuthenticated();
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
@@ -31,81 +36,71 @@ export class ExpensesManagementComponent implements OnInit {
   setId(id) {
     this.organizationId = id;
     if (id !== undefined) {
-      this.expansesService.getProcessingChain(this.organizationId).subscribe(items => this.loadExpanses(items), error => error);
+      this.expansesService.getExpanses(this.organizationId, this.monthDate).subscribe(items => this.loadExpanses(items), error => error);
     } else {
-      this.toastr.warning(messageCode['WARNNING']['WRE012']['summary']);
-      this.isBlocked = false;
+      this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
+      this.existMonth = false;
       return;
     }
   }
 
-  loadExpanses(items) {
-    if (items === undefined || items.length <= 0) {
-      this.toastr.warning(messageCode['WARNNING']['WRE012']['summary']);
-      this.isBlocked = false;
+
+  openFixed() {
+    if (!this.isExpand) {
+      this.isExpand = true;
+      this.expanse.fixed = this.fixed.loadFixedCosts(this.expanse);
+    } else {
+      this.isExpand = false;
+      this.fixed.close();
+    }
+  }
+
+  loadExpanses(item) {
+    if (item === undefined || item._id === undefined) {
+      this.existMonth = false;
       return;
     }
-    this.processChain = items;
-    this.typeProcessing = items;
-    items.forEach(processingChain => {
-      processingChain.expanses.forEach(expanse => {
-        let obj = {
-          _id: expanse._id,
-          name: expanse.name,
-          active: expanse.active,
-          price: expanse.price,
-          processingType: processingChain,
-          date: expanse.date,
-          type: expanse.type,
-          description: expanse.description
-        };
-        if (this.expanses === undefined || this.expanses.length <= 0) {
-          this.expanses = [obj];
-        } else {
-          this.expanses.push(obj);
-        }
-      });
-    });
+    this.expanse = item;
+    this.existMonth = true;
   }
+
 
   newItem() {
-    if (this.expanses === undefined) {
-      this.expanses = [{ _id: undefined, type: undefined, processingType: '', name: undefined, active: true, price: 0.0, date: new Date(), description: undefined }];
-    } else {
-      this.expanses.push({ _id: undefined, type: undefined, processingType: '', name: undefined, active: true, price: 0.0, date: new Date(), description: undefined });
-    }
+    this.expanse = { _id: undefined, date: new Date(), fixed: [], inconstant: [], uncertain: [] };
+    this.existMonth = true;
   }
 
 
   veryfyBeforeSave() {
-    if (this.expanses === undefined || this.expanses.length <= 0) {
+    if (this.expanse === undefined) {
       this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
       throw new Error();
     }
-    this.expanses.forEach(item => {
-      if (item.name === undefined) {
-        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
-        throw new Error();
-      }
-      if (item.price === undefined || item.price <= 0) {
-        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
-        throw new Error();
-      }
-      if (item.description === undefined) {
-        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
-        throw new Error();
-      }
-      if (item.date === undefined) {
-        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
-        throw new Error();
-      }
-      if (item.type === undefined || item.type === '') {
-        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
-        throw new Error();
-      }
-    });
+
+    if (this.expanse.date === undefined) {
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
+    }
+
+
+    if (this.expanse.fixed !== undefined) {
+      this.fixed.veryfyBeforeSave(this.expanse.fixed);
+    }
   }
 
 
+  save() {
+    try {
+      this.veryfyBeforeSave();
+      this.expansesService.createOrUpdate(this.organizationId, this.expanse);
+      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
+    } catch (error) {
+      try {
+        this.toastr.error(messageCode['ERROR'][error]['summary']);
+      } catch (e) {
+        this.toastr.error(error.message);
+      }
 
+    }
+  }
 }

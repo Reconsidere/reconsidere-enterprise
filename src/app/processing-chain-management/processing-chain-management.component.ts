@@ -4,7 +4,7 @@ import { ProcessingChainManagementService } from 'src/services/processing-chain-
 import { AuthService } from 'src/services';
 import { ToastrService } from 'ngx-toastr';
 import * as messageCode from 'message.code.json';
-import { FixedCost } from 'src/models/fixedcost';
+import { Fixed } from 'src/models/fixed';
 
 @Component({
   selector: 'app-processing-chain-management',
@@ -47,9 +47,9 @@ export class ProcessingChainManagementComponent implements OnInit {
 
   newItem() {
     if (this.processChain === undefined) {
-      this.processChain = [{ _id: undefined, name: '', description: '', active: true, date: new Date(), fixedCost: [], hierarchy: [], collectionCost: [], expanses:[] }];
+      this.processChain = [{ _id: undefined, name: '', description: '', active: true, date: new Date(), hierarchy: [] }];
     } else {
-      this.processChain.push({ _id: undefined, name: '', description: '', active: true, date: new Date(), fixedCost: [], hierarchy: [], collectionCost: [], expanses:[] });
+      this.processChain.push({ _id: undefined, name: '', description: '', active: true, date: new Date(), hierarchy: [] });
     }
   }
 
@@ -81,7 +81,7 @@ export class ProcessingChainManagementComponent implements OnInit {
   save() {
     try {
       this.veryfyBeforeSave();
-      this.processingChainService.createOrUpdate(this.organizationId, this.processChain);
+      //this.processingChainService.createOrUpdate(this.organizationId, this.processChain);
       this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
     } catch (error) {
       try {

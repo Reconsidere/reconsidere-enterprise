@@ -10,21 +10,5 @@ export class CollectionCostManagementService {
 
   constructor(private http: HttpClient) { }
 
-  createOrUpdate(organizatioId: string, processingChain: ProcessingChain[]) {
-    this.update(organizatioId, processingChain);
-  }
 
-  update(organizationId: string, processingChain: ProcessingChain[]) {
-    this.http
-      .put(
-        environment.database.uri +
-        `/organization/update/collectioncost/${organizationId}/`,
-        processingChain
-      )
-      .subscribe(res => console.log('Done'));
-  }
-
-  getProcessingChain(id) {
-    return this.http.get<any>(`${environment.database.uri}/organization/collectioncost/${id}`);
-  }
 }

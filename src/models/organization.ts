@@ -5,6 +5,7 @@ import { Vehicle } from './vehicle';
 import { GeoRoute } from './georoute';
 import { Units } from './unit';
 import { Supports } from './supports';
+import { Expenses } from './expenses';
 
 export class Organization {
   _id: string;
@@ -26,6 +27,7 @@ export class Organization {
   vehicles: [Vehicle];
   georoutes: [GeoRoute];
   hierarchy: Hierarchy;
+  expenses:Expenses;
 }
 
 export namespace Organization {

@@ -32,15 +32,15 @@ export class CollectionCostManagementComponent implements OnInit {
   }
 
   setId(id) {
-    this.organizationId = id;
-    if (id !== undefined) {
-      this.collectionCostService.getProcessingChain(this.organizationId).subscribe(items => this.loadCollectionCots(items), error => error);
-      this.getVehicles();
-    } else {
-      this.toastr.warning(messageCode['WARNNING']['WRE012']['summary']);
-      this.isBlocked = false;
-      return;
-    }
+    // this.organizationId = id;
+    // if (id !== undefined) {
+    //   this.collectionCostService.getProcessingChain(this.organizationId).subscribe(items => this.loadCollectionCots(items), error => error);
+    //   this.getVehicles();
+    // } else {
+    //   this.toastr.warning(messageCode['WARNNING']['WRE012']['summary']);
+    //   this.isBlocked = false;
+    //   return;
+    // }
   }
 
   loadCollectionCots(items) {
@@ -205,7 +205,7 @@ export class CollectionCostManagementComponent implements OnInit {
     try {
       this.veryfyBeforeSave();
       this.addToItemsCollectionCost();
-      this.collectionCostService.createOrUpdate(this.organizationId, this.processChain);
+      //this.collectionCostService.createOrUpdate(this.organizationId, this.processChain);
       this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
     } catch (error) {
       try {

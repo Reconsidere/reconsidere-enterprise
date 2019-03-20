@@ -1,55 +1,41 @@
 <app-toolbar></app-toolbar>
 <div class="container">
-  <div *ngIf="isBlocked">
-    <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
-      Salvar ações
-    </button>
 
-    <div class="tableFixedCost">
-      <table class="table-sm">
-        <thead>
-          <tr>
-            <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-              <mat-icon>add</mat-icon>
-            </button>
-          </tr>
-          <tr id="Titles">
-            <th>Cadeia de processamento</th>
-            <th>Tipo</th>
-            <th>Descrição</th>
-            <th>Data entrada</th>
-            <th>preço</th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-template ngFor let-item [ngForOf]="(expanses | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
-            <tr *ngIf="item.active">
-              <td>
-                <select (click)="oldValue = item.processingType" (change)="changeTypeProcessing
-                (item.processingType, oldValue, item)" required [(ngModel)]="item.processingType" name="processingType" class="form-control">
-                  <option id="processingType" [ngValue]="type" *ngFor="let type of typeProcessing">{{type.name}}</option>
-                </select>
-              </td>
-              <td>
-                <select
-                 required [(ngModel)]="item.type" name="type" class="form-control">
-                  <option id="type" [ngValue]="type" *ngFor="let expanse of typeExpanse">{{expanse}}</option>
-                </select>
-              </td>
-              <td>
-                <input required [(ngModel)]="item.description" name="description" type="text" class="form-control" id="description" aria-describedby="description" />
-              </td>
-              <td>
-                <p-calendar required disabled="disabled" (ngModelChange)="item.date=$event" name="date" [ngModel]="item.date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
-              </td>
-              <td>
-                <input required type="text" (ngModelChange)="item.price=$event"   [ngModel]="item.price |currency:'BRL':'symbol':'2.2':allowZero: true"  name="price" class="form-control" id="price" aria-describedby="price"/>
-              </td>
-            </tr>
-          </ng-template>
-        </tbody>
-        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
-      </table>
+  <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
+    Salvar ações
+  </button>
+  <p-calendar view="month" dateFormat="mm/yy" [yearNavigator]="true"  name="monthDate" [(ngModel)]="monthDate" yearRange="2000:2090"></p-calendar>
+
+
+  <div class="row">
+    <div class="col-xl-12 col-lg-6 col-md-12 col-sm-12 col-12">
+      <div class="form-group">
+        <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+          <mat-icon>add</mat-icon><span>Adicionar despesas</span>
+        </button>
+      </div>
+    </div>
+    <div *ngIf="existMonth">
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="date">Data entrada</label>
+          <p-calendar (ngModelChange)="expanse.date = $event" required disabled="disabled" name="date" [ngModel]="expanse.date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
+        </div>
+      </div>
+      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="form-group">
+          <label for="date">Custo fixo</label>
+          <button id="openFixed" (click)="openFixed()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <mat-icon *ngIf="isExpand">expand_more</mat-icon>
+            <mat-icon *ngIf="!isExpand">expand_less</mat-icon>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+</div>
+
+
+<div>
+  <app-fixed-cost-management #myComponentFixed></app-fixed-cost-management>
 </div>

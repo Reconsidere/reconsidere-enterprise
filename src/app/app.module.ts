@@ -113,7 +113,7 @@ registerLocaleData(localePt);
     MatSlideToggleModule,
     MatButtonModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
   ],
 
   providers: [
@@ -126,7 +126,9 @@ registerLocaleData(localePt);
     BrowserModule,
     RouterModule,
     DecriptEncript,
-    DatePipe
+    DatePipe,
+    FixedCostManagementComponent,
+    ExpensesManagementComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -30,9 +30,7 @@ export const routes: Routes = [
   {path: 'pricing', component: PricingComponent, canActivate: [AuthGuard]},
 
   //Módulo financeiro
-  {path: 'fixed-cost-management', component: FixedCostManagementComponent, canActivate: [AuthGuard]},
   {path: 'processing-chain-management', component: ProcessingChainManagementComponent, canActivate: [AuthGuard]},
-  {path: 'collection-cost-management', component: CollectionCostManagementComponent, canActivate: [AuthGuard]},
   {path: 'expenses-management', component: ExpensesManagementComponent, canActivate: [AuthGuard]},
 
   //Módulo de formulários
