@@ -10,21 +10,21 @@ export class ExpensesManagementService {
 
   constructor(private http: HttpClient) { }
 
-  createOrUpdate(organizatioId: string, expenses: Expenses) {
+  createOrUpdate(organizatioId: string, expenses: Expenses[]) {
     this.update(organizatioId, expenses);
   }
 
-  update(organizationId: string, expenses: Expenses) {
+  update(organizationId: string, expenses: Expenses[]) {
     this.http
       .put(
         environment.database.uri +
-        `/organization/update/expanses/${organizationId}/`,
+        `/organization/update/expenses/${organizationId}/`,
         expenses
       )
       .subscribe(res => console.log('Done'));
   }
 
   getExpanses(id, date) {
-    return this.http.get(`${environment.database.uri}/organization/expanses/${id}/${date}`);
+    return this.http.get(`${environment.database.uri}/organization/expenses/${id}/${date}`);
   }
 }

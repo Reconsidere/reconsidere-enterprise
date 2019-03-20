@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import * as messageCode from 'message.code.json';
 import { ExpensesManagementService } from 'src/services/expenses-management.service';
 import { FixedCostManagementComponent } from '../fixed-cost-management/fixed-cost-management.component';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -14,20 +15,20 @@ import { FixedCostManagementComponent } from '../fixed-cost-management/fixed-cos
 export class ExpensesManagementComponent implements OnInit {
   organizationId: string;
   page: number;
-  expanse;
+  expenses: any[];
   typeExpanse: [];
   existMonth;
-  monthDate: Date;
+  dateMonth: Date;
   isExpand;
 
 
   @ViewChild('myComponentFixed') fixed: any;
-  constructor(private authService: AuthService, private toastr: ToastrService, private expansesService: ExpensesManagementService) {
+  constructor(private authService: AuthService, private toastr: ToastrService, private expansesService: ExpensesManagementService, private datePipe: DatePipe) {
   }
 
   ngOnInit() {
     this.existMonth = false;
-    this.monthDate = new Date();
+    this.dateMonth = new Date();
     this.page = 1;
     this.authService.isAuthenticated();
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
@@ -36,7 +37,7 @@ export class ExpensesManagementComponent implements OnInit {
   setId(id) {
     this.organizationId = id;
     if (id !== undefined) {
-      this.expansesService.getExpanses(this.organizationId, this.monthDate).subscribe(items => this.loadExpanses(items), error => error);
+      this.expansesService.getExpanses(this.organizationId, this.dateMonth).subscribe(items => this.loadExpanses(items), error => error);
     } else {
       this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
       this.existMonth = false;
@@ -48,7 +49,7 @@ export class ExpensesManagementComponent implements OnInit {
   openFixed() {
     if (!this.isExpand) {
       this.isExpand = true;
-      this.expanse.fixed = this.fixed.loadFixedCosts(this.expanse);
+      this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses);
     } else {
       this.isExpand = false;
       this.fixed.close();
@@ -60,39 +61,40 @@ export class ExpensesManagementComponent implements OnInit {
       this.existMonth = false;
       return;
     }
-    this.expanse = item;
+    this.expenses = item;
     this.existMonth = true;
   }
 
 
   newItem() {
-    this.expanse = { _id: undefined, date: new Date(), fixed: [], inconstant: [], uncertain: [] };
+    this.expenses = [{ date: new Date(), fixed: [], inconstant: [], uncertain: [] }];
     this.existMonth = true;
   }
 
 
   veryfyBeforeSave() {
-    if (this.expanse === undefined) {
+    if (this.expenses[0] === undefined) {
       this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
       throw new Error();
     }
 
-    if (this.expanse.date === undefined) {
+    if (this.expenses[0].date === undefined) {
       this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
       throw new Error();
     }
 
 
-    if (this.expanse.fixed !== undefined) {
-      this.fixed.veryfyBeforeSave(this.expanse.fixed);
+    if (this.expenses[0].fixed !== undefined) {
+      this.fixed.veryfyBeforeSave(this.expenses[0].fixed);
     }
   }
 
 
   save() {
     try {
-      this.veryfyBeforeSave();
-      this.expansesService.createOrUpdate(this.organizationId, this.expanse);
+      this.
+        veryfyBeforeSave();
+      this.expansesService.createOrUpdate(this.organizationId, this.expenses);
       this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
     } catch (error) {
       try {

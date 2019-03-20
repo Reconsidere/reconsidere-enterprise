@@ -4,7 +4,7 @@
   <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
     Salvar ações
   </button>
-  <p-calendar view="month" dateFormat="mm/yy" [yearNavigator]="true"  name="monthDate" [(ngModel)]="monthDate" yearRange="2000:2090"></p-calendar>
+  <p-calendar view="month" dateFormat="mm/yy" [yearNavigator]="true"  name="dateMonth" [(ngModel)]="dateMonth" yearRange="2000:2090"></p-calendar>
 
 
   <div class="row">
@@ -19,7 +19,7 @@
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
         <div class="form-group">
           <label for="date">Data entrada</label>
-          <p-calendar (ngModelChange)="expanse.date = $event" required disabled="disabled" name="date" [ngModel]="expanse.date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
+          <p-calendar (ngModelChange)="expenses.date = $event" required disabled="disabled" name="date" [ngModel]="expenses.date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
         </div>
       </div>
       <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">

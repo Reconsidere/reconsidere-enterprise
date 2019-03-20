@@ -6,6 +6,7 @@ import { GeoRoute } from './georoute';
 import { Units } from './unit';
 import { Supports } from './supports';
 import { Expenses } from './expenses';
+import { ProcessingChain } from './processingchain';
 
 export class Organization {
   _id: string;
@@ -28,6 +29,7 @@ export class Organization {
   georoutes: [GeoRoute];
   hierarchy: Hierarchy;
   expenses:Expenses;
+  processChain: ProcessingChain;
 }
 
 export namespace Organization {

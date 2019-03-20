@@ -21,9 +21,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of (expanse.fixed | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
+                <tr *ngFor="let item of (expenses[0].fixed | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
                   <td>
-                    <select required [(ngModel)]="item.type" name="type" class="form-control">
+                    <select required [(ngModel)]="item.typeExpense" name="typeExpense" class="form-control">
                       <option id="type" *ngFor="let type  of types">{{ type }}</option>
                     </select>
                   </td>

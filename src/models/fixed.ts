@@ -1,7 +1,7 @@
 export class Fixed {
   _id: string;
   name: string;
-  type: string;
+  typeExpense: string;
   description: string;
   date: Date;
   cost: number;

@@ -26,7 +26,7 @@ export class FixedCostManagementComponent implements OnInit {
   isBlocked = true;
   types = Object.values(Fixed.Type);
   isHidden;
-  expanse;
+  expenses: any[];
 
 
   constructor(private authService: AuthService, private fixedCostService: FixedCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
@@ -42,29 +42,25 @@ export class FixedCostManagementComponent implements OnInit {
   }
 
   loadFixedCosts(item) {
-    if (item !== undefined) {
-      this.expanse = item;
-      if (item.fixed === undefined || item.fixed.length <= 0) {
+    if (item[0] !== undefined) {
+      this.expenses = item;
+      if (item[0].fixed === undefined || item[0].fixed.length <= 0) {
         this.newItem();
       } else {
-        this.expanse.fixed = item.fixed;
+        this.expenses[0].fixed = item[0].fixed;
         this.isHidden = false;
       }
     }
-    return this.expanse.fixed;
+    return this.expenses[0].fixed;
   }
 
 
   newItem() {
-    if (this.expanse.fixed === undefined) {
-      this.expanse.fixed = [{
-         type: undefined, description: undefined, name: undefined, active: true, cost: 0.0, date: new Date()
-      }
-      ];
+    const fixed = { name: undefined, typeExpense: undefined, description: undefined, date: new Date(), cost: 0.0, active: true };
+    if (this.expenses[0].fixed === undefined || this.expenses[0].fixed.length <= 0) {
+      this.expenses[0].fixed = [fixed];
     } else {
-      this.expanse.fixed.push({
-         type: undefined, description: undefined, name: undefined, active: true, cost: 0.0, date: new Date()
-      });
+      this.expenses[0].fixed.push(fixed);
     }
     this.isHidden = false;
   }
@@ -106,7 +102,7 @@ export class FixedCostManagementComponent implements OnInit {
         this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         throw new Error();
       }
-      if (item.type === undefined || item.type === '') {
+      if (item.typeExpense === undefined || item.typeExpense === '') {
         this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         throw new Error();
       }
