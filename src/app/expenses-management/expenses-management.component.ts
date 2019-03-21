@@ -19,14 +19,18 @@ export class ExpensesManagementComponent implements OnInit {
   typeExpanse: [];
   existMonth;
   dateMonth: Date;
-  isExpand;
+  isExpandFixed;
+  isExpandInconstant;
+  showButtonAdd;
 
 
   @ViewChild('myComponentFixed') fixed: any;
+  @ViewChild('myComponentInconstat') inconstant: any;
   constructor(private authService: AuthService, private toastr: ToastrService, private expansesService: ExpensesManagementService, private datePipe: DatePipe) {
   }
 
   ngOnInit() {
+    this.showButtonAdd = false;
     this.existMonth = false;
     this.dateMonth = new Date();
     this.page = 1;
@@ -41,6 +45,7 @@ export class ExpensesManagementComponent implements OnInit {
     } else {
       this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
       this.existMonth = false;
+      this.showButtonAdd = true;
       return;
     }
   }
@@ -51,12 +56,22 @@ export class ExpensesManagementComponent implements OnInit {
 
 
   openFixed() {
-    if (!this.isExpand) {
-      this.isExpand = true;
-      this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses);
+    if (!this.isExpandFixed) {
+      this.isExpandFixed = true;
+      this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses, this.dateMonth);
     } else {
-      this.isExpand = false;
+      this.isExpandFixed = false;
       this.fixed.close();
+    }
+  }
+
+  openInconstant() {
+    if (!this.isExpandInconstant) {
+      this.isExpandInconstant = true;
+      this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth);
+    } else {
+      this.isExpandInconstant = false;
+      this.inconstant.close();
     }
   }
 
@@ -64,12 +79,16 @@ export class ExpensesManagementComponent implements OnInit {
     if (item === null || item === undefined || item._id === undefined) {
       this.existMonth = false;
       this.expenses = [];
-      this.isExpand = false;
+      this.isExpandFixed = false;
+      this.isExpandInconstant = false;
+      this.showButtonAdd = true;
       this.fixed.clean();
+      this.inconstant.clean();
       return;
     }
     this.expenses = [item];
     this.existMonth = true;
+    this.showButtonAdd = false;
   }
 
 

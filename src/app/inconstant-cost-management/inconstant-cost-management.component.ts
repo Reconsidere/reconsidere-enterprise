@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Inconstant } from 'src/models/inconstant';
 import { AuthService } from 'src/services';
-import { FixedCostManagementService } from '../../services/fixed-cost-management.service';
-import * as messageCode from 'message.code.json';
-import { ToastrService } from 'ngx-toastr';
+import { InconstantCostManagementService } from 'src/services/inconstant-cost-management.service';
 import { DatePipe } from '@angular/common';
-import { Fixed } from 'src/models/fixed';
+import { ToastrService } from 'ngx-toastr';
+import * as messageCode from 'message.code.json';
+
 
 @Component({
-  selector: 'app-fixed-cost-management',
-  templateUrl: './fixed-cost-management.component.html',
-  styleUrls: ['./fixed-cost-management.component.scss']
+  selector: 'app-inconstant-cost-management',
+  templateUrl: './inconstant-cost-management.component.html',
+  styleUrls: ['./inconstant-cost-management.component.scss']
 })
-export class FixedCostManagementComponent implements OnInit {
+export class InconstantCostManagementComponent implements OnInit {
+
 
   private readonly DATEFORMAT = 'dd/MM/yyyy';
   private readonly REGEX = /[^0-9.,]+/;
@@ -24,13 +26,13 @@ export class FixedCostManagementComponent implements OnInit {
   organizationId: string;
   page: number;
   isBlocked = true;
-  types = Object.values(Fixed.Type);
+  types = Object.values(Inconstant.Type);
   isHidden;
   expenses: any[];
   date;
 
 
-  constructor(private authService: AuthService, private fixedCostService: FixedCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
+  constructor(private authService: AuthService, private InconstantCostService: InconstantCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.page = 1;
@@ -46,28 +48,28 @@ export class FixedCostManagementComponent implements OnInit {
     this.expenses = [];
     this.isHidden = true;
   }
-  loadFixedCosts(item, date) {
+  loadInconstantCosts(item, date) {
     this.date = date;
     if (item[0] !== undefined) {
       this.expenses = item;
-      if (item[0].fixed === undefined || item[0].fixed.length <= 0) {
+      if (item[0].inconstant === undefined || item[0].inconstant.length <= 0) {
         this.newItem();
       } else {
-        this.expenses[0].fixed = item[0].fixed;
+        this.expenses[0].inconstant = item[0].inconstant;
         this.isHidden = false;
       }
     }
-    return this.expenses[0].fixed;
+    return this.expenses[0].inconstant;
   }
 
 
   newItem() {
     this.expenses[0].date = this.date;
-    const fixed = { name: undefined, typeExpense: undefined, description: undefined, date: this.date, cost: 0.0, active: true };
-    if (this.expenses[0].fixed === undefined || this.expenses[0].fixed.length <= 0) {
-      this.expenses[0].fixed = [fixed];
+    const inconstant = { name: undefined, type: undefined, description: undefined, date: this.date, quantity: 1, weight: 0, cost: 0.0, amount: 0.0, };
+    if (this.expenses[0].inconstant === undefined || this.expenses[0].inconstant.length <= 0) {
+      this.expenses[0].inconstant = [inconstant];
     } else {
-      this.expenses[0].fixed.push(fixed);
+      this.expenses[0].inconstant.push(inconstant);
     }
     this.isHidden = false;
   }
@@ -83,21 +85,43 @@ export class FixedCostManagementComponent implements OnInit {
       return;
     }
     item.cost = Number(number);
-    item.date = new Date();
 
   }
 
-  veryfyBeforeSave(fixed) {
-    if (fixed === undefined || fixed.length <= 0) {
+
+  changeAmount(oldValue, value, item, e) {
+    if (oldValue === value) {
+      return;
+    }
+    let number = value.replace(this.REGEX, '');
+    number = Number(number.replace(this.COMMA, this.DOT)).toFixed(2);
+    if (number === this.NOTNUMBER) {
+      item.cost = '';
+      return;
+    }
+    item.amount = Number(number);
+    item.date = new Date();
+  }
+
+  veryfyBeforeSave(inconstant) {
+    if (inconstant === undefined || inconstant.length <= 0) {
       this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
       throw new Error();
     }
-    fixed.forEach(item => {
+    inconstant.forEach(item => {
       if (item.name === undefined) {
         this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         throw new Error();
       }
       if (item.cost === undefined || item.cost <= 0) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if (item.quantity === undefined || item.quantity <= 0) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if (item.amount === undefined || item.amount <= 0) {
         this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
         throw new Error();
       }
@@ -115,4 +139,5 @@ export class FixedCostManagementComponent implements OnInit {
       }
     });
   }
+
 }

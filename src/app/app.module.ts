@@ -53,6 +53,7 @@ import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost
 import { ProcessingChainManagementComponent } from './processing-chain-management/processing-chain-management.component';
 import { CollectionCostManagementComponent } from './collection-cost-management/collection-cost-management.component';
 import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
+import { InconstantCostManagementComponent } from './inconstant-cost-management/inconstant-cost-management.component';
 
 registerLocaleData(localePt);
 
@@ -82,7 +83,8 @@ registerLocaleData(localePt);
     FixedCostManagementComponent,
     ProcessingChainManagementComponent,
     CollectionCostManagementComponent,
-    ExpensesManagementComponent
+    ExpensesManagementComponent,
+    InconstantCostManagementComponent
   ],
   imports: [
     BrowserModule,
@@ -128,7 +130,8 @@ registerLocaleData(localePt);
     DecriptEncript,
     DatePipe,
     FixedCostManagementComponent,
-    ExpensesManagementComponent
+    ExpensesManagementComponent,
+    InconstantCostManagementComponent
   ],
   bootstrap: [AppComponent]
 })
