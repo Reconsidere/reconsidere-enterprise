@@ -4,38 +4,44 @@
   <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
     Salvar ações
   </button>
-  <p-calendar view="month" dateFormat="mm/yy" [yearNavigator]="true"  name="dateMonth" [(ngModel)]="dateMonth" yearRange="2000:2090"></p-calendar>
 
 
   <div class="row">
     <div class="col-xl-12 col-lg-6 col-md-12 col-sm-12 col-12">
       <div class="form-group">
-        <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-          <mat-icon>add</mat-icon><span>Adicionar despesas</span>
+        <button *ngIf="!existMonth" id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+          <mat-icon>add</mat-icon><span>Adicionar despesa referente ao mês</span>
         </button>
+        <p-calendar view="month" (onSelect)="changeDate()" dateFormat="mm/yy" [yearNavigator]="true" name="dateMonth" [(ngModel)]="dateMonth" yearRange="2000:2090"></p-calendar>
       </div>
     </div>
     <div *ngIf="existMonth">
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="date">Data entrada</label>
-          <p-calendar (ngModelChange)="expenses.date = $event" required disabled="disabled" name="date" [ngModel]="expenses.date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
-        </div>
+      <div class="tableExpenses">
+        <table class="table-sm">
+          <thead>
+            <tr id="Titles">
+              <th>Data entrada</th>
+              <th>Custo fixo</th>
+              <th>Custo variável</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <p-calendar (ngModelChange)="expenses[0].date = $event" required disabled="disabled" name="date" [ngModel]="expenses[0].date| date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
+              </td>
+              <td>
+                <button id="openFixed" (click)="openFixed()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                  <mat-icon *ngIf="isExpand">expand_more</mat-icon>
+                  <mat-icon *ngIf="!isExpand">expand_less</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-12">
-        <div class="form-group">
-          <label for="date">Custo fixo</label>
-          <button id="openFixed" (click)="openFixed()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
-            <mat-icon *ngIf="isExpand">expand_more</mat-icon>
-            <mat-icon *ngIf="!isExpand">expand_less</mat-icon>
-          </button>
-        </div>
-      </div>
+      
     </div>
   </div>
 </div>
-
-
-<div>
-  <app-fixed-cost-management #myComponentFixed></app-fixed-cost-management>
-</div>
+<app-fixed-cost-management #myComponentFixed></app-fixed-cost-management>

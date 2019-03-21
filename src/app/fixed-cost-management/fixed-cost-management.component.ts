@@ -41,6 +41,10 @@ export class FixedCostManagementComponent implements OnInit {
     this.isHidden = true;
   }
 
+  clean() {
+    this.expenses = [];
+    this.isHidden = true;
+  }
   loadFixedCosts(item) {
     if (item[0] !== undefined) {
       this.expenses = item;

@@ -45,6 +45,10 @@ export class ExpensesManagementComponent implements OnInit {
     }
   }
 
+  changeDate() {
+    this.expansesService.getExpanses(this.organizationId, this.dateMonth).subscribe(items => this.loadExpanses(items), error => error);
+  }
+
 
   openFixed() {
     if (!this.isExpand) {
@@ -57,11 +61,14 @@ export class ExpensesManagementComponent implements OnInit {
   }
 
   loadExpanses(item) {
-    if (item === undefined || item._id === undefined) {
+    if (item === null || item === undefined || item._id === undefined) {
       this.existMonth = false;
+      this.expenses = [];
+      this.isExpand = false;
+      this.fixed.clean();
       return;
     }
-    this.expenses = item;
+    this.expenses = [item];
     this.existMonth = true;
   }
 

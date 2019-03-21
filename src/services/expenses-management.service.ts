@@ -11,7 +11,20 @@ export class ExpensesManagementService {
   constructor(private http: HttpClient) { }
 
   createOrUpdate(organizatioId: string, expenses: Expenses[]) {
-    this.update(organizatioId, expenses);
+    if (expenses[0]._id === undefined) {
+      this.add(organizatioId, expenses);
+    } else {
+      this.update(organizatioId, expenses);
+    }
+  }
+  add(organizationId: string, expenses: Expenses[]) {
+    this.http
+      .post(
+        environment.database.uri +
+        `/organization/add/expenses/${organizationId}/`,
+        expenses
+      )
+      .subscribe(res => console.log('Done'));
   }
 
   update(organizationId: string, expenses: Expenses[]) {
@@ -25,6 +38,6 @@ export class ExpensesManagementService {
   }
 
   getExpanses(id, date) {
-    return this.http.get(`${environment.database.uri}/organization/expenses/${id}/${date}`);
+    return this.http.get(`${environment.database.uri}/organization/expenses/${id}/${new Date(date).toISOString()}`);
   }
 }
