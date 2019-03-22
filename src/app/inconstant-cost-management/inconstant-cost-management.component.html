@@ -1,66 +1,65 @@
-<div class="container">
-  <div *ngIf="!isHidden">
-    <div class="card">
-      <div class="card-header"> <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false"
-          autocomplete="off">
-          <mat-icon>add</mat-icon><span>Adicionar custo varivável</span>
-        </button></div>
-      <div class="card-body">
-        <div class="row">
-          <div class="tableInconstant">
-            <table class="table-sm">
-              <thead>
-                <tr id="Titles">
-                  <th>Tipo</th>
-                  <th>Nome</th>
-                  <th>Descrição</th>
-                  <th>Custo</th>
-                  <th>Quantidade</th>
-                  <th>Peso</th>
-                  <th>Valor</th>
-                  <th>Data entrada</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of (expenses[0].inconstant | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
-                  <td>
-                    <select required [(ngModel)]="item.typeInconstant" name="typeInconstant" class="form-control">
-                      <option id="type" *ngFor="let type  of types">{{ type }}</option>
-                    </select>
-                  </td>
-                  <td>
-                    <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
-                  </td>
-                  <td>
-                    <input required [(ngModel)]="item.description" name="name" type="text" class="form-control" id="description" aria-describedby="description" />
-                  </td>
-                  <td>
-                    <input required type="text" [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" class="form-control" id="cost" aria-describedby="cost"
-                      (ngModelChange)="item.cost=$event" (focus)="oldValue = item.cost" (blur)="changePrice(oldValue, item.cost, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
-                  </td>
-                  <td>
-                    <input required [(ngModel)]="item.quantity" name="quantity" (blur)="calculatePrice(item)" type="number" class="form-control" id="quantity" aria-describedby="quantity" />
-                  </td>
-                  <td>
-                    <input  required [(ngModel)]="item.weight" name="weight" (blur)="calculatePrice(item)" type="number" class="form-control" id="weight"
-                      aria-describedby="weight" />
-                  </td>
-                  <td>
-                      <input required type="text" [ngModel]="item.amount |currency:'BRL':'symbol':'2.2':allowZero: true" name="amount" class="form-control" id="amount" aria-describedby="amount"
-                        (ngModelChange)="item.amount=$event" (focus)="oldValue = item.amount" (blur)="changeAmount(oldValue, item.amount, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
-                    </td>
-                  <td>
-                    <p-calendar (ngModelChange)="item.date=$event" required disabled="disabled" name="date" [ngModel]="item.date | date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
-                  </td>
-                </tr>
+<div *ngIf="!isHidden">
+  <div class="card">
+    <div class="card-header"> <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+        <mat-icon>add</mat-icon><span>Adicionar custo varivável</span>
+      </button></div>
+    <div class="card-body">
+      <div class="row">
+        <div class="tableInconstant">
+          <table class="table-sm">
+            <thead>
+              <tr id="Titles">
+                <th>Tipo</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Custo</th>
+                <th>Quantidade</th>
+                <th>Peso</th>
+                <th>Valor</th>
+                <th>Data entrada</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of (expenses[0].inconstant | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
+                <td>
+                  <select style="width: 8em;" required [(ngModel)]="item.typeExpense" (change)="typeSelected(item)" name="typeExpense" class="form-control">
+                    <option id="type" *ngFor="let type  of types">{{ type }}</option>
+                  </select>
+                </td>
+                <td *ngIf="isTypeMaterial">
+                  <select style="width: 12em;" required [(ngModel)]="materialSelected" (change)="selectedMaterial(item)" name="material" class="form-control">
+                    <option> </option>
+                    <option id="material" [ngValue]="material" *ngFor="let material of itemsMaterials">{{ material.name }}</option>
+                  </select>
+                </td>
+                <td *ngIf="!isTypeMaterial">
+                  <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+                </td>
+                <td>
+                  <input required [(ngModel)]="item.description" name="name" type="text" class="form-control" id="description" aria-describedby="description" />
+                </td>
+                <td>
+                  <input required type="text" [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" class="form-control" id="cost" aria-describedby="cost" (ngModelChange)="item.cost=$event" (focus)="oldValue = item.cost" (blur)="changePrice(oldValue, item.cost, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
+                </td>
+                <td>
+                  <input required [(ngModel)]="item.quantity" name="quantity" (blur)="calculatePrice(item)" type="number" class="form-control" id="quantity" aria-describedby="quantity" />
+                </td>
+                <td>
+                  <input required [(ngModel)]="item.weight" name="weight" (blur)="calculatePrice(item)" type="number" class="form-control" id="weight" aria-describedby="weight" />
+                </td>
+                <td>
+                  <input required type="text" [ngModel]="item.amount |currency:'BRL':'symbol':'2.2':allowZero: true" name="amount" class="form-control" id="amount" aria-describedby="amount" (ngModelChange)="item.amount=$event" (focus)="oldValue = item.amount" (blur)="changeAmount(oldValue, item.amount, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
+                </td>
+                <td>
+                  <p-calendar (ngModelChange)="item.date=$event" required disabled="disabled" name="date" [ngModel]="item.date | date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
+                </td>
+              </tr>
 
-              </tbody>
-              <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination">
-              </pagination-controls>
-            </table>
-          </div>
+            </tbody>
+            <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination">
+            </pagination-controls>
+          </table>
         </div>
       </div>
     </div>
-
   </div>

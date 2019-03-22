@@ -13,7 +13,7 @@ export class Inconstant {
 
 export namespace Inconstant {
   export enum Type {
-    Others = 'Outros',
     Material = 'Material',
+    Others = 'Outros',
   }
 }

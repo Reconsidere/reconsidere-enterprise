@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Inconstant } from 'src/models/inconstant';
 import { AuthService } from 'src/services';
 import { InconstantCostManagementService } from 'src/services/inconstant-cost-management.service';
 import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import * as messageCode from 'message.code.json';
+import { MaterialManagementService } from 'src/services/material-management.service';
+import { Hierarchy } from 'src/models/material';
 
 
 @Component({
@@ -14,6 +16,7 @@ import * as messageCode from 'message.code.json';
 })
 export class InconstantCostManagementComponent implements OnInit {
 
+  materialSelected;
 
   private readonly DATEFORMAT = 'dd/MM/yyyy';
   private readonly REGEX = /[^0-9.,]+/;
@@ -30,14 +33,17 @@ export class InconstantCostManagementComponent implements OnInit {
   isHidden;
   expenses: any[];
   date;
+  itemsMaterials: any[];
+  isTypeMaterial;
 
 
-  constructor(private authService: AuthService, private InconstantCostService: InconstantCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
+  constructor(private materialService: MaterialManagementService, private authService: AuthService, private InconstantCostService: InconstantCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
 
   ngOnInit() {
     this.page = 1;
     this.authService.isAuthenticated();
     this.isHidden = true;
+    this.itemsMaterials = [];
   }
 
   close() {
@@ -48,7 +54,8 @@ export class InconstantCostManagementComponent implements OnInit {
     this.expenses = [];
     this.isHidden = true;
   }
-  loadInconstantCosts(item, date) {
+  loadInconstantCosts(item, date, organizationId) {
+    this.organizationId = organizationId;
     this.date = date;
     if (item[0] !== undefined) {
       this.expenses = item;
@@ -65,7 +72,7 @@ export class InconstantCostManagementComponent implements OnInit {
 
   newItem() {
     this.expenses[0].date = this.date;
-    const inconstant = { name: undefined, type: undefined, description: undefined, date: this.date, quantity: 1, weight: 0, cost: 0.0, amount: 0.0, };
+    const inconstant = { name: undefined, typeExpense: undefined, description: undefined, date: this.date, quantity: 1, weight: 0, cost: 0.0, amount: 0.0, };
     if (this.expenses[0].inconstant === undefined || this.expenses[0].inconstant.length <= 0) {
       this.expenses[0].inconstant = [inconstant];
     } else {
@@ -101,6 +108,64 @@ export class InconstantCostManagementComponent implements OnInit {
     }
     item.amount = Number(number);
     item.date = new Date();
+  }
+
+  typeSelected(object) {
+    if (object.typeExpense === Inconstant.Type.Material) {
+      this.isTypeMaterial = true;
+      this.materialService
+        .getHierarchy(this.organizationId)
+        .subscribe(item => this.loadMaterials(item), error => error);
+    } else {
+      this.isTypeMaterial = false;
+    }
+  }
+
+  loadMaterials(item) {
+    if (item !== undefined) {
+      this.insertItems(Hierarchy.types.glass, Hierarchy.Material.Glass, item);
+      this.insertItems(Hierarchy.types.isopor, Hierarchy.Material.Isopor, item);
+      this.insertItems(Hierarchy.types.metal, Hierarchy.Material.Metal, item);
+      this.insertItems(Hierarchy.types.paper, Hierarchy.Material.Paper, item);
+      this.insertItems(Hierarchy.types.plastic, Hierarchy.Material.Plastic, item);
+      this.insertItems(Hierarchy.types.tetrapack, Hierarchy.Material.Tetrapack, item);
+      this.itemsMaterials.sort();
+    }
+  }
+  insertItems(type: any, typeMaterial: any, list: Hierarchy) {
+    if (list.solid.materials[type] !== undefined) {
+      list.solid.materials[type].items.forEach(item => {
+        if (this.itemsMaterials === undefined) {
+          this.itemsMaterials = [
+            {
+              _id: item._id,
+              typeMaterial: typeMaterial,
+              name: item.name,
+              active: item.active,
+              pricing: item.pricing
+            }
+          ];
+        } else {
+          if (item.active) {
+            this.itemsMaterials.push({
+              _id: item._id,
+              typeMaterial: typeMaterial,
+              name: item.name,
+              active: item.active,
+              pricing: item.pricing
+            });
+          }
+        }
+      });
+    }
+  }
+
+ 
+  selectedMaterial(item) {
+    if (item !== undefined && this.materialSelected !== undefined) {
+      item.cost = this.materialSelected.pricing.unitPrice[this.materialSelected.pricing.unitPrice.length - 1];
+      item.name = this.materialSelected.name;
+    }
   }
 
   veryfyBeforeSave(inconstant) {

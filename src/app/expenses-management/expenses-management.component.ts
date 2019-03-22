@@ -68,7 +68,7 @@ export class ExpensesManagementComponent implements OnInit {
   openInconstant() {
     if (!this.isExpandInconstant) {
       this.isExpandInconstant = true;
-      this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth);
+      this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth, this.organizationId);
     } else {
       this.isExpandInconstant = false;
       this.inconstant.close();
