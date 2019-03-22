@@ -92,6 +92,7 @@ export class InconstantCostManagementComponent implements OnInit {
       return;
     }
     item.cost = Number(number);
+    this.calculatePrice(item);
 
   }
 
@@ -107,6 +108,19 @@ export class InconstantCostManagementComponent implements OnInit {
       return;
     }
     item.amount = Number(number);
+    this.calculatePrice(item);
+  }
+
+  calculatePrice(item) {
+    if (item.cost === undefined && item.quantity === undefined && item.weight === undefined || item.quantity <= 0 && item.weight <= 0 && item.cost <= 0) {
+      this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
+      return;
+    }
+    else if (item.cost > 0 && item.quantity > 0 && item.weight > 0) {
+      item.amount = item.cost * item.quantity * item.weight;
+    } else if (item.cost > 0 && item.quantity > 0 && item.weight <= 0) {
+      item.amount = item.cost * item.quantity;
+    }
     item.date = new Date();
   }
 
@@ -118,6 +132,9 @@ export class InconstantCostManagementComponent implements OnInit {
         .subscribe(item => this.loadMaterials(item), error => error);
     } else {
       this.isTypeMaterial = false;
+      object.name = '';
+      object.cost = 0.0;
+      this.materialSelected = undefined;
     }
   }
 
@@ -160,11 +177,15 @@ export class InconstantCostManagementComponent implements OnInit {
     }
   }
 
- 
+
   selectedMaterial(item) {
-    if (item !== undefined && this.materialSelected !== undefined) {
+    if (item !== undefined && this.materialSelected !== undefined && this.materialSelected !== '') {
       item.cost = this.materialSelected.pricing.unitPrice[this.materialSelected.pricing.unitPrice.length - 1];
       item.name = this.materialSelected.name;
+      this.calculatePrice(item);
+    } else {
+      item.cost = 0.0;
+      item.name = '';
     }
   }
 

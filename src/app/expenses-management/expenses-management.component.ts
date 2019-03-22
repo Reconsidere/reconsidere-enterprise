@@ -22,6 +22,7 @@ export class ExpensesManagementComponent implements OnInit {
   isExpandFixed;
   isExpandInconstant;
   showButtonAdd;
+  amountTotal;
 
 
   @ViewChild('myComponentFixed') fixed: any;
@@ -36,6 +37,7 @@ export class ExpensesManagementComponent implements OnInit {
     this.page = 1;
     this.authService.isAuthenticated();
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
+    this.amountTotal = 0.0;
   }
 
   setId(id) {
@@ -59,6 +61,7 @@ export class ExpensesManagementComponent implements OnInit {
     if (!this.isExpandFixed) {
       this.isExpandFixed = true;
       this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses, this.dateMonth);
+      this.calculateTotalAmount();
     } else {
       this.isExpandFixed = false;
       this.fixed.close();
@@ -69,6 +72,7 @@ export class ExpensesManagementComponent implements OnInit {
     if (!this.isExpandInconstant) {
       this.isExpandInconstant = true;
       this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth, this.organizationId);
+      this.calculateTotalAmount();
     } else {
       this.isExpandInconstant = false;
       this.inconstant.close();
@@ -91,10 +95,20 @@ export class ExpensesManagementComponent implements OnInit {
     this.showButtonAdd = false;
   }
 
+  calculateTotalAmount() {
+    this.amountTotal = 0.0;
+    this.expenses[0].fixed.forEach(fixed => {
+      this.amountTotal += fixed.cost;
+    });
+    this.expenses[0].inconstant.forEach(inconstant => {
+      this.amountTotal += inconstant.amount;
+    });
+  }
 
   newItem() {
     this.expenses = [{ date: new Date(), fixed: [], inconstant: [], uncertain: [] }];
     this.existMonth = true;
+    this.showButtonAdd = false;
   }
 
 

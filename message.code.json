@@ -27,7 +27,8 @@
     "WRE010": { "status": "WARNNING", "summary": "Nenhuma alteração foi realizada, todos os items já foram precificados!", "message": ""},
     "WRE011": { "status": "WARNNING", "summary": "Está placa já está em uso!", "message": ""},
     "WRE012": { "status": "WARNNING", "summary": "Por favor, para utilizar este recurso primeiro, vá ate a tela de Cadeia de processamento e cadastre pelo menos um item.", "message": "Não é permitido a utilização deste recurso, existe uma dependência de informações de outras áreas do sistema que precisam ser cadastradas antes."},
-    "WRE013": { "status": "WARNNING", "summary": "Nenhum dado foi localizado!", "message": ""}
+    "WRE013": { "status": "WARNNING", "summary": "Nenhum dado foi localizado!", "message": ""},
+    "WRE014": { "status": "WARNNING", "summary": "Para calcular o valor, é necessário ter pelo menos a quantidade e o custo!", "message": ""}
 
   },
   "ERROR": {

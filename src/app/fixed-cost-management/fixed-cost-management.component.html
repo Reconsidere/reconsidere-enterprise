@@ -14,7 +14,6 @@
                   <th>Nome</th>
                   <th>Descrição</th>
                   <th>Custo</th>
-                  <th>Data entrada</th>
                 </tr>
               </thead>
               <tbody>
@@ -33,9 +32,6 @@
                   <td>
                     <input required type="text" [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" class="form-control" id="cost" aria-describedby="cost"
                       (ngModelChange)="item.cost=$event" (focus)="oldValue = item.cost" (blur)="changePrice(oldValue, item.cost, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
-                  </td>
-                  <td>
-                    <p-calendar (ngModelChange)="item.date=$event" required disabled="disabled" name="date" [ngModel]="item.date | date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>
                   </td>
                 </tr>
 
