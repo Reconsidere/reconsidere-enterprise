@@ -2,6 +2,7 @@ import { Purchase } from "./purchase";
 import { Sale } from "./sale";
 
 export class Entries {
+  _id: string;
   purchase: [Purchase];
   sale: [Sale];
 
@@ -22,3 +23,11 @@ export namespace Entries {
     sale = 'sale'
   }
 }
+
+export namespace Entries {
+  export enum TypeEntrie {
+    Material = 'Material',
+    Others = 'Outros',
+  }
+}
+

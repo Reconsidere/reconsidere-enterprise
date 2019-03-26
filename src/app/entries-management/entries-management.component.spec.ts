@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EntriesManagementComponent } from './entries-management.component';
 
-describe('IncomingOutManagementComponent', () => {
+describe('EntriesManagementComponent', () => {
   let component: EntriesManagementComponent;
   let fixture: ComponentFixture<EntriesManagementComponent>;
 
