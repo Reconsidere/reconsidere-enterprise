@@ -54,7 +54,7 @@ import { ProcessingChainManagementComponent } from './processing-chain-managemen
 import { CollectionCostManagementComponent } from './collection-cost-management/collection-cost-management.component';
 import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
 import { InconstantCostManagementComponent } from './inconstant-cost-management/inconstant-cost-management.component';
-import { IncomingOutManagementComponent } from './incoming-out-management/incoming-out-management.component';
+import { EntriesManagementComponent } from './entries-management/entries-management.component';
 
 registerLocaleData(localePt);
 
@@ -86,7 +86,7 @@ registerLocaleData(localePt);
     CollectionCostManagementComponent,
     ExpensesManagementComponent,
     InconstantCostManagementComponent,
-    IncomingOutManagementComponent
+    EntriesManagementComponent
   ],
   imports: [
     BrowserModule,

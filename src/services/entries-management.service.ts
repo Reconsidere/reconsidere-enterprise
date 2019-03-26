@@ -5,12 +5,12 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class IncomingOutManagementService {
+export class EntriesManagementService {
 
   constructor(private http: HttpClient) { }
 
 
-  getIncomingOut(id) {
-    return this.http.get<any>(`${environment.database.uri}/organization/processingchain/${id}`);
+  getEntries(id) {
+    return this.http.get<any>(`${environment.database.uri}/organization/entries/${id}`);
   }
 }

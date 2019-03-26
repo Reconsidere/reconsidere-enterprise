@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IncomingOutManagementComponent } from './incoming-out-management.component';
+import { EntriesManagementComponent } from './entries-management.component';
 
 describe('IncomingOutManagementComponent', () => {
-  let component: IncomingOutManagementComponent;
-  let fixture: ComponentFixture<IncomingOutManagementComponent>;
+  let component: EntriesManagementComponent;
+  let fixture: ComponentFixture<EntriesManagementComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IncomingOutManagementComponent ]
+      declarations: [ EntriesManagementComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IncomingOutManagementComponent);
+    fixture = TestBed.createComponent(EntriesManagementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

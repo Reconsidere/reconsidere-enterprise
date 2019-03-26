@@ -23,12 +23,12 @@
               <ng-template ngFor let-item [ngForOf]="(expenses[0].inconstant | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
                 <tr>
                   <td>
-                    <select style="width: 8em;" required [(ngModel)]="item.typeExpense" (change)="typeSelected(item)" name="typeExpense" class="form-control">
+                    <select style="width: 8em;" required [(ngModel)]="item.type" (change)="typeSelected(item)" name="typeExpense" class="form-control">
                       <option id="type" *ngFor="let type  of types">{{ type }}</option>
                     </select>
                   </td>
-                  <td *ngIf="isTypeMaterial">
-                    <select style="width: 12em;" required [(ngModel)]="materialSelected" (change)="selectedMaterial(item)" name="material" class="form-control">
+                  <td>
+                    <select required [(ngModel)]="item.type" (change)="changeType(item)" name="type" class="form-control">
                       <option> </option>
                       <option id="material" [ngValue]="material" *ngFor="let material of itemsMaterials">{{ material.name }}</option>
                     </select>
