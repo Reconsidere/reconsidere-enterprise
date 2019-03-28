@@ -8,9 +8,14 @@
   <div class="tablePricing">
     <table class="table-sm">
       <thead>
+        <tr>
+          <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <mat-icon>add</mat-icon>
+          </button>
+        </tr>
         <tr id="Titles">
+          <th>Ação</th>
           <th>Tipo</th>
-          <th>Tipo ação</th>
           <th>Nome</th>
           <th>Custo</th>
           <th>Data</th>
@@ -25,22 +30,22 @@
               </select>
             </td>
             <td>
-              <select style="width: 8em;" required [(ngModel)]="item.typeEntrie" (change)="typeSelected(item)" name="typeEntrie" class="form-control">
+              <select required [(ngModel)]="item.typeEntrie" (change)="typeSelected(item)" name="typeEntrie" class="form-control">
                 <option id="type" *ngFor="let type  of typeEntrie">{{ type }}</option>
               </select>
             </td>
-            <td>
-              <select *ngIf="isTypeMaterial" required [(ngModel)]="item.type" (change)="changeType(item)" name="type" class="form-control">
-                <option> </option>
-                <option id="material" [ngValue]="material" *ngFor="let material of itemsMaterials">{{ material.name }}</option>
-              </select>
-            </td>
-            <td *ngIf="!isTypeMaterial">
+            <td *ngIf="!item.isTypeMaterial">
               <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
             </td>
+            <td *ngIf="item.isTypeMaterial">
+              <select required [(ngModel)]="item.name" (change)="changeType(item)" name="type" class="form-control">
+                <option> </option>
+                <option id="material" [ngValue]="material.name" *ngFor="let material of itemsMaterials">{{ material.name }}</option>
+              </select>
+            </td>
+
             <td>
-              <input required [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" type="text" (ngModelChange)="item.cost = $event" class="form-control" id="cost"
-                aria-describedby="cost" />
+              <input required type="text" [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" class="form-control" id="cost" aria-describedby="cost" (ngModelChange)="item.cost=$event" (focus)="oldValue = item.cost" (blur)="changePrice(oldValue, item.cost, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
             </td>
             <td>
               <p-calendar (ngModelChange)="item.date=$event" required disabled="disabled" name="date" [ngModel]="item.date | date:'dd/MM/yyyy'" dateFormat="dd/mm/yy"></p-calendar>

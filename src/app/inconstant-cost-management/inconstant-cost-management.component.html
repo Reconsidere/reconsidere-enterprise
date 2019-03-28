@@ -23,21 +23,21 @@
               <ng-template ngFor let-item [ngForOf]="(expenses[0].inconstant | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
                 <tr>
                   <td>
-                    <select style="width: 8em;" required [(ngModel)]="item.type" (change)="typeSelected(item)" name="typeExpense" class="form-control">
+                    <select style="width: 8em;" required [(ngModel)]="item.typeExpense" (change)="typeSelected(item)" name="typeExpense" class="form-control">
                       <option id="type" *ngFor="let type  of types">{{ type }}</option>
                     </select>
                   </td>
-                  <td>
-                    <select required [(ngModel)]="item.type" (change)="changeType(item)" name="type" class="form-control">
+                  <td *ngIf="!item.isTypeMaterial">
+                    <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+                  </td>
+                  <td *ngIf="item.isTypeMaterial">
+                    <select  required [(ngModel)]="item.type" (change)="changeType(item)" name="type" class="form-control">
                       <option> </option>
                       <option id="material" [ngValue]="material" *ngFor="let material of itemsMaterials">{{ material.name }}</option>
                     </select>
                   </td>
-                  <td *ngIf="!isTypeMaterial">
-                    <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
-                  </td>
                   <td>
-                    <input required [(ngModel)]="item.description" name="name" type="text" class="form-control" id="description" aria-describedby="description" />
+                    <input required [(ngModel)]="item.description" name="description" type="text" class="form-control" id="description" aria-describedby="description" />
                   </td>
                   <td>
                     <input required type="text" [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" class="form-control" id="cost" aria-describedby="cost"

@@ -21,10 +21,16 @@ export class EntriesManagementComponent implements OnInit {
   types: any[];
   typeEntrie: any[];
   itemsMaterials: any[];
-  isTypeMaterial;
   materialSelected;
+  private readonly REGEX = /[^0-9.,]+/;
 
-  constructor(private authService: AuthService, private toastr: ToastrService, private incomingOutService: EntriesManagementService, private materialService: MaterialManagementService) { }
+  private readonly NOTNUMBER = 'NaN';
+
+  private readonly COMMA = ',';
+
+  private readonly DOT = '.';
+
+  constructor(private authService: AuthService, private toastr: ToastrService, private entriesService: EntriesManagementService, private materialService: MaterialManagementService) { }
 
   ngOnInit() {
     this.page = 1;
@@ -32,12 +38,13 @@ export class EntriesManagementComponent implements OnInit {
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
     this.types = Object.values(Entries.Type);
     this.typeEntrie = Object.values(Entries.TypeEntrie);
+    this.itemsMaterials = [];
   }
 
   setId(id) {
     this.organizationId = id;
     if (id !== undefined) {
-      this.incomingOutService.getEntries(this.organizationId).subscribe(items => this.loadAll(items), error => error);
+      this.entriesService.getEntries(this.organizationId).subscribe(items => this.loadAll(items), error => error);
     } else {
       this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
       return;
@@ -47,25 +54,63 @@ export class EntriesManagementComponent implements OnInit {
 
   loadAll(items) {
     if (items === undefined || items.length <= 0) {
-      this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
-    } else {
+      this.entries = new Entries();
       this.newItem();
+    } else {
+      this.entries = items;
+      this.createSimpleList(items);
+    }
+  }
+
+  createSimpleList(list: Entries) {
+    this.insertItems(Entries.types.purchase, Entries.Type.Input, list);
+    this.insertItems(Entries.types.sale, Entries.Type.Output, list);
+  }
+
+  insertItems(type: any, typeEntrie: any, list: Entries) {
+    if (list[type] !== undefined) {
+      list[type].forEach(item => {
+        let obj = {
+          _id: item._id,
+          name: item.name,
+          cost: item.cost,
+          typeEntrie: item.typeEntrie,
+          date: item.date,
+          type: typeEntrie,
+          isTypeMaterial: item.typeEntrie === Entries.TypeEntrie.Material ? true : false
+        }
+        if (obj.isTypeMaterial) {
+          this.materialService
+            .getHierarchy(this.organizationId)
+            .subscribe(item => this.loadMaterials(item), error => error);
+        }
+        if (this.entrieItems === undefined || this.entrieItems.length <= 0) {
+          this.entrieItems = [obj];
+        } else {
+          this.entrieItems.push(obj);
+        }
+      });
     }
   }
 
   newItem() {
-    this.entrieItems = [{ _id: undefined, type: undefined, typeEntrie: undefined, cost: 0, name: undefined, date: new Date() }];
+    let obj = { _id: undefined, type: undefined, isTypeMaterial: false, typeEntrie: undefined, cost: 0.0, name: undefined, date: new Date() };
+    if (this.entrieItems === undefined || this.entrieItems.length <= 0) {
+      this.entrieItems = [obj];
+    } else {
+      this.entrieItems.push(obj);
+    }
   }
 
 
   typeSelected(object) {
     if (object.typeEntrie === Entries.TypeEntrie.Material) {
-      this.isTypeMaterial = true;
+      object.isTypeMaterial = true;
       this.materialService
         .getHierarchy(this.organizationId)
         .subscribe(item => this.loadMaterials(item), error => error);
     } else {
-      this.isTypeMaterial = false;
+      object.isTypeMaterial = false;
       this.materialSelected = undefined;
     }
   }
@@ -80,16 +125,17 @@ export class EntriesManagementComponent implements OnInit {
 
   loadMaterials(item) {
     if (item !== undefined) {
-      this.insertItems(Hierarchy.types.glass, Hierarchy.Material.Glass, item);
-      this.insertItems(Hierarchy.types.isopor, Hierarchy.Material.Isopor, item);
-      this.insertItems(Hierarchy.types.metal, Hierarchy.Material.Metal, item);
-      this.insertItems(Hierarchy.types.paper, Hierarchy.Material.Paper, item);
-      this.insertItems(Hierarchy.types.plastic, Hierarchy.Material.Plastic, item);
-      this.insertItems(Hierarchy.types.tetrapack, Hierarchy.Material.Tetrapack, item);
+      this.insertaterials(Hierarchy.types.glass, Hierarchy.Material.Glass, item);
+      this.insertaterials(Hierarchy.types.isopor, Hierarchy.Material.Isopor, item);
+      this.insertaterials(Hierarchy.types.metal, Hierarchy.Material.Metal, item);
+      this.insertaterials(Hierarchy.types.paper, Hierarchy.Material.Paper, item);
+      this.insertaterials(Hierarchy.types.plastic, Hierarchy.Material.Plastic, item);
+      this.insertaterials(Hierarchy.types.tetrapack, Hierarchy.Material.Tetrapack, item);
       this.itemsMaterials.sort();
     }
   }
-  insertItems(type: any, typeMaterial: any, list: Hierarchy) {
+
+  insertaterials(type: any, typeMaterial: any, list: Hierarchy) {
     if (list.solid.materials[type] !== undefined) {
       list.solid.materials[type].items.forEach(item => {
         if (this.itemsMaterials === undefined) {
@@ -144,12 +190,129 @@ export class EntriesManagementComponent implements OnInit {
         });
         if (isRemoved) {
           item.typeMaterial = selected;
-          this.entries[type][index] = item;
+          this.entrieItems[type][index] = item;
           isChanged = true;
           isRemoved = false;
         }
       }
     });
+  }
+
+  changePrice(oldValue, value, item, e) {
+    if (oldValue === value) {
+      return;
+    }
+    let number = value.replace(this.REGEX, '');
+    number = Number(number.replace(this.COMMA, this.DOT)).toFixed(2);
+    if (number === this.NOTNUMBER) {
+      item.cost = '';
+      return;
+    }
+    item.cost = Number(number);
+  }
+
+  veryfyBeforeSave() {
+    if (this.entrieItems === undefined || this.entrieItems.length <= 0) {
+      this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+      throw new Error();
+    }
+    this.entrieItems.forEach(item => {
+      if (item.name === undefined) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if (item.cost === undefined || item.cost <= 0) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if (item.typeEntrie === undefined || item.typeEntrie === '') {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if (item.type === undefined || item.type === '') {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+      if (item.date === undefined) {
+        this.toastr.warning(messageCode['WARNNING']['WRE001']['summary']);
+        throw new Error();
+      }
+    });
+  }
+
+
+  private addToEntrie() {
+    this.entrieItems.forEach(entrieItems => {
+      if (entrieItems.type === Entries.Type.Input) {
+        this.insertValues(entrieItems, Entries.types.purchase);
+      } if (entrieItems.type === Entries.Type.Output) {
+        this.insertValues(entrieItems, Entries.types.sale);
+      }
+    });
+  }
+
+  private insertValues(itemEntrie: any, type: string) {
+    let isAdd = false;
+    if (this.entries[type] !== undefined) {
+      this.entries[type].forEach((item, index) => {
+        if (item === itemEntrie) {
+          let obj = {
+            _id: itemEntrie._id,
+            name: itemEntrie.name,
+            cost: itemEntrie.cost,
+            typeEntrie: itemEntrie.typeEntrie,
+            date: itemEntrie.date
+          };
+          this.entries[type][index] = obj;
+          isAdd = true;
+        } else if (item._id !== undefined && item._id === itemEntrie._id) {
+          let obj = {
+            _id: itemEntrie._id,
+            name: itemEntrie.name,
+            cost: itemEntrie.cost,
+            typeEntrie: itemEntrie.typeEntrie,
+            date: itemEntrie.date
+          };
+          this.entries[type][index] = obj;
+          isAdd = true;
+        }
+      });
+      if (!isAdd) {
+        let obj = {
+          _id: itemEntrie._id,
+          name: itemEntrie.name,
+          cost: itemEntrie.cost,
+          typeEntrie: itemEntrie.typeEntrie,
+          date: itemEntrie.date
+        };
+        this.entries[type].push(obj);
+      }
+    } else {
+      let obj = {
+        _id: itemEntrie._id,
+        name: itemEntrie.name,
+        cost: itemEntrie.cost,
+        typeEntrie: itemEntrie.typeEntrie,
+        date: itemEntrie.date
+      };
+      this.entries[type] = [obj];
+    }
+  }
+
+  save() {
+    try {
+      this.veryfyBeforeSave();
+      this.addToEntrie();
+      this.entriesService.createOrUpdate(this.organizationId, this.entries);
+      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
+    } catch (error) {
+      try {
+        this.toastr.error(messageCode['ERROR'][error]['summary']);
+      } catch (e) {
+        this.toastr.error(error.message);
+      }
+
+    }
   }
 
 }

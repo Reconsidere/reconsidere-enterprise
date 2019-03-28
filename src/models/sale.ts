@@ -3,5 +3,5 @@ export class Sale {
   date: Date;
   name: string;
   cost: number;
-  data: Date;
+  typeEntrie: string;
 }

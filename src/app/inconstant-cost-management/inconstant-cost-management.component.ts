@@ -34,7 +34,6 @@ export class InconstantCostManagementComponent implements OnInit {
   expenses: any[];
   date;
   itemsMaterials: any[];
-  isTypeMaterial;
 
 
   constructor(private materialService: MaterialManagementService, private authService: AuthService, private InconstantCostService: InconstantCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
@@ -72,7 +71,7 @@ export class InconstantCostManagementComponent implements OnInit {
 
   newItem() {
     this.expenses[0].date = this.date;
-    const inconstant = { name: undefined, typeExpense: undefined, description: undefined, date: this.date, quantity: 1, weight: 0, cost: 0.0, amount: 0.0, };
+    const inconstant = { name: undefined, isTypeMaterial: false, typeExpense: undefined, description: undefined, date: this.date, quantity: 1, weight: 0, cost: 0.0, amount: 0.0, };
     if (this.expenses[0].inconstant === undefined || this.expenses[0].inconstant.length <= 0) {
       this.expenses[0].inconstant = [inconstant];
     } else {
@@ -126,12 +125,12 @@ export class InconstantCostManagementComponent implements OnInit {
 
   typeSelected(object) {
     if (object.typeExpense === Inconstant.Type.Material) {
-      this.isTypeMaterial = true;
+      object.isTypeMaterial = true;
       this.materialService
         .getHierarchy(this.organizationId)
         .subscribe(item => this.loadMaterials(item), error => error);
     } else {
-      this.isTypeMaterial = false;
+      object.isTypeMaterial = false;
       object.name = '';
       object.cost = 0.0;
       this.materialSelected = undefined;
