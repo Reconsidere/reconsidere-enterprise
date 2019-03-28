@@ -10,31 +10,16 @@
           <table class="table-sm">
             <thead>
               <tr id="Titles">
-                <th>Tipo</th>
                 <th>Nome</th>
                 <th>Descrição</th>
                 <th>Custo</th>
-                <th>Quantidade</th>
-                <th>Peso</th>
-                <th>Valor</th>
               </tr>
             </thead>
             <tbody>
               <ng-template ngFor let-item [ngForOf]="(expenses[0].inconstant | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
                 <tr>
                   <td>
-                    <select style="width: 8em;" required [(ngModel)]="item.typeExpense" (change)="typeSelected(item)" name="typeExpense" class="form-control">
-                      <option id="type" *ngFor="let type  of types">{{ type }}</option>
-                    </select>
-                  </td>
-                  <td *ngIf="!item.isTypeMaterial">
                     <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
-                  </td>
-                  <td *ngIf="item.isTypeMaterial">
-                    <select  required [(ngModel)]="item.type" (change)="changeType(item)" name="type" class="form-control">
-                      <option> </option>
-                      <option id="material" [ngValue]="material" *ngFor="let material of itemsMaterials">{{ material.name }}</option>
-                    </select>
                   </td>
                   <td>
                     <input required [(ngModel)]="item.description" name="description" type="text" class="form-control" id="description" aria-describedby="description" />
@@ -43,16 +28,7 @@
                     <input required type="text" [ngModel]="item.cost |currency:'BRL':'symbol':'2.2':allowZero: true" name="cost" class="form-control" id="cost" aria-describedby="cost"
                       (ngModelChange)="item.cost=$event" (focus)="oldValue = item.cost" (blur)="changePrice(oldValue, item.cost, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
                   </td>
-                  <td>
-                    <input required [(ngModel)]="item.quantity" name="quantity" (blur)="calculatePrice(item)" type="number" class="form-control" id="quantity" aria-describedby="quantity" min="1" />
-                  </td>
-                  <td>
-                    <input [(ngModel)]="item.weight" name="weight" (blur)="calculatePrice(item)" type="number" class="form-control" id="weight" aria-describedby="weight" />
-                  </td>
-                  <td>
-                    <input required type="text" [ngModel]="item.amount |currency:'BRL':'symbol':'2.2':allowZero: true" name="amount" class="form-control" id="amount" aria-describedby="amount"
-                      (ngModelChange)="item.amount=$event" (focus)="oldValue = item.amount" (blur)="changeAmount(oldValue, item.amount, item,$event)" [ngModelOptions]="{updateOn:'blur'}" />
-                  </td>
+
                 </tr>
               </ng-template>
             </tbody>

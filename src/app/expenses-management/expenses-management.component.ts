@@ -23,6 +23,7 @@ export class ExpensesManagementComponent implements OnInit {
   isExpandInconstant;
   showButtonAdd;
   amountTotal;
+  notDuplicate;
 
 
   @ViewChild('myComponentFixed') fixed: any;
@@ -80,14 +81,18 @@ export class ExpensesManagementComponent implements OnInit {
   }
 
   loadExpanses(item) {
-    if (item === null || item === undefined || item._id === undefined) {
+    if (item === null || item === undefined || item.length <= 0) {
       this.existMonth = false;
       this.expenses = [];
       this.isExpandFixed = false;
       this.isExpandInconstant = false;
       this.showButtonAdd = true;
-      this.fixed.clean();
-      this.inconstant.clean();
+      if (this.fixed !== undefined) {
+        this.fixed.clean();
+      }
+      if (this.inconstant !== undefined) {
+        this.inconstant.clean();
+      }
       return;
     }
     this.expenses = [item];
@@ -101,7 +106,7 @@ export class ExpensesManagementComponent implements OnInit {
       this.amountTotal += fixed.cost;
     });
     this.expenses[0].inconstant.forEach(inconstant => {
-      this.amountTotal += inconstant.amount;
+      this.amountTotal += inconstant.cost;
     });
   }
 
@@ -109,6 +114,8 @@ export class ExpensesManagementComponent implements OnInit {
     this.expenses = [{ date: new Date(), fixed: [], inconstant: [], uncertain: [] }];
     this.existMonth = true;
     this.showButtonAdd = false;
+    this.notDuplicate = false;
+    this.amountTotal = 0.0;
   }
 
 
@@ -124,9 +131,28 @@ export class ExpensesManagementComponent implements OnInit {
     }
 
 
-    if (this.expenses[0].fixed !== undefined) {
+    if (this.expenses[0].fixed !== undefined && this.expenses[0].fixed.length > 0) {
       this.fixed.veryfyBeforeSave(this.expenses[0].fixed);
     }
+
+    if (this.expenses[0].inconstant !== undefined && this.expenses[0].inconstant.length > 0) {
+      this.inconstant.veryfyBeforeSave(this.expenses[0].inconstant);
+    }
+  }
+  preventDuplicitySave(items) {
+    items.forEach(item => {
+      item.fixed.forEach(fixed => {
+        if (item._id === undefined) {
+          this.notDuplicate = true;
+          return;
+        }
+      });
+      item.inconstant.forEach(inconstant => {
+        if (item._id === undefined) {
+          this.notDuplicate = true;
+        }
+      });
+    });
   }
 
 
@@ -134,8 +160,10 @@ export class ExpensesManagementComponent implements OnInit {
     try {
       this.
         veryfyBeforeSave();
-      this.expansesService.createOrUpdate(this.organizationId, this.expenses);
+      this.expansesService.createOrUpdate(this.organizationId, this.expenses, this.notDuplicate);
       this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
+      this.calculateTotalAmount();
+      this.preventDuplicitySave(this.expenses);
     } catch (error) {
       try {
         this.toastr.error(messageCode['ERROR'][error]['summary']);

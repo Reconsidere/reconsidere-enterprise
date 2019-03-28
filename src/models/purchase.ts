@@ -4,4 +4,9 @@ export class Purchase {
   name: string;
   cost: number;
   typeEntrie: string;
+  quantity: number;
+  weight: number;
+  amount: number;
+  active: boolean;
+
 }

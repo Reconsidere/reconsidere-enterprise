@@ -195,6 +195,21 @@ export class MaterialManagementComponent implements OnInit {
         throw new Error();
       }
     });
+    if (this.checkDuplicityName()) {
+      throw new Error();
+    }
+  }
+
+  checkDuplicityName() {
+    for (let i = 0; i <= this.itemsMaterials.length; i++) {
+      for (let j = i; j <= this.itemsMaterials.length; j++) {
+        if (i !== j && this.itemsMaterials[i].name === this.itemsMaterials[j].name) {
+          this.toastr.warning(messageCode['WARNNING']['WRE015']['summary']);
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   private addToItemsMaterial() {

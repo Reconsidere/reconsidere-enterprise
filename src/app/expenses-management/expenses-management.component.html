@@ -17,7 +17,7 @@
         <mat-icon>add</mat-icon><span>Adicionar despesas para este mês</span>
       </button>
 
-      <div class="col-md-2 pull-right">
+      <div *ngIf="!showButtonAdd" class="col-md-2 pull-right">
         Despesas do mês <input disabled="disabled" (ngModelChange)="amountTotal=$event" [ngModel]="amountTotal |currency:'BRL':'symbol':'2.2':allowZero: true" name="amountTotal" type="text" class="form-control" id="amountTotal"
           aria-describedby="amountTotal" [ngModelOptions]="{updateOn:'change'}"  />
       </div>

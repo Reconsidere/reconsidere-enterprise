@@ -32,7 +32,7 @@
                 </select>
               </td>
               <td>
-                <input required [(ngModel)]="item.name" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
+                <input required [(ngModel)]="item.name" (blur)="checkDuplicityName()" name="name" type="text" class="form-control" id="name" aria-describedby="name" />
               </td>
               <td>
                 <input required type="text" (focus)="oldValue = item.pricing.unitPrice[item.pricing.unitPrice.length - 1]"

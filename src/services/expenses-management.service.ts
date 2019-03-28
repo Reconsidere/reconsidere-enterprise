@@ -10,8 +10,8 @@ export class ExpensesManagementService {
 
   constructor(private http: HttpClient) { }
 
-  createOrUpdate(organizatioId: string, expenses: Expenses[]) {
-    if (expenses[0]._id === undefined) {
+  createOrUpdate(organizatioId: string, expenses: Expenses[], notDuplicate) {
+    if (expenses[0]._id === undefined && !notDuplicate) {
       this.add(organizatioId, expenses);
     } else {
       this.update(organizatioId, expenses);
