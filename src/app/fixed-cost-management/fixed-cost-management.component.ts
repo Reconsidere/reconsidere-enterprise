@@ -22,7 +22,7 @@ export class FixedCostManagementComponent implements OnInit {
 
   private readonly DOT = '.';
   organizationId: string;
-  page: number;
+  pageFixed: number;
   isBlocked = true;
   types = Object.values(Fixed.Type);
   isHidden;
@@ -33,7 +33,7 @@ export class FixedCostManagementComponent implements OnInit {
   constructor(private authService: AuthService, private fixedCostService: FixedCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
 
   ngOnInit() {
-    this.page = 1;
+    this.pageFixed = 1;
     this.authService.isAuthenticated();
     this.isHidden = true;
   }

@@ -13,7 +13,7 @@ import * as messageCode from 'message.code.json';
 })
 export class InconstantCostManagementComponent implements OnInit {
   organizationId: string;
-  page: number;
+  pageInconstant: number;
   isBlocked = true;
   isHidden;
   expenses: any[];
@@ -29,7 +29,7 @@ export class InconstantCostManagementComponent implements OnInit {
   constructor(private authService: AuthService, private InconstantCostService: InconstantCostManagementService, private toastr: ToastrService, private datePipe: DatePipe) { }
 
   ngOnInit() {
-    this.page = 1;
+    this.pageInconstant = 1;
     this.authService.isAuthenticated();
     this.isHidden = true;
   }

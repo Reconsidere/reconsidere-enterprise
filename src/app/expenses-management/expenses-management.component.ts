@@ -14,7 +14,6 @@ import { DatePipe } from '@angular/common';
 })
 export class ExpensesManagementComponent implements OnInit {
   organizationId: string;
-  page: number;
   expenses: any[];
   typeExpanse: [];
   existMonth;
@@ -23,7 +22,8 @@ export class ExpensesManagementComponent implements OnInit {
   isExpandInconstant;
   showButtonAdd;
   amountTotal;
-  afterSave;
+  refreshIems;
+  isChangeDate;
 
 
   @ViewChild('myComponentFixed') fixed: any;
@@ -35,7 +35,6 @@ export class ExpensesManagementComponent implements OnInit {
     this.showButtonAdd = false;
     this.existMonth = false;
     this.dateMonth = new Date();
-    this.page = 1;
     this.authService.isAuthenticated();
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
     this.amountTotal = 0.0;
@@ -54,12 +53,14 @@ export class ExpensesManagementComponent implements OnInit {
   }
 
   changeDate() {
+    this.isChangeDate = true;
     this.expansesService.getExpanses(this.organizationId, this.dateMonth).subscribe(items => this.loadExpanses(items), error => error);
+    return new Promise(resolve => setTimeout(resolve, 1000));
   }
 
 
   openFixed() {
-    if (this.afterSave) {
+    if (this.refreshIems) {
       if (this.isExpandFixed) {
         this.isExpandFixed = true;
         this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses, this.dateMonth);
@@ -76,7 +77,7 @@ export class ExpensesManagementComponent implements OnInit {
   }
 
   openInconstant() {
-    if (this.afterSave) {
+    if (this.refreshIems) {
       if (this.isExpandInconstant) {
         this.isExpandInconstant = true;
         this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth, this.organizationId);
@@ -112,6 +113,18 @@ export class ExpensesManagementComponent implements OnInit {
     this.expenses = [item];
     this.existMonth = true;
     this.showButtonAdd = false;
+
+    if (this.isChangeDate) {
+      this.isExpandFixed = true;
+      this.isExpandInconstant = true;
+      this.openFixed();
+      this.openInconstant();
+      this.isChangeDate = false;
+    }
+    else if (this.refreshIems) {
+      this.openFixed();
+      this.openInconstant();
+    }
   }
 
   calculateTotalAmount() {
@@ -157,11 +170,9 @@ export class ExpensesManagementComponent implements OnInit {
     try {
       this.veryfyBeforeSave();
       await this.waitSave(1000);
+      this.refreshIems = true;
       await this.reloadAfterSave(1000);
-      this.afterSave = true;
-      this.openFixed();
-      this.openInconstant();
-      this.afterSave = false;
+      this.refreshIems = false;
     } catch (error) {
       try {
         this.toastr.error(messageCode['ERROR'][error]['summary']);

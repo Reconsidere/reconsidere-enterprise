@@ -1,13 +1,13 @@
-  <div *ngIf="!isHidden">
-    <div class="card">
+  <div  *ngIf="!isHidden">
+    <div   class="card">
       <div class="card-header"> <button id="newItem" (click)="newItem()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false"
           autocomplete="off">
           <mat-icon>add</mat-icon><span>Adicionar custo fixo</span>
         </button></div>
-      <div class="card-body">
+      <div  class="card-body">
         <div class="row">
-          <div class="tableFixedCost">
-            <table class="table-sm">
+          <div id="tableFixedCost" class="tableFixedCost">
+            <table  class="table-sm table-responsive">
               <thead>
                 <tr id="Titles">
                   <th>Tipo</th>
@@ -17,7 +17,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let item of (expenses[0].fixed | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
+                <tr *ngFor="let item of (expenses[0].fixed | paginate: { id: 'first', itemsPerPage: 5, currentPage: pageFixed })" igroup="indexFixed">
                   <td>
                     <select required [(ngModel)]="item.typeExpense" name="typeExpense" class="form-control">
                       <option id="type" *ngFor="let type  of types">{{ type }}</option>
@@ -36,7 +36,7 @@
                 </tr>
 
               </tbody>
-              <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination">
+              <pagination-controls  (pageChange)="pageFixed = $event" id="first" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination">
               </pagination-controls>
             </table>
           </div>
