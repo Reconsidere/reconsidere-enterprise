@@ -23,7 +23,7 @@ export class ExpensesManagementComponent implements OnInit {
   isExpandInconstant;
   showButtonAdd;
   amountTotal;
-  notDuplicate;
+  afterSave;
 
 
   @ViewChild('myComponentFixed') fixed: any;
@@ -59,7 +59,13 @@ export class ExpensesManagementComponent implements OnInit {
 
 
   openFixed() {
-    if (!this.isExpandFixed) {
+    if (this.afterSave) {
+      if (this.isExpandFixed) {
+        this.isExpandFixed = true;
+        this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses, this.dateMonth);
+        this.calculateTotalAmount();
+      }
+    } else if (!this.isExpandFixed) {
       this.isExpandFixed = true;
       this.expenses[0].fixed = this.fixed.loadFixedCosts(this.expenses, this.dateMonth);
       this.calculateTotalAmount();
@@ -70,7 +76,14 @@ export class ExpensesManagementComponent implements OnInit {
   }
 
   openInconstant() {
-    if (!this.isExpandInconstant) {
+    if (this.afterSave) {
+      if (this.isExpandInconstant) {
+        this.isExpandInconstant = true;
+        this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth, this.organizationId);
+        this.calculateTotalAmount();
+      }
+    }
+    else if (!this.isExpandInconstant) {
       this.isExpandInconstant = true;
       this.expenses[0].inconstant = this.inconstant.loadInconstantCosts(this.expenses, this.dateMonth, this.organizationId);
       this.calculateTotalAmount();
@@ -95,6 +108,7 @@ export class ExpensesManagementComponent implements OnInit {
       }
       return;
     }
+    this.expenses = undefined;
     this.expenses = [item];
     this.existMonth = true;
     this.showButtonAdd = false;
@@ -114,7 +128,6 @@ export class ExpensesManagementComponent implements OnInit {
     this.expenses = [{ date: new Date(), fixed: [], inconstant: [], uncertain: [] }];
     this.existMonth = true;
     this.showButtonAdd = false;
-    this.notDuplicate = false;
     this.amountTotal = 0.0;
   }
 
@@ -139,31 +152,16 @@ export class ExpensesManagementComponent implements OnInit {
       this.inconstant.veryfyBeforeSave(this.expenses[0].inconstant);
     }
   }
-  preventDuplicitySave(items) {
-    items.forEach(item => {
-      item.fixed.forEach(fixed => {
-        if (item._id === undefined) {
-          this.notDuplicate = true;
-          return;
-        }
-      });
-      item.inconstant.forEach(inconstant => {
-        if (item._id === undefined) {
-          this.notDuplicate = true;
-        }
-      });
-    });
-  }
 
-
-  save() {
+  async save() {
     try {
-      this.
-        veryfyBeforeSave();
-      this.expansesService.createOrUpdate(this.organizationId, this.expenses, this.notDuplicate);
-      this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
-      this.calculateTotalAmount();
-      this.preventDuplicitySave(this.expenses);
+      this.veryfyBeforeSave();
+      await this.waitSave(1000);
+      await this.reloadAfterSave(1000);
+      this.afterSave = true;
+      this.openFixed();
+      this.openInconstant();
+      this.afterSave = false;
     } catch (error) {
       try {
         this.toastr.error(messageCode['ERROR'][error]['summary']);
@@ -172,5 +170,17 @@ export class ExpensesManagementComponent implements OnInit {
       }
 
     }
+  }
+
+  waitSave(ms: number) {
+    this.expansesService.createOrUpdate(this.organizationId, this.expenses);
+    this.toastr.success(messageCode['SUCCESS']['SRE001']['summary']);
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  reloadAfterSave(ms: number) {
+    this.expansesService.getExpanses(this.organizationId, this.dateMonth).subscribe(items => this.loadExpanses(items), error => error);
+    return new Promise(resolve => setTimeout(resolve, ms));
+
   }
 }

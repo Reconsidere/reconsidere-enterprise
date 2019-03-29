@@ -117,7 +117,7 @@ export class EntriesManagementComponent implements OnInit {
       object.isTypeMaterial = true;
       this.materialService
         .getHierarchy(this.organizationId)
-        .subscribe(item => this.loadMaterials(item), error => error);
+        .subscribe(item => this.loadMaterials(item, undefined), error => error);
     } else {
       object.isTypeMaterial = false;
       object.name = '';

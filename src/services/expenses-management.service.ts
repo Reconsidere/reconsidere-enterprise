@@ -10,28 +10,14 @@ export class ExpensesManagementService {
 
   constructor(private http: HttpClient) { }
 
-  createOrUpdate(organizatioId: string, expenses: Expenses[], notDuplicate) {
-    if (expenses[0]._id === undefined && !notDuplicate) {
+  createOrUpdate(organizatioId: string, expenses: Expenses[]) {
       this.add(organizatioId, expenses);
-    } else {
-      this.update(organizatioId, expenses);
-    }
   }
   add(organizationId: string, expenses: Expenses[]) {
     this.http
       .post(
         environment.database.uri +
-        `/organization/add/expenses/${organizationId}/`,
-        expenses
-      )
-      .subscribe(res => console.log('Done'));
-  }
-
-  update(organizationId: string, expenses: Expenses[]) {
-    this.http
-      .put(
-        environment.database.uri +
-        `/organization/update/expenses/${organizationId}/`,
+        `/organization/add/expenses/${organizationId}/${expenses[0]._id}`,
         expenses
       )
       .subscribe(res => console.log('Done'));
