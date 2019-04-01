@@ -1,0 +1,81 @@
+<app-toolbar></app-toolbar>
+
+<div class="container">
+  <div *ngIf="isBlocked">
+
+    <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
+      Salvar ações
+    </button>
+
+    agrupar pelo nome e trazer o valor total do lado somando tudo
+    <br>
+    agrupar por data
+    <br>
+    agrupar por entrada e saída
+
+    nome - preço medio por material - preço total - entrada/ qtd em estoque
+
+    <div class="tablePricing">
+      <table class="table-sm">
+        <thead>
+          <tr id="Titles">
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-item [ngForOf]="(entries | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+            <tr>
+              <td>
+                <div class="row">
+                  <div class="">
+                    <div class="card bg-light mb-3 shadow  mb-5 bg-white rounded">
+                      <div class="card-header">{{item.name}}</div>
+                      <div class="card-body">
+                        <h5 class="card-title"></h5>
+                        <div class="card-text">
+                          <table class="">
+                            <thead>
+                              <tr id="">
+                                <th>Preço médio</th>
+                                <th>Preço total</th>
+                                <th>Quantidade em estoque</th>
+                                <th>Peso</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <label>{{item.average |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                                </td>
+
+                                <td>
+                                  <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                                </td>
+
+                                <td>
+                                  <label>{{item.quantity}}</label>
+                                </td>
+
+
+                                <td>
+                                  <label>{{item.weight}}</label>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </td>
+            </tr>
+
+          </ng-template>
+        </tbody>
+        <pagination-controls (pageChange)="page = $event" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination"></pagination-controls>
+      </table>
+    </div>
+  </div>
+
+</div>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Hierarchy } from 'src/models/material';
 import { AuthService } from 'src/services';
 import { MaterialManagementService } from 'src/services/material-management.service';
-import { Pricing } from 'src/models/pricing';
+import { MaterialSummary } from 'src/models/materialsummary';
 import { CurrencyPipe } from '@angular/common';
 import * as messageCode from 'message.code.json';
 import { ToastrService } from 'ngx-toastr';
@@ -163,7 +163,7 @@ export class MaterialManagementComponent implements OnInit {
   newItem() {
     if (this.itemsMaterials === undefined) {
       this.itemsMaterials = [
-        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0, dateEntry: undefined } }
+        { _id: undefined, typeMaterial: '', name: undefined, active: true, pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0} }
       ];
     } else {
       this.itemsMaterials.push({
@@ -171,7 +171,7 @@ export class MaterialManagementComponent implements OnInit {
         typeMaterial: '',
         name: undefined,
         active: true,
-        pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0, dateEntry: undefined }
+        pricing: { unitPrice: [0], date: [new Date()], weight: 0, price: 0 }
       });
     }
   }

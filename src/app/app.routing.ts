@@ -8,13 +8,13 @@ import { SignInComponent } from './auth/sign-in/sign-in.component';
 import { StartcenterComponent } from './startcenter/startcenter.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { MaterialManagementComponent } from './material-management/material-management.component';
-import { PricingComponent } from './pricing/pricing.component';
 import { UcFormComponent } from './forms/uc-form/uc-form.component';
 import { FixedCostManagementComponent } from './fixed-cost-management/fixed-cost-management.component';
 import { ProcessingChainManagementComponent } from './processing-chain-management/processing-chain-management.component';
 import { CollectionCostManagementComponent } from './collection-cost-management/collection-cost-management.component';
 import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
 import { EntriesManagementComponent } from './entries-management/entries-management.component';
+import { MaterialSummaryComponent } from './materialsummary/material-summary.component';
 
 export const routes: Routes = [
   //Módulo de segurança
@@ -28,7 +28,7 @@ export const routes: Routes = [
   {path: 'vehicle-management', component: VehicleManagementComponent, canActivate: [AuthGuard] },
   {path: 'material-management', component: MaterialManagementComponent, canActivate: [AuthGuard]},
   {path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard]},
-  {path: 'pricing', component: PricingComponent, canActivate: [AuthGuard]},
+  {path: 'material-summary', component: MaterialSummaryComponent, canActivate: [AuthGuard]},
 
   //Módulo financeiro
   {path: 'processing-chain-management', component: ProcessingChainManagementComponent, canActivate: [AuthGuard]},

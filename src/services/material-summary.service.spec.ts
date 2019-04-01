@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PricingService } from './pricing.service';
+import { MaterialSummary } from './material-summary.service';
 
-describe('PricingService', () => {
+describe('MaterialSummary', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: PricingService = TestBed.get(PricingService);
+    const service: MaterialSummary = TestBed.get(MaterialSummary);
     expect(service).toBeTruthy();
   });
 });

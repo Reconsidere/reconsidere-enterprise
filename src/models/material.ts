@@ -1,4 +1,4 @@
-import { Pricing } from './pricing';
+import { MaterialSummary } from './materialsummary';
 
 export class Hierarchy {
   solid = {
@@ -9,7 +9,7 @@ export class Hierarchy {
         items: [
           {
             _id: String, name: String, active: Boolean,
-            pricing: { unitPrice: [], date: [], weight: Number, price: Number, dateEntry: Date }
+            pricing: { unitPrice: [], date: [], weight: Number, price: Number }
           }
         ]
       },
@@ -19,7 +19,7 @@ export class Hierarchy {
         items: [
           {
             _id: String, name: String, active: Boolean,
-            pricing: { unitPrice: [], date: [], weight: Number, price: Number, dateEntry: Date }
+            pricing: { unitPrice: [], date: [], weight: Number, price: Number }
           }
         ]
       },
@@ -29,7 +29,7 @@ export class Hierarchy {
         items: [
           {
             _id: String, name: String, active: Boolean,
-            pricing: { unitPrice: [], date: [], weight: Number, price: Number, dateEntry: Date }
+            pricing: { unitPrice: [], date: [], weight: Number, price: Number }
           }
         ]
       },
@@ -39,7 +39,7 @@ export class Hierarchy {
         items: [
           {
             _id: String, name: String, active: Boolean,
-            pricing: { unitPrice: [], date: [], weight: Number, price: Number, dateEntry: Date }
+            pricing: { unitPrice: [], date: [], weight: Number, price: Number }
           }
         ]
       },
@@ -49,7 +49,7 @@ export class Hierarchy {
         items: [
           {
             _id: String, name: String, active: Boolean,
-            pricing: { unitPrice: [], date: [], weight: Number, price: Number, dateEntry: Date }
+            pricing: { unitPrice: [], date: [], weight: Number, price: Number }
           }
         ]
       },
@@ -59,7 +59,7 @@ export class Hierarchy {
         items: [
           {
             _id: String, name: String, active: Boolean,
-            pricing: { unitPrice: [], date: [], weight: Number, price: Number, dateEntry: Date }
+            pricing: { unitPrice: [], date: [], weight: Number, price: Number }
           }
         ]
       }

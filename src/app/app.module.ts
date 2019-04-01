@@ -39,7 +39,6 @@ import { TermFilterPipe } from '../pipes/term-filter.pipe';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MaterialManagementComponent } from './material-management/material-management.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import { PricingComponent } from './pricing/pricing.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { InternalErrorComponent } from './errors/internal-error/internal-error.component';
 import { UcFormComponent } from './forms/uc-form/uc-form.component';
@@ -55,6 +54,8 @@ import { CollectionCostManagementComponent } from './collection-cost-management/
 import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
 import { InconstantCostManagementComponent } from './inconstant-cost-management/inconstant-cost-management.component';
 import { EntriesManagementComponent } from './entries-management/entries-management.component';
+import { MaterialSummaryComponent } from './materialsummary/material-summary.component';
+
 
 registerLocaleData(localePt);
 
@@ -75,7 +76,7 @@ registerLocaleData(localePt);
     DateconvertPipe,
     TermFilterPipe,
     MaterialManagementComponent,
-    PricingComponent,
+    MaterialSummaryComponent,
     NotFoundComponent,
     InternalErrorComponent,
     UcFormComponent,

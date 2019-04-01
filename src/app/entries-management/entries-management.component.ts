@@ -22,7 +22,6 @@ export class EntriesManagementComponent implements OnInit {
   types: any[];
   typeEntrie: any[];
   itemsMaterials: any[];
-  materialSelected;
   private readonly REGEX = /[^0-9.,]+/;
 
   private readonly NOTNUMBER = 'NaN';
@@ -81,7 +80,8 @@ export class EntriesManagementComponent implements OnInit {
           isTypeMaterial: item.typeEntrie === Entries.TypeEntrie.Material ? true : false,
           amount: item.amount,
           weight: item.weight,
-          quantity: item.quantity
+          quantity: item.quantity,
+          materialSelected: undefined
         }
         if (obj.isTypeMaterial) {
           this.materialService
@@ -98,12 +98,12 @@ export class EntriesManagementComponent implements OnInit {
   }
 
   setMaterial(item) {
-    this.materialSelected = this.itemsMaterials.find(x => x.name === item.name);
+    item.materialSelected = this.itemsMaterials.find(x => x.name === item.name);
   }
 
 
   newItem() {
-    let obj = { _id: undefined, type: undefined, isTypeMaterial: false, typeEntrie: undefined, cost: 0.0, name: undefined, date: new Date(), quantity: 1, weight: 0, amount: 0.0 };
+    let obj = { _id: undefined, type: undefined, isTypeMaterial: false, typeEntrie: undefined, cost: 0.0, name: undefined, date: new Date(), quantity: 1, weight: 0, amount: 0.0, materialSelected: undefined };
     if (this.entrieItems === undefined || this.entrieItems.length <= 0) {
       this.entrieItems = [obj];
     } else {
@@ -123,18 +123,18 @@ export class EntriesManagementComponent implements OnInit {
       object.name = '';
       object.cost = 0.0;
       object.amount = 0.0;
-      this.materialSelected = undefined;
+      object.materialSelected = undefined;
     }
   }
 
   selectedMaterial(item) {
-    if (item !== undefined && this.materialSelected !== undefined && this.materialSelected !== '') {
-      item.name = this.materialSelected.name;
-      item.cost = this.materialSelected.pricing.unitPrice[this.materialSelected.pricing.unitPrice.length - 1];
+    if (item !== undefined && item.materialSelected !== undefined && item.materialSelected !== '') {
+      item.name = item.materialSelected.name;
+      item.cost = item.materialSelected.pricing.unitPrice[item.materialSelected.pricing.unitPrice.length - 1];
       this.calculatePrice(item);
     } else {
       item.name = '';
-      this.materialSelected = undefined;
+      item.materialSelected = undefined;
     }
   }
 
