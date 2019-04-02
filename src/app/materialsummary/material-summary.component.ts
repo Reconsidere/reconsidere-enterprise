@@ -20,6 +20,9 @@ export class MaterialSummaryComponent implements OnInit {
   organizationId: string;
   page: number;
   isBlocked = true;
+  entriesResult;
+  entriesPurchase;
+  entriesSale;
 
   private readonly DATEFORMAT = 'dd/MM/yyyy';
 
@@ -33,6 +36,9 @@ export class MaterialSummaryComponent implements OnInit {
     this.authService.isAuthenticated();
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
     this.entries = [];
+    this.entriesResult = [];
+    this.entriesPurchase = [];
+    this.entriesSale = [];
   }
 
   setId(id) {
@@ -53,7 +59,11 @@ export class MaterialSummaryComponent implements OnInit {
       return;
     } else {
       this.createSimpleList(items);
-      this.generteValues();
+      this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.purchase), Entries.types.purchase);
+      this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.sale), Entries.types.sale);
+      this.entriesResult.sort(x => x.name);
+      //agrupar por tipo e nome e no html separar por ng if....
+      //this.separeteGroups();
     }
   }
 
@@ -69,7 +79,7 @@ export class MaterialSummaryComponent implements OnInit {
           _id: item._id,
           name: item.name,
           cost: item.cost,
-          typeEntrie: item.typeEntrie,
+          typeEntrie: type === Entries.types.purchase ? Entries.Type.Input : Entries.Type.Output,
           date: item.date,
           type: type,
           isTypeMaterial: item.typeEntrie === Entries.TypeEntrie.Material ? true : false,
@@ -89,23 +99,37 @@ export class MaterialSummaryComponent implements OnInit {
 
 
 
-  generteValues() {
+  generteValuesPurchase(items, type) {
+    if (items === undefined || items.length <= 0) {
+      return;
+    }
     let result = [];
-    this.entries.reduce(function (res, value) {
+    items.reduce(function (res, value) {
       if (!res[value.name]) {
-        res[value.name] = { _id: value._id, total: value.amount, type: value.type, name: value.name, quantity: value.quantity, average: 0.0, weight: value.weight };
+        res[value.name] = { _id: value._id, total: value.amount, type: value.type, name: value.name, quantity: value.quantity, average: 0.0, weight: value.weight, expand: true, typeEntrie: value.typeEntrie };
         result.push(res[value.name]);
       }
+
       res[value.name].total += value.amount;
       res[value.name].weight += value.weight;
       return res;
     }, {});
     this.calculateAverage(result);
-    this.calculateQuantity(result, this.entries);
-    this.entries = [];
-    this.entries = result;
-    console.log(result);
+    this.calculateQuantity(result, this.entries.filter(x => x.type === type));
+
+    if (this.entriesResult === undefined || this.entriesResult.length <= 0) {
+      this.entriesResult = result;
+    } else {
+      this.addMore(result);
+    }
   }
+
+  addMore(result) {
+    result.forEach(item => {
+      this.entriesResult.push(item);
+    });
+  }
+
 
   calculateAverage(result) {
     result.forEach(res => {
@@ -122,7 +146,7 @@ export class MaterialSummaryComponent implements OnInit {
       totPurchase = this.sumQuantity('quantity', filterPurchase);
       totSale = this.sumQuantity('quantity', filterSale);
       res.quantity = totPurchase - totSale;
-      Math.abs(res.quantity);
+      res.quantity = Math.abs(res.quantity);
     });
 
   }
@@ -134,6 +158,35 @@ export class MaterialSummaryComponent implements OnInit {
       }, 0);
     } catch (error) {
       return 0;
+    }
+  }
+
+  // separeteGroups() {
+  //   this.entriesResult.forEach(result => {
+  //     if (result.type === Entries.types.purchase) {
+  //       if (this.entriesPurchase === undefined || this.entriesPurchase.length <= 0) {
+  //         this.entriesPurchase = [result];
+  //       } else {
+  //         this.entriesPurchase.push(result);
+  //       }
+  //     }
+  //     else if (result.type === Entries.types.sale) {
+  //       if (this.entriesSale === undefined || this.entriesSale.length <= 0) {
+  //         this.entriesSale = [result];
+  //       } else {
+  //         this.entriesSale.push(result);
+  //       }
+  //     }
+  //   });
+  // }
+
+
+
+  closeOrExpand(item) {
+    if (item.expand) {
+      item.expand = false;
+    } else {
+      item.expand = true;
     }
   }
 }
