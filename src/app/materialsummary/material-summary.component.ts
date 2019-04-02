@@ -71,7 +71,7 @@ export class MaterialSummaryComponent implements OnInit {
           cost: item.cost,
           typeEntrie: item.typeEntrie,
           date: item.date,
-          type: typeEntrie,
+          type: type,
           isTypeMaterial: item.typeEntrie === Entries.TypeEntrie.Material ? true : false,
           amount: item.amount,
           weight: item.weight,
@@ -93,16 +93,15 @@ export class MaterialSummaryComponent implements OnInit {
     let result = [];
     this.entries.reduce(function (res, value) {
       if (!res[value.name]) {
-        res[value.name] = { _id: value._id, total: value.amount, typeEntrie: value.typeEntrie, name: value.name, quantity: value.quantity, average: 0.0, weight: value.weight };
+        res[value.name] = { _id: value._id, total: value.amount, type: value.type, name: value.name, quantity: value.quantity, average: 0.0, weight: value.weight };
         result.push(res[value.name]);
       }
       res[value.name].total += value.amount;
-      res[value.name].typeEntrie += value.typeEntrie;
-      res[value.name].quantity += value.quantity;
       res[value.name].weight += value.weight;
       return res;
     }, {});
     this.calculateAverage(result);
+    this.calculateQuantity(result, this.entries);
     this.entries = [];
     this.entries = result;
     console.log(result);
@@ -112,5 +111,29 @@ export class MaterialSummaryComponent implements OnInit {
     result.forEach(res => {
       res.average = res.total / this.entries.filter(x => x.name === res.name).length;
     });
+  }
+
+  calculateQuantity(result, entries) {
+    let totPurchase;
+    let totSale;
+    result.forEach(res => {
+      let filterPurchase = entries.filter(x => res.type === Entries.types.purchase && x.name === res.name && x.type === res.type);
+      let filterSale = entries.filter(x => res.type === Entries.types.sale && x.name === res.name && x.type === res.type);
+      totPurchase = this.sumQuantity('quantity', filterPurchase);
+      totSale = this.sumQuantity('quantity', filterSale);
+      res.quantity = totPurchase - totSale;
+      Math.abs(res.quantity);
+    });
+
+  }
+
+  sumQuantity(prop, items) {
+    try {
+      return items.reduce(function (a, b) {
+        return a + b[prop];
+      }, 0);
+    } catch (error) {
+      return 0;
+    }
   }
 }
