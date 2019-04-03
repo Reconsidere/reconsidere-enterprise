@@ -55,6 +55,7 @@ import { ExpensesManagementComponent } from './expenses-management/expenses-mana
 import { InconstantCostManagementComponent } from './inconstant-cost-management/inconstant-cost-management.component';
 import { EntriesManagementComponent } from './entries-management/entries-management.component';
 import { MaterialSummaryComponent } from './materialsummary/material-summary.component';
+import { GroupbyPipe } from '../pipes/groupby.pipe';
 
 
 registerLocaleData(localePt);
@@ -87,7 +88,8 @@ registerLocaleData(localePt);
     CollectionCostManagementComponent,
     ExpensesManagementComponent,
     InconstantCostManagementComponent,
-    EntriesManagementComponent
+    EntriesManagementComponent,
+    GroupbyPipe
   ],
   imports: [
     BrowserModule,
