@@ -64,7 +64,31 @@ export class MaterialSummaryComponent implements OnInit {
       this.entriesResult.sort(x => x.name);
       //agrupar por tipo e nome e no html separar por ng if....
       //this.separeteGroups();
+      //  this.entriesResult = this.groupBy('name');
+      this.entriesResult = this.groupBy('name');
+      console.log(this.entriesResult['caco de vidro']);
     }
+  }
+
+  groupBy(key) {
+    // return this.entriesResult.reduce(function (rv, x) {
+    //   (rv[x[key]] = rv[x[key]] || []).push(x);
+    //   return rv;
+    // }, {});
+
+  
+    return this.entriesResult.reduce(
+      (result, item) => ({
+        ...result,
+        [item[key]]: [
+          ...(result[item[key]] || []),
+          item,
+        ],
+      }),
+      {},
+
+    );
+
   }
 
   createSimpleList(list: Entries) {
