@@ -21,19 +21,22 @@
 
 
     <ul class="list-group">
-      <li *ngFor="let cards of entriesResult; let i=indexCards">
+      <li *ngFor="let cards of entriesResult; index as i">
         <div class="">
           <div class="">
             <div class="card bg-light mb-3 shadow  mb-5 bg-white rounded">
-              <div *ngFor="let card of cards.value; let i=indexcard">
-                <div class="card-header">{{card.name}}
-                  <div>Estoque:{{card.stock}}</div>
+              <div *ngFor="let card of cards.value; index as xxl">
+                <div *ngIf="xxl < [entriesResult.length -1]" class="card-header">{{card.name}}
+
+                  <div class="pull-right">Estoque:{{card.stock}}</div>
                 </div>
-                <button *ngIf="!card.expand" (click)="closeOrExpand(card)" type="button" mat-raised-button color="accent" class="input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <button *ngIf="card.expand && xxl < [entriesResult.length -1]"  (click)="closeOrExpand(card)" type="button" mat-raised-button color="accent" class="input-group-text bg-primary border-primary text-white styleHeight"
+                  data-toggle="button" aria-pressed="false" autocomplete="off">
                   <mat-icon *ngIf="!card.expand">expand_more</mat-icon>
                   <mat-icon *ngIf="card.expand">expand_less</mat-icon>
                 </button>
               </div>
+              <!-- *ngIf="item.expand" -->
               <div class="card-body">
                 <h5 class="card-title"></h5>
                 <div class="card-text">
@@ -44,7 +47,7 @@
                         <th>Quantidade</th>
                         <th>Peso</th>
                         <th>Preço médio</th>
-                        <th>Preço total</th>
+                        <th>Preço</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -70,7 +73,8 @@
                               <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
                             </td>
                             <div *ngIf='igroupI < 1' class="card-body d-flex flex-column">
-                              <button (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent" class="align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
+                              <button *ngIf="!item.expand" (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent"
+                                class="align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
                                 <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
                                 <mat-icon *ngIf="item.expand">expand_less</mat-icon>
                               </button>
@@ -96,12 +100,13 @@
                               <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
                             </td>
 
-                              <div *ngIf='igroupI <1'>
-                                <button (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent" class="fixed-bottom align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                  <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
-                                  <mat-icon *ngIf="item.expand">expand_less</mat-icon>
-                                </button>
-                              </div>
+                            <div *ngIf='igroupI <1'>
+                              <button (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent"
+                                class="fixed-bottom align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
+                                <mat-icon *ngIf="item.expand">expand_less</mat-icon>
+                              </button>
+                            </div>
                           </tr>
                         </ng-template>
                       </ng-template>
