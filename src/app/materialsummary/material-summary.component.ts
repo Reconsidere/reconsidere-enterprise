@@ -59,16 +59,18 @@ export class MaterialSummaryComponent implements OnInit {
       return;
     } else {
       this.createSimpleList(items);
-      this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.purchase), Entries.types.purchase);
-      this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.sale), Entries.types.sale);
-      this.entriesResult.sort(x => x.name);
+      //this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.purchase), Entries.types.purchase);
+      //this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.sale), Entries.types.sale);
+      this.entries.sort(x => x.name);
       this.entriesResult = this.groupBy('name');
+      this.calculateValues(Entries.types.purchase);
+      this.calculateValues(Entries.types.sale);
     }
   }
 
   groupBy(key) {
     var names = [];
-    this.entriesResult = this.entriesResult.reduce(function (rv, x) {
+    this.entriesResult = this.entries.reduce(function (rv, x) {
       (rv[x[key]] = rv[x[key]] || []).push(x);
       if (names.indexOf(x[key]) === -1) {
         names.push(x[key]);
@@ -76,6 +78,7 @@ export class MaterialSummaryComponent implements OnInit {
       return rv;
     }, {});
     return this.addToDictionary(names);
+    return this.entriesResult;
 
 
   }
@@ -123,37 +126,53 @@ export class MaterialSummaryComponent implements OnInit {
   }
 
 
-
-  generteValuesPurchase(items, type) {
-    if (items === undefined || items.length <= 0) {
-      return;
-    }
-    let result = [];
-    items.reduce(function (res, value) {
-      if (!res[value.name]) {
-        res[value.name] = { _id: value._id, total: value.amount, type: value.type, name: value.name, quantity: value.quantity, average: 0.0, weight: value.weight, expand: true, typeEntrie: value.typeEntrie };
-        result.push(res[value.name]);
-      }
-
-      res[value.name].total += value.amount;
-      res[value.name].weight += value.weight;
-      return res;
-    }, {});
-    this.calculateAverage(result);
-    this.calculateQuantity(result, this.entries.filter(x => x.type === type));
-
-    if (this.entriesResult === undefined || this.entriesResult.length <= 0) {
-      this.entriesResult = result;
-    } else {
-      this.addMore(result);
-    }
+  calculateValues(type){
+    this.calculateTotal(this.entriesResult);
+    this.calculateWeight(this.entriesResult);
+    this.calculateAverage(this.entriesResult);
+    this.calculateQuantityStock(this.entriesResult, this.entries.filter(x => x.type === type));
   }
 
-  addMore(result) {
-    result.forEach(item => {
-      this.entriesResult.push(item);
-    });
+
+  calculateTotal(items){
+
   }
+
+  calculateWeight(items){
+
+  }
+
+
+  // generteValuesPurchase(items, type) {
+  //   if (items === undefined || items.length <= 0) {
+  //     return;
+  //   }
+  //   let result = [];
+  //   items.reduce(function (res, value) {
+  //     if (!res[value.name]) {
+  //       res[value.name] = { _id: value._id, total: value.amount, type: value.type, name: value.name, quantity: value.quantity, average: 0.0, weight: value.weight, expand: true, typeEntrie: value.typeEntrie, stock: 0.0 };
+  //       result.push(res[value.name]);
+  //     }
+
+  //     res[value.name].total += value.amount;
+  //     res[value.name].weight += value.weight;
+  //     return res;
+  //   }, {});
+  //   this.calculateAverage(result);
+  //   this.calculateQuantityStock(result, this.entries.filter(x => x.type === type));
+
+  //   if (this.entriesResult === undefined || this.entriesResult.length <= 0) {
+  //     this.entriesResult = result;
+  //   } else {
+  //     this.addMore(result);
+  //   }
+  // }
+
+  // addMore(result) {
+  //   result.forEach(item => {
+  //     this.entriesResult.push(item);
+  //   });
+  // }
 
 
   calculateAverage(result) {
@@ -162,7 +181,7 @@ export class MaterialSummaryComponent implements OnInit {
     });
   }
 
-  calculateQuantity(result, entries) {
+  calculateQuantityStock(result, entries) {
     let totPurchase;
     let totSale;
     result.forEach(res => {
@@ -170,8 +189,8 @@ export class MaterialSummaryComponent implements OnInit {
       let filterSale = entries.filter(x => res.type === Entries.types.sale && x.name === res.name && x.type === res.type);
       totPurchase = this.sumQuantity('quantity', filterPurchase);
       totSale = this.sumQuantity('quantity', filterSale);
-      res.quantity = totPurchase - totSale;
-      res.quantity = Math.abs(res.quantity);
+      res.stock = totPurchase - totSale;
+      res.stock = Math.abs(res.stock);
     });
 
   }
