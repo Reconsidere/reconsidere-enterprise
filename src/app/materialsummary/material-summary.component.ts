@@ -59,7 +59,8 @@ export class MaterialSummaryComponent implements OnInit {
       return;
     } else {
       this.createSimpleList(items);
-      this.entries.sort(x => x.name);
+      this.entries.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
+
       this.entriesResult = this.groupBy('name');
     }
   }
