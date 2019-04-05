@@ -25,93 +25,97 @@
         <div class="">
           <div class="">
             <div class="card bg-light mb-3 shadow  mb-5 bg-white rounded">
-              <div *ngFor="let card of cards.value; index as xxl">
-                <div *ngIf="xxl < [entriesResult.length -1]" class="card-header">{{card.name}}
-
-                  <div class="pull-right">Estoque:{{card.stock}}</div>
+              <div *ngFor="let card of cards.value; index as cardIndex">
+                <div *ngIf="cardIndex < [entriesResult.length -1]" class="card-header text-muted text-uppercase">{{card.name}}
+                  <div class="pull-right text-muted text-lowercase">Em estoque {{card.stock}}</div>
                 </div>
-                <button *ngIf="card.expand && xxl < [entriesResult.length -1]"  (click)="closeOrExpand(card)" type="button" mat-raised-button color="accent" class="input-group-text bg-primary border-primary text-white styleHeight"
-                  data-toggle="button" aria-pressed="false" autocomplete="off">
-                  <mat-icon *ngIf="!card.expand">expand_more</mat-icon>
-                  <mat-icon *ngIf="card.expand">expand_less</mat-icon>
-                </button>
-              </div>
-              <!-- *ngIf="item.expand" -->
-              <div class="card-body">
-                <h5 class="card-title"></h5>
-                <div class="card-text">
-                  <table class="">
-                    <thead>
-                      <tr id="">
-                        <th>Tipo </th>
-                        <th>Quantidade</th>
-                        <th>Peso</th>
-                        <th>Preço médio</th>
-                        <th>Preço</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <ng-template ngFor let-values [ngForOf]="(entriesResult | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
-                        <ng-template ngFor let-item [ngForOf]="(values.value)" let-igroupI="index">
-                          <tr *ngIf="values.key === cards.key && item.type === 'purchase'">
-                            <td>
-                              <label>{{item.typeEntrie}}</label>
-                            </td>
 
-                            <td>
-                              <label>{{item.quantity}}</label>
-                            </td>
 
-                            <td>
-                              <label>{{item.weight}}</label>
-                            </td>
-                            <td>
-                              <label>{{item.average |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
-                            </td>
 
-                            <td>
-                              <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
-                            </td>
-                            <div *ngIf='igroupI < 1' class="card-body d-flex flex-column">
-                              <button *ngIf="!item.expand" (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent"
-                                class="align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
-                                <mat-icon *ngIf="item.expand">expand_less</mat-icon>
-                              </button>
-                            </div>
+                <!-- *" -->
+                <div *ngIf="cardIndex < [entriesResult.length -1]">
+                  <div *ngIf="!card.expand" class="card-body">
 
+                    <h5 class="card-title"></h5>
+                    <div class="card-text">
+                      <table class="">
+                        <thead>
+                          <tr id="">
+                            <th>Tipo </th>
+                            <th>Quantidade</th>
+                            <th>Peso</th>
+                            <th>Preço médio</th>
+                            <th>Preço</th>
                           </tr>
-                          <tr *ngIf="values.key === cards.key && item.type === 'sale'">
-                            <td>
-                              <label>{{item.typeEntrie}}</label>
-                            </td>
-                            <td>
-                              <label>{{item.quantity}}</label>
-                            </td>
+                        </thead>
+                        <tbody>
+                          <ng-template ngFor let-values [ngForOf]="(entriesResult | paginate: { itemsPerPage: 5, currentPage: page })" let-igroup="index">
+                            <ng-template ngFor let-item [ngForOf]="(values.value)" let-igroupI="index">
+                              <tr *ngIf="values.key === cards.key && item.type === 'purchase'">
+                                <td>
+                                  <label>{{item.typeEntrie}}</label>
+                                </td>
 
-                            <td>
-                              <label>{{item.weight}}</label>
-                            </td>
-                            <td>
-                              <label>{{item.average |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
-                            </td>
+                                <td>
+                                  <label>{{item.quantity}}</label>
+                                </td>
 
-                            <td>
-                              <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
-                            </td>
+                                <td>
+                                  <label>{{item.weight}}</label>
+                                </td>
+                                <td>
+                                  <label>{{item.average |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                                </td>
 
-                            <div *ngIf='igroupI <1'>
-                              <button (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent"
-                                class="fixed-bottom align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
-                                <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
-                                <mat-icon *ngIf="item.expand">expand_less</mat-icon>
-                              </button>
-                            </div>
-                          </tr>
-                        </ng-template>
-                      </ng-template>
-                    </tbody>
-                  </table>
+                                <td>
+                                  <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                                </td>
+                                <div *ngIf='igroupI < 1' test.value='item.expand' class="card-body d-flex flex-column">
+                                  <button *ngIf="!item.expand" (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent" class="align-self-end input-group-text bg-primary border-primary text-white styleHeight" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                    <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
+                                    <mat-icon *ngIf="item.expand">expand_less</mat-icon>
+                                  </button>
+                                </div>
+
+                              </tr>
+                              <tr *ngIf="values.key === cards.key && item.type === 'sale'">
+                                <td>
+                                  <label>{{item.typeEntrie}}</label>
+                                </td>
+                                <td>
+                                  <label>{{item.quantity}}</label>
+                                </td>
+
+                                <td>
+                                  <label>{{item.weight}}</label>
+                                </td>
+                                <td>
+                                  <label>{{item.average |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                                </td>
+
+                                <td>
+                                  <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                                </td>
+
+                                <div class="" *ngIf='igroupI <1'>
+                                  <button (click)="closeOrExpand(item)" type="button" mat-raised-button color="accent" class="fixed-bottom align-self-end input-group-text bg-primary border-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                    <mat-icon *ngIf="!item.expand">expand_more</mat-icon>
+                                    <mat-icon *ngIf="item.expand">expand_less</mat-icon>
+                                  </button>
+                                </div>
+                              </tr>
+                            </ng-template>
+                          </ng-template>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card-footer text-muted block">
+                    <button class="block" *ngIf="card.expand && cardIndex < [entriesResult.length -1]" (click)="closeOrExpand(card)" type="button" mat-raised-button color="accent"  data-toggle="button" aria-pressed="false" autocomplete="off">
+                      <mat-icon *ngIf="!card.expand">expand_more</mat-icon>
+                      <mat-icon *ngIf="card.expand">expand_less</mat-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

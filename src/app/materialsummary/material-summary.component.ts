@@ -59,8 +59,6 @@ export class MaterialSummaryComponent implements OnInit {
       return;
     } else {
       this.createSimpleList(items);
-      //this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.purchase), Entries.types.purchase);
-      //this.generteValuesPurchase(this.entries.filter(x => x.type === Entries.types.sale), Entries.types.sale);
       this.entries.sort(x => x.name);
       this.entriesResult = this.groupBy('name');
     }
