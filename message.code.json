@@ -29,7 +29,8 @@
     "WRE012": { "status": "WARNNING", "summary": "Por favor, para utilizar este recurso primeiro, vá ate a tela de Cadeia de processamento e cadastre pelo menos um item.", "message": "Não é permitido a utilização deste recurso, existe uma dependência de informações de outras áreas do sistema que precisam ser cadastradas antes."},
     "WRE013": { "status": "WARNNING", "summary": "Nenhum dado foi localizado!", "message": ""},
     "WRE014": { "status": "WARNNING", "summary": "Para calcular o valor, é necessário ter pelo menos a quantidade e o custo!", "message": ""},
-    "WRE015": { "status": "WARNNING", "summary": "Este nome já está cadastrado!", "message": "Não é permitido duplicidade de materiais."}
+    "WRE015": { "status": "WARNNING", "summary": "Este nome já está cadastrado!", "message": "Não é permitido duplicidade de materiais."},
+    "WRE016": { "status": "WARNNING", "summary": "Para apresentar este resumo mé necessário dar entrada ou saída de materias", "message": ""}
 
 
   },

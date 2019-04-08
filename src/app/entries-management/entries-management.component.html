@@ -24,7 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-item [ngForOf]="(entrieItems | paginate: { itemsPerPage: 5, currentPage: page })" igroup="index">
+        <ng-template ngFor let-item [ngForOf]="(entrieItems | paginate: { itemsPerPage: 6, currentPage: page })" igroup="index">
           <tr>
             <td>
               <select (click)="oldValue = item.type" (change)="changeType(item.type, oldValue, item)" required [(ngModel)]="item.type" name="type" class="form-control">

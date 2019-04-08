@@ -7,8 +7,9 @@
         <div *ngIf="[entriesResult.length] > entrieIndex">
           <div class="card bg-light mb-3 shadow  mb-5 bg-white rounded">
             <div *ngFor="let card of cards.value; index as cardIndex">
-              <div *ngIf="cardIndex ===0" class="card-header text-muted text-uppercase">{{card.name}}
-                <div class="pull-right text-muted text-lowercase">Em estoque {{card.stock}}</div>
+              <div *ngIf="cardIndex ===0" class="card-header text-muted">
+                <Span class="text-uppercase"> {{card.name}}</Span>
+                <div class="pull-right text-muted">Em estoque {{card.stock}} | Peso {{card.weightStock}}</div>
               </div>
 
               <div *ngIf="!card.expand && cardIndex ===0" class="card-body">
@@ -66,7 +67,7 @@
                             </td>
 
                             <td>
-                              <label>{{item.total |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
+                              <label>{{item.amount |currency:'BRL':'symbol':'2.2':allowZero: true}}</label>
                             </td>
 
                           </tr>
