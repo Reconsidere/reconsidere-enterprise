@@ -23,6 +23,8 @@ export class MaterialSummaryComponent implements OnInit {
   entriesResult;
   entriesPurchase;
   entriesSale;
+  dateFilterInitial;
+  dateFilterFinal;
 
   private readonly DATEFORMAT = 'dd/MM/yyyy';
 
@@ -53,8 +55,8 @@ export class MaterialSummaryComponent implements OnInit {
   }
 
   loadAll(items) {
-    if (items === undefined || items.length <= 0) {
-      this.toastr.warning(messageCode['WARNNING']['WRE016']['summary']);
+    if (items === undefined || items === null || items.length <= 0) {
+      this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
       this.isBlocked = false;
       return;
     } else {
@@ -62,6 +64,37 @@ export class MaterialSummaryComponent implements OnInit {
       this.entries.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 
       this.entriesResult = this.groupBy('name');
+    }
+  }
+
+
+  filterMaterial() {
+    if (!this.dateFilterInitial && !this.dateFilterInitial) {
+      this.entriesService.getEntries(this.organizationId).subscribe(items => this.loadAll(items), error => error);
+    } else {
+      if (this.dateFilterInitial > this.dateFilterFinal) {
+        this.toastr.warning(messageCode['WARNNING']['WRE017']['summary']);
+        return;
+      }
+      let filter;
+      if (this.dateFilterInitial && !this.dateFilterFinal) {
+        filter = {
+          dateInitial: this.dateFilterInitial,
+          dateFinal: this.dateFilterInitial
+        };
+
+      } else if (!this.dateFilterInitial && this.dateFilterFinal) {
+        filter = {
+          dateInitial: this.dateFilterFinal,
+          dateFinal: this.dateFilterFinal
+        };
+      } else {
+        filter = {
+          dateInitial: this.dateFilterInitial,
+          dateFinal: this.dateFilterFinal
+        };
+      }
+      this.entriesService.getFilteredEntries(this.organizationId, filter).subscribe(items => this.loadAll(items), error => error);
     }
   }
 

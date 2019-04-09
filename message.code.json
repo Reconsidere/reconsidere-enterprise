@@ -30,7 +30,9 @@
     "WRE013": { "status": "WARNNING", "summary": "Nenhum dado foi localizado!", "message": ""},
     "WRE014": { "status": "WARNNING", "summary": "Para calcular o valor, é necessário ter pelo menos a quantidade e o custo!", "message": ""},
     "WRE015": { "status": "WARNNING", "summary": "Este nome já está cadastrado!", "message": "Não é permitido duplicidade de materiais."},
-    "WRE016": { "status": "WARNNING", "summary": "Para apresentar este resumo mé necessário dar entrada ou saída de materias", "message": ""}
+    "WRE016": { "status": "WARNNING", "summary": "Nenhum dado foi localizado!. ", "message": "Certifique-se que existem dados cadastrados neste período de entrada ou saída de materias"},
+    "WRE017": { "status": "WARNNING", "summary": "A data inicial não pode ser maior que a data final.", "message": ""}
+
 
 
   },

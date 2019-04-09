@@ -29,4 +29,9 @@ export class EntriesManagementService {
   getEntries(id) {
     return this.http.get<any>(`${environment.database.uri}/organization/entries/${id}`);
   }
+
+  getFilteredEntries(id, filter) {
+    return this.http.post(`${environment.database.uri}/organization/entries/filter/${id}`, filter);
+
+  }
 }
