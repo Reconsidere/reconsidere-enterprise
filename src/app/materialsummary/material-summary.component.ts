@@ -37,6 +37,10 @@ export class MaterialSummaryComponent implements OnInit {
     this.page = 1;
     this.authService.isAuthenticated();
     this.authService.getOrganizationId().subscribe(id => this.setId(id));
+    this.init();
+  }
+
+  private init() {
     this.entries = [];
     this.entriesResult = [];
     this.entriesPurchase = [];
@@ -55,15 +59,17 @@ export class MaterialSummaryComponent implements OnInit {
   }
 
   loadAll(items) {
-    if (items === undefined || items === null || items.length <= 0) {
+    this.init();
+    if (items === undefined || items === null || items.length <= 0 || items.purchase.length <= 0 && items.sale <= 0) {
       this.toastr.warning(messageCode['WARNNING']['WRE013']['summary']);
       this.isBlocked = false;
       return;
     } else {
       this.createSimpleList(items);
       this.entries.sort((a, b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
-
       this.entriesResult = this.groupBy('name');
+      this.isBlocked = true
+        ;
     }
   }
 
@@ -78,22 +84,34 @@ export class MaterialSummaryComponent implements OnInit {
       }
       let filter;
       if (this.dateFilterInitial && !this.dateFilterFinal) {
+        let date = this.dateFilterInitial.setDate(this.dateFilterInitial.getDate() + 1);
         filter = {
-          dateInitial: this.dateFilterInitial,
-          dateFinal: this.dateFilterInitial
+          dateInitial: new Date(this.dateFilterInitial).toDateString(),
+          dateFinal: new Date(date).toDateString()
         };
 
       } else if (!this.dateFilterInitial && this.dateFilterFinal) {
+        let date = this.dateFilterFinal.setDate(this.dateFilterFinal.getDate() + 1);
         filter = {
-          dateInitial: this.dateFilterFinal,
-          dateFinal: this.dateFilterFinal
+          dateInitial: new Date(this.dateFilterFinal).toDateString(),
+          dateFinal: new Date(date).toDateString()
         };
       } else {
+        if (new Date(this.dateFilterInitial).toDateString() === new Date(this.dateFilterFinal).toDateString()) {
+          let date = this.dateFilterFinal.setDate(this.dateFilterFinal.getDate() + 1);
+          filter = {
+            dateInitial: new Date(this.dateFilterInitial).toDateString(),
+            dateFinal: new Date(date).toDateString()
+          };
+        } else {
+
+        }
         filter = {
-          dateInitial: this.dateFilterInitial,
-          dateFinal: this.dateFilterFinal
+          dateInitial: new Date(this.dateFilterInitial).toDateString(),
+          dateFinal: new Date(this.dateFilterFinal).toDateString()
         };
       }
+      console.log(filter.dateFinal);
       this.entriesService.getFilteredEntries(this.organizationId, filter).subscribe(items => this.loadAll(items), error => error);
     }
   }
