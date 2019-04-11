@@ -8,10 +8,16 @@ import { AuthService } from 'src/services';
 })
 export class ToolbarComponent implements OnInit {
 
-
-  constructor(public auth: AuthService) { }
+  name;
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.name = this.authService.getUserName();
+    } else {
+      this.name = undefined;
+    }
+
   }
 
 

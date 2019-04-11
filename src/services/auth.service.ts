@@ -45,6 +45,10 @@ export class AuthService {
     return true;
   }
 
+
+  public getUserName() {
+    return JSON.parse(localStorage.getItem('userName'));
+  }
   public signup(organization: Organization) {
     if (organization._id === undefined) {
       this.add(organization);
@@ -71,6 +75,7 @@ export class AuthService {
   cleanStorage() {
     localStorage.removeItem('currentToken');
     localStorage.removeItem('currentUserId');
+    localStorage.removeItem('userName');
     this.currenTokenSubject.next(null);
   }
 
@@ -128,6 +133,7 @@ export class AuthService {
       }
       localStorage.setItem('currentToken', JSON.stringify(user.token));
       localStorage.setItem('currentUserId', JSON.stringify(user._id));
+      localStorage.setItem('userName', JSON.stringify(user.name));
       this.currenTokenSubject.next(user.token);
       return true;
     }

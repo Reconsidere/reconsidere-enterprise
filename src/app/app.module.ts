@@ -56,6 +56,8 @@ import { InconstantCostManagementComponent } from './inconstant-cost-management/
 import { EntriesManagementComponent } from './entries-management/entries-management.component';
 import { MaterialSummaryComponent } from './materialsummary/material-summary.component';
 import { GroupbyPipe } from '../pipes/groupby.pipe';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 
 
 registerLocaleData(localePt);
@@ -121,6 +123,7 @@ registerLocaleData(localePt);
     MatButtonModule,
     MatIconModule,
     MatCheckboxModule,
+    NgbModule.forRoot(),
   ],
 
   providers: [
@@ -138,7 +141,7 @@ registerLocaleData(localePt);
     ExpensesManagementComponent,
     InconstantCostManagementComponent
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
 

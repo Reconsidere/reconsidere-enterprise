@@ -16,30 +16,6 @@
     </div>
   </div>
   <div *ngIf="isBlocked">
-
-
-    <!-- <div text-muted class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title text-muted">
-          Filtro
-        </h3>
-      </div>
-      <div class="panel-body">
-        <form class="form-inline" role="form">
-          <div class="form-group">
-            <p-calendar [(ngModel)]="dateFilterInitial" name="date" dateFormat="dd/mm/yy" (onSelect)="filterMaterial()"></p-calendar>
-            <mat-icon color="accent" class="input-icon">date_range</mat-icon>
-            <p-calendar [(ngModel)]="dateFilterFinal" name="date" dateFormat="dd/mm/yy"></p-calendar>
-            <mat-icon color="accent" class="input-icon">date_range</mat-icon>
-            <button type="button" id="save" (click)="filterMaterial()" mat-raised-button class="" color="accent">
-              Filtrar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div> -->
-
-
     <ul class="list-group">
       <li *ngFor="let cards of entriesResult; index as entrieIndex">
         <div *ngIf="[entriesResult.length] > entrieIndex">

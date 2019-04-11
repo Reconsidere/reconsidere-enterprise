@@ -1,4 +1,4 @@
-<ol id="menu" class="breadcrumb">
+<!-- <ol id="menu" class="breadcrumb">
   <li><a class="option nav-link text-light" routerLink="/account" routerLinkActive="active">Conta</a></li>
   <li><a class="option nav-link text-light" routerLink="/vehicle-management" routerLinkActive="active">Veículo</a></li>
   <li><a class="option nav-link text-light" routerLink="/material-management" routerLinkActive="active">Material</a></li>
@@ -8,4 +8,42 @@
   <li><a class="option nav-link text-light" routerLink="/incoming-out-management" routerLinkActive="active">Entrada e Saída</a></li>
   <li><a class="option nav-link text-light" routerLink="/scheduler" routerLinkActive="active">Rota</a></li>
   <li><a class="option nav-link text-light" routerLink="/logout" routerLinkActive="active" (click)="auth.logout()">Sair</a></li>
-</ol>
+</ol> -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand">Reconsidere</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" routerLink="/account" routerLinkActive="active">Conta</a>
+      </li>
+      <!-- <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li> -->
+      <li ngbDropdown class="nav-item dropdown">
+        <a ngbDropdownToggle class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Financeiro
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/expenses-management" routerLinkActive="active">Despesas</a>
+          <a class="dropdown-item" routerLink="/incoming-out-management" routerLinkActive="active">Entrada e Saída</a>
+          <!-- <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a> -->
+        </div>
+      </li>
+    </ul>
+    <div class="pull-right">
+      <ul class="nav pull-right">
+        <li ngbDropdown  class="dropdown"><a ngbDropdownToggle class="dropdown-toggle" data-toggle="dropdown"><span class="text-muted text-uppercase" *ngIf="name">Bem vindo, {{name}}</span> <b class="caret"></b></a>
+          <ul ngbDropdownMenu class="dropdown-menu">
+            <li><a routerLink="/logout" routerLinkActive="active" (click)="auth.logout()"><i class="icon-off"></i>Sair</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

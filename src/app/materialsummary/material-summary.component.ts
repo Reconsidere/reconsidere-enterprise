@@ -84,27 +84,22 @@ export class MaterialSummaryComponent implements OnInit {
       }
       let filter;
       if (this.dateFilterInitial && !this.dateFilterFinal) {
-        let dateInit = this.dateFilterInitial.setDate(this.dateFilterInitial.getDate() - 1);
-        let dateFin = this.dateFilterInitial.setDate(this.dateFilterInitial.getDate() + 1);
+        this.dateFilterFinal = this.dateFilterInitial;
         filter = {
-          dateInitial: new Date(dateInit).toDateString(),
-          dateFinal: new Date(dateFin).toDateString()
+          dateInitial: new Date(this.dateFilterInitial).toDateString(),
+          dateFinal: new Date(this.dateFilterInitial).toDateString()
         };
 
       } else if (!this.dateFilterInitial && this.dateFilterFinal) {
-        let dateInit = this.dateFilterFinal.setDate(this.dateFilterFinal.getDate() - 1);
-        let dateFin = this.dateFilterFinal.setDate(this.dateFilterFinal.getDate() + 1);
+        this.dateFilterInitial = this.dateFilterFinal;
         filter = {
-          dateInitial: new Date(dateInit).toDateString(),
-          dateFinal: new Date(dateFin).toDateString()
+          dateInitial: new Date(this.dateFilterFinal).toDateString(),
+          dateFinal: new Date(this.dateFilterFinal).toDateString()
         };
       } else {
-        let dateInit = this.dateFilterInitial.setDate(this.dateFilterInitial.getDate() - 1);
-        let dateFin = this.dateFilterFinal.setDate(this.dateFilterFinal.getDate() + 1);
-
         filter = {
-          dateInitial: new Date(dateInit).toDateString(),
-          dateFinal: new Date(dateFin).toDateString()
+          dateInitial: new Date(this.dateFilterInitial).toDateString(),
+          dateFinal: new Date(this.dateFilterFinal).toDateString()
         };
       }
       console.log(filter.dateFinal);
