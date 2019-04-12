@@ -45,7 +45,6 @@ export class AuthService {
     return true;
   }
 
-
   public getUserName() {
     return JSON.parse(localStorage.getItem('userName'));
   }

@@ -16,14 +16,14 @@ export class SignInComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   error = '';
-  hidepassword =  true;
+  hidepassword = true;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({

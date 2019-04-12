@@ -35,12 +35,24 @@
           <a class="dropdown-item" href="#">Something else here</a> -->
         </div>
       </li>
+      <li ngbDropdown class="nav-item dropdown">
+        <a ngbDropdownToggle class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Material
+        </a>
+        <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" routerLink="/material-management" routerLinkActive="active">Material</a>
+          <a class="dropdown-item" routerLink="/material-summary" routerLinkActive="active">Resumo do material</a>
+          <!-- <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a> -->
+        </div>
+      </li>
     </ul>
     <div class="pull-right">
       <ul class="nav pull-right">
-        <li ngbDropdown  class="dropdown"><a ngbDropdownToggle class="dropdown-toggle" data-toggle="dropdown"><span class="text-muted text-uppercase" *ngIf="name">Bem vindo, {{name}}</span> <b class="caret"></b></a>
+        <li ngbDropdown class="dropdown"><a ngbDropdownToggle class="dropdown-toggle" data-toggle="dropdown"><span class="text-muted text-uppercase" *ngIf="name">Bem vindo, {{name}}</span> <b
+              class="caret"></b></a>
           <ul ngbDropdownMenu class="dropdown-menu">
-            <li><a routerLink="/logout" routerLinkActive="active" (click)="auth.logout()"><i class="icon-off"></i>Sair</a></li>
+            <li><a class="text-muted" routerLink="/logout" routerLinkActive="active" (click)="auth.logout()"><i class="icon-off text-muted"></i>Sair</a></li>
           </ul>
         </li>
       </ul>
