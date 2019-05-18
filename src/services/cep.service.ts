@@ -8,7 +8,7 @@ import { SignUpComponent } from 'src/app/auth/sign-up/sign-up.component';
 })
 export class CepService {
   private adrress: string[];
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   search(value: string, location: Location, page) {
     value = value.replace(/[^a-zA-Z0-9 ]/g, '');
@@ -30,5 +30,11 @@ export class CepService {
     location.neighborhood = cepNaResposta.bairro;
     location.county = cepNaResposta.localidade;
     location.state = cepNaResposta.uf;
+  }
+
+  /*new serch method*/
+  searchCep(value: string) {
+    value = value.replace(/[^a-zA-Z0-9 ]/g, '');
+    return this.http.get(`https://viacep.com.br/ws/${value}/json/`);
   }
 }

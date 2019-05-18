@@ -57,6 +57,7 @@ import { EntriesManagementComponent } from './entries-management/entries-managem
 import { MaterialSummaryComponent } from './materialsummary/material-summary.component';
 import { GroupbyPipe } from '../pipes/groupby.pipe';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { NeighborhoodSchedulingComponent } from './neighborhood-scheduling/neighborhood-scheduling.component';
 
 
 
@@ -91,7 +92,8 @@ registerLocaleData(localePt);
     ExpensesManagementComponent,
     InconstantCostManagementComponent,
     EntriesManagementComponent,
-    GroupbyPipe
+    GroupbyPipe,
+    NeighborhoodSchedulingComponent
   ],
   imports: [
     BrowserModule,

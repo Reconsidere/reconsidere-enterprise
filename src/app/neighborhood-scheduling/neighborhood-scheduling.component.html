@@ -1,0 +1,88 @@
+<app-toolbar></app-toolbar>
+
+<div class="container">
+  <button type="button" id="save" (click)="save()" mat-raised-button class="col-md-2 pull-right" color="primary">
+    Salvar ações
+  </button>
+  <div class="tableNeighborhoodScheduling">
+    <table class="table-sm">
+      <thead>
+        <tr>
+          <button id="newNeighborhoodScheduling" (click)="newNeighborhoodScheduling()" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+            <mat-icon>add</mat-icon>
+          </button>
+        </tr>
+        <tr id="Titles">
+          <th>Cep</th>
+          <th>Bairro</th>
+          <th>Itinerário</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-schedNeig [ngForOf]="(neighborhoodSchedulingItems | paginate: { itemsPerPage: 6, currentPage: page })" igroup="index">
+          <tr>
+            <td>
+              <input [(ngModel)]="schedNeig.cep" (blur)="CEPSearch(schedNeig)" placeholder="00.000-000" mask="00.000-000" name="cep" type="text" class="form-control" id="cep" aria-describedby="cep" />
+            <td>
+              <input required [(ngModel)]="schedNeig.neighborhood" name="neighborhood" type="text" class="form-control" id="neighborhood" aria-describedby="neighborhood" />
+            </td>
+            <!-- <td>
+              <button (click)="removeScheduling(schedNeig)" type="button" mat-raised-button color="warn" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </td> -->
+            <td>
+              <button (click)="expand(schedNeig)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                <mat-icon>local_shipping</mat-icon>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table class="table-sm" *ngIf="schedNeig.expand">
+                <thead>
+                  <tr>
+                    <th>
+                      <button id="newItineray" (click)="newItineray(schedNeig)" type="button" mat-raised-button color="accent" class="btn btn-sm btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                        Novo itinerário
+                      </button>
+                    </th>
+                  </tr>
+                  <tr id="Titles">
+                    <th>Dia da semana</th>
+                    <th>hora</th>
+                    <th>Remover</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <ng-template ngFor let-itinerary [ngForOf]="(schedNeig.itinerary | paginate: { itemsPerPage: 6, currentPage: pageItineray })" igroup="indexItin">
+                    <tr>
+                      <td>
+                        <select required [(ngModel)]="itinerary.dayWeek" name="dayWeek" class="form-control">
+                          <option id="dayWeek" *ngFor="let dayWeek  of daysWeek">{{ dayWeek }}</option>
+                        </select>
+                      </td>
+                      <td>
+                        <p-calendar name="hour" pattern="HH:mm" timeOnly="true" hourFormat="24" (ngModelChange)="itinerary.hour = $event" [ngModel]="itinerary.hour | dateconvert"></p-calendar>
+                      </td>
+                      <td>
+                        <button (click)="removeItinerary(itinerary)" type="button" mat-raised-button color="warn" class="btn btn-sm btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                          <mat-icon>delete_forever</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                </tbody>
+                <pagination-controls (pageChange)="pageItineray = $event" id="second" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination">
+                </pagination-controls>
+              </table>
+            </td>
+          </tr>
+        </ng-template>
+
+      </tbody>
+      <pagination-controls (pageChange)="page = $event" id="first" previousLabel="Anterior" nextLabel="Próxima" autoHide="true" responsive="true" screenReaderPaginationLabel="Pagination">
+      </pagination-controls>
+    </table>
+  </div>
+</div>

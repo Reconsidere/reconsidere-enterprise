@@ -15,31 +15,33 @@ import { CollectionCostManagementComponent } from './collection-cost-management/
 import { ExpensesManagementComponent } from './expenses-management/expenses-management.component';
 import { EntriesManagementComponent } from './entries-management/entries-management.component';
 import { MaterialSummaryComponent } from './materialsummary/material-summary.component';
+import { NeighborhoodSchedulingComponent } from './neighborhood-scheduling/neighborhood-scheduling.component';
 
 export const routes: Routes = [
   //Módulo de segurança
-  {path: '', component: StartcenterComponent, canActivate: [AuthGuard]},
-  {path: 'sign-up', component: SignUpComponent },
-  {path: 'login', component: SignInComponent},
-  {path: 'logout', component: LogoutComponent},
+  { path: '', component: StartcenterComponent, canActivate: [AuthGuard] },
+  { path: 'sign-up', component: SignUpComponent },
+  { path: 'login', component: SignInComponent },
+  { path: 'logout', component: LogoutComponent },
 
   //Módulo de materiais
-  {path: 'account', component: SignUpComponent, canActivate: [AuthGuard] },
-  {path: 'vehicle-management', component: VehicleManagementComponent, canActivate: [AuthGuard] },
-  {path: 'material-management', component: MaterialManagementComponent, canActivate: [AuthGuard]},
-  {path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard]},
-  {path: 'material-summary', component: MaterialSummaryComponent, canActivate: [AuthGuard]},
+  { path: 'account', component: SignUpComponent, canActivate: [AuthGuard] },
+  { path: 'vehicle-management', component: VehicleManagementComponent, canActivate: [AuthGuard] },
+  { path: 'material-management', component: MaterialManagementComponent, canActivate: [AuthGuard] },
+  { path: 'material-summary', component: MaterialSummaryComponent, canActivate: [AuthGuard] },
 
   //Módulo financeiro
-  {path: 'processing-chain-management', component: ProcessingChainManagementComponent, canActivate: [AuthGuard]},
-  {path: 'expenses-management', component: ExpensesManagementComponent, canActivate: [AuthGuard]},
-  {path: 'incoming-out-management', component: EntriesManagementComponent, canActivate: [AuthGuard]},
+  { path: 'processing-chain-management', component: ProcessingChainManagementComponent, canActivate: [AuthGuard] },
+  { path: 'expenses-management', component: ExpensesManagementComponent, canActivate: [AuthGuard] },
+  { path: 'incoming-out-management', component: EntriesManagementComponent, canActivate: [AuthGuard] },
 
   //Módulo de formulários
-  {path: 'uc-form', component: UcFormComponent },
-  {path: 'citizen-registration', component: UcFormComponent },
+  { path: 'uc-form', component: UcFormComponent },
+  { path: 'citizen-registration', component: UcFormComponent },
 
   //Qualquer outro acesso
-  {path: '**', redirectTo: '' }
+  { path: 'scheduler', component: SchedulerComponent, canActivate: [AuthGuard] },
+  { path: 'scheduler-neighborhood', component: NeighborhoodSchedulingComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '' }
 ];
 export const ROUTING: ModuleWithProviders = RouterModule.forRoot(routes);
