@@ -7,7 +7,7 @@ export const environment = {
     password: '',
     host: '',
     port: '27017',
-    dbname: 'eowyn-reconsidere-enterpris',
+    dbname: 'eowyn-reconsidere-enterprise',
     uri: `http://localhost:42546`
   },
 

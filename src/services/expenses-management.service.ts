@@ -17,7 +17,7 @@ export class ExpensesManagementService {
     this.http
       .post(
         environment.database.uri +
-        `/organization/add/expenses/${organizationId}/${expenses[0]._id}`,
+        `/organization/add/expenses/${organizationId}`,
         expenses
       )
       .subscribe(res => console.log('Done'));

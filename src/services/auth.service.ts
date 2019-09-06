@@ -58,7 +58,7 @@ export class AuthService {
 
   add(organization: Organization) {
     this.http
-      .post(environment.api.uri + `api/organization/add`, organization)
+      .post(environment.database.uri + `/organization/add`, organization)
       .subscribe(res => console.log('Done'));
   }
 
