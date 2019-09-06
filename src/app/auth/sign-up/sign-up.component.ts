@@ -146,7 +146,7 @@ export class SignUpComponent implements OnInit {
     this.isValidPasswordUser = ConfirmPasswordValidator.MatchPassword(this.user.password, this.confirmPasswordUser);
     setTimeout(function () { }.bind(this), 1000);
     if (this.isValidPasswordUser) {
-      this.confirmPasswordUser = this.passwordUser;
+      this.passwordUser = this.confirmPasswordUser;
     } else {
       this.confirmPasswordUser = this.authService.decript(this.confirmPasswordUser);
     }
