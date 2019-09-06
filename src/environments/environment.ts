@@ -11,23 +11,23 @@ export const environment = {
     password: '',
     host: '',
     port: '27017',
-    dbname: 'reconsideredb',
-    uri: `http://localhost:32546`
+    dbname: 'eowyn-reconsidere-enterpris',
+    uri: `http://localhost:42546`
   },
   api: {
     auth: {
-      uri: `localhost:32546`
+      uri: `localhost:42546`
     },
     persistence: {
-      uri: `localhost:32546`
+      uri: `localhost:42546`
     },
     publish: {
-      uri: `localhost:32546`
+      uri: `localhost:42546`
     },
     external: {
-      uri: `localhost:32546`
+      uri: `localhost:42546`
     },
-    uri: "localhost:32546"
+    uri: "localhost:42546"
   },
   secret: '154097$#@$^@1ETI',
 };
